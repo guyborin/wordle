@@ -1,0 +1,527 @@
+body, html {
+   margin:0;
+   padding:0;
+   background-color: #121213;
+}
+
+.grid{
+   display: grid;
+   grid-template-rows: repeat(5, auto);
+   grid-template-columns: repeat(5, auto);
+   justify-content: center;
+   position:relative;
+   top: 125px;
+}
+
+#wrap{
+   text-align: center;
+   width: 100%;
+}
+
+.box{
+   border-radius: 10%;
+   border-style: solid;
+   border-color: #3a3a3c;
+   border-width: 2px;
+   width: 60px;
+   height: 60px;
+   font-family: Montserrat, 'Open Sans', sans-serif;
+   color:white;
+   font-size: 35px;
+   font-weight: 600;
+   text-align: center;
+   align-content: center;
+   margin: 2.5px;
+}
+
+.box.empty{
+   background-color: #5c5656;
+}
+
+.box.wrong{
+   background-color: #b59f3b;
+}
+
+.box.correct{
+   background-color: #538d4e;
+}
+
+#annoncement{
+   color:red;
+   font-family: Arial, Helvetica, sans-serif;
+   position: relative;
+   top:120px;
+   height: 20px;
+}
+
+.animated{
+   animation: flip 0.5s ease;
+}
+
+@keyframes flip{
+   0%{
+      transform: scaleY(1);
+   }
+
+   50%{
+      transform: scaleY(0);
+   }
+
+   100%{
+      transform: scaleY(1);
+   }
+}
+
+.keys{
+   font-family: Arial, Helvetica, sans-serif;
+   background-color: #2f2f30;
+   border: none;
+   color: white;
+   width: 42px;
+   margin-top: 5px;
+   border-radius: 8px;
+   text-align: center;
+   padding-top: 8px;
+   padding-bottom: 8px;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 26px;
+}
+
+.keys:hover{
+   background-color: #3f3f3f;
+}
+
+#keyboard{
+   position:absolute;
+   top:79%;
+   width: 100%;
+   text-align: center;
+   align-content: center;
+}
+
+#del{
+   background-color: #3a3a3c;
+   border: none;
+   margin-bottom: -14px;
+   border-radius: 8px;
+   width: 30px;
+   height: 34px;
+   padding: 6px 6px;
+   align-content: center;
+}
+
+#del:hover{
+   background-color: #474747;
+}
+
+#enter{
+   background-color: #3a3a3c;
+   border: none;
+   margin-bottom: -14px;
+   border-radius: 8px;
+   width: 24px;
+   height: 35px;
+   padding: 6px 9px;
+   align-content: center;
+}
+
+#enter:hover{
+   background-color: #474747;
+}
+
+#trash{
+   background-color: #3a3a3c;
+   border: none;
+   margin-bottom: -14px;
+   border-radius: 8px;
+   width: 25px;
+   height: 30px;
+   padding: 8px 8px;
+   align-content: center;
+}
+
+#trash:hover{
+   background-color: #474747;
+}
+
+#hint{
+   background-color: #3a3a3c;
+   border: none;
+   margin-bottom: -14px;
+   border-radius: 8px;
+   width: 22px;
+   height: 30px;
+   padding: 8px 10px;
+   align-content: center;
+}
+
+#hint:hover{
+   background-color: #474747;
+}
+
+.keys.correct{
+   background-color: #538d4e;
+}
+
+.keys.wrong{
+   background-color: #b59f3b;
+}
+
+.keys.empty{
+   background-color: #5c5656;
+}
+
+#left-bar{
+   padding: 43px;
+   text-align: center;
+   position:absolute;
+   bottom:10px;
+   height: 77%;
+   width: 210px;
+   background-color: #646464;
+   border-radius: 25px;
+}
+
+.in{
+   animation: 1s mymovein ease;
+   left: 10px;
+}
+
+.out{
+   animation: 1s mymoveout ease;
+   left: -300px;
+}
+
+.init{
+   left: -300px;
+}
+
+@keyframes mymovein {
+   from {left: -300px;}
+   to {left: 10px;}
+}
+
+@keyframes mymoveout {
+   from {left: 10px;}
+   to {left: -300px;}
+}
+
+.title{
+   border-radius: 10px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+   font-family: Montserrat, 'Open Sans', sans-serif;
+   font-style: normal;
+   font-weight: 700;
+   font-size: 35px;
+   color: #FFFFFF;
+   width: 50px;
+   height: 50px;
+   margin-right: 5px;
+   width: 52px;
+   height: 52px;
+}
+
+#title-W{
+   background: #5C5656;
+}
+
+#title-O{
+   background: #538D4E;
+}
+
+#title-R{
+   background: #B59F3B;
+}
+
+#title-D{
+   background: #538D4E;
+}
+
+#title-L{
+   background: #5C5656;
+}
+
+#title-E{
+   background: #B59F3B;
+}
+
+#top-bar{
+   position:absolute;
+   top:0px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+   width: 100%;
+   height:70px;
+   background-color: #3a3a3c;
+}
+
+#language{
+   position: absolute;
+   left:90%;
+}
+
+#options{
+   position: absolute;
+   border-radius: 7px;
+   color: white;
+   width: 27px;
+   height: 27px;
+   padding: 10px;
+   right: 95%;
+   background-color:#3a3a3c;
+
+}
+
+#options:hover{
+   background-color:#474747;
+}
+
+.left-btns{
+   height: 30px;
+   background-color: #f58855;
+   position: absolute;
+   top: 30%;
+   width: 33.6%;
+   left: 18%;
+   padding: 10px;
+   font-size: larger;
+   color: white;
+   text-align: center;
+   border-radius: 8px;
+   font-family: Montserrat, 'Open Sans', sans-serif;
+}
+
+#info{
+   height: 25px;
+   background-color: #eb7742;
+   position: absolute;
+   top: 29.5%;
+   width: 25px;
+   left: 65.5%;
+   padding: 10px;
+   font-size: larger;
+   color: white;
+   text-align: center;
+   border-radius: 8px;
+   font-family: Montserrat, 'Open Sans', sans-serif;
+}
+
+
+#info1{
+   height: 25px;
+   background-color: #eb7742;
+   position: absolute;
+   top: 39.3%;
+   width: 25px;
+   left: 20%;
+   padding: 10px;
+   font-size: larger;
+   color: white;
+   text-align: center;
+   border-radius: 8px;
+   font-family: Montserrat, 'Open Sans', sans-serif;
+}
+
+#leaderboard{
+   display: flex;
+   height: 185px;
+   background-color: #784212;
+   position: absolute;
+   top: 49%;
+   width: 53%;
+   left: 18%;
+   padding: 15px;
+   font-size: larger;
+   color: white;
+   text-align: center;
+   border-radius: 8px;
+   font-family: Montserrat, 'Open Sans', sans-serif;
+}
+
+#leaderboard p{
+   left: 59px;
+   height: 16px;
+   align-self: flex-start;
+   position: absolute;
+   top: 16px;
+}
+
+#leaderIcon{
+   position: relative;
+   width: 30px;
+   align-self: start;
+   background-color: #784212;
+   height: 30px;
+   padding: 10px;
+}
+
+#leaderIcon :hover{
+   background-color: #975317;
+}
+
+#CW{
+   top: 39%;
+}
+
+.left-btns:hover{
+   background-color: #fa7e44;
+}
+
+#left-title{
+   color: white;
+   text-align: center;
+   font-family: Montserrat, 'Open Sans', sans-serif;
+}
+
+.change{
+   background-color: #f58855;
+   width: 30px;
+   height: 30px;
+   margin-top: 5px;
+   border-radius: 8px;
+   padding: 10px;
+   margin-bottom: 10px;
+}
+
+#back{
+   margin-right: 15px;
+}
+
+#create{
+   position: absolute;
+   top: 29%;
+}
+
+#rules{
+   padding: 5px 79px;
+   position: absolute;
+   top: 83%;
+   width: 10%;
+   height: 40px;
+}
+
+#icon{
+   position: relative;
+   right: 63px;
+   top: 12%;
+}
+
+#rulesText{
+   position: absolute;
+   right: 29px;
+   bottom: -12%;
+}
+
+#gameMode{
+   position: absolute;
+   top: 39%;
+   left: 41%;
+}
+
+#btn01{
+   position: absolute;
+   width: 30px;
+   left: 64px;
+   top: 138px;
+}
+
+#btn01:hover{
+   animation:0.5s rotate;
+}
+
+#btn02{
+   position: absolute;
+   width: 30px;
+   left: 133px;
+   top: 138px;
+}
+
+#btn02:hover{
+   animation:0.5s rotate;
+}
+
+@keyframes rotate {
+   100%{transform:rotate(360deg);}
+}
+
+#unmute{
+   margin-left: 15px;
+   height: 30px;
+}
+
+.change:hover{
+   background-color: #fa7e44;
+}
+
+#mute{
+   position: absolute;
+   background-color: #f58855;
+   width: 28px;
+   border-radius: 8px;
+   padding: 11px;
+   margin-bottom: 10px;
+   height: 28px;
+   right: 54px;
+   top: 128px;
+   visibility: hidden;
+}
+
+#shader{
+   position: absolute;
+   top: 0px;
+   left: 0px;
+   width: 100%;
+   height: 100%;
+   background-color: #000000;
+   opacity: 0.8;
+   visibility: hidden;
+}
+
+#newWordle{
+   padding: 20px 43px;
+   text-align: center;
+   position: absolute;
+   bottom: 31%;
+   left: 36%;
+   height: 230px;
+   width: 350px;
+   background-color: #646464;
+   border-radius: 25px;
+   visibility: hidden;
+}
+
+#newWordle p{
+   color: white;
+   font-family: Montserrat, 'Open Sans', sans-serif;
+   font-size: 30px;
+}
+
+
+#newWordle input{
+   font-family: Montserrat, 'Open Sans', sans-serif;
+   font-size:15px;
+   height: 15px;
+   padding: 10px;
+   border-radius: 50px;
+   border: 2px solid #000000;
+}
+
+#newWordle button{
+   background-color: #ffffff;
+   height: 40px;
+   width: 40px;
+   padding: 5px;
+   font-size: 17px;
+   border-radius: 50px;
+   border: 2px solid #000000;
+}
+
+#newWordle button:hover{
+   background-color: #d3d3d3;
+}
