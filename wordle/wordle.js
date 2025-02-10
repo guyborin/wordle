@@ -1,7 +1,9 @@
 let inGame = true;
 let action = 0;
 let language = "english";
-const hintLetter = Math.floor(Math.random() * 5);
+let sound = true;
+let hintLetter = Math.floor(Math.random() * 5);
+let notWord = false;
 
 const stats = {
     secret:WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase(),
@@ -55,6 +57,7 @@ function start(){
     drawGrid(game);
 
     keyboard();
+    changeEnglish();
     console.log(stats.secret)
 }
 
@@ -76,12 +79,14 @@ function virtualKeyboardClick(e){
 }
 
 function deleteVirtual(){
+    if(inGame === false) return;
     removeAnnounce();
     removeLetter();
     updateGrid();
 }
 
 function enter(){
+    if(inGame === false) return;
     if(stats.currentCol === 5){
         const word = getCurrentWord();
         if(isWordValid(word)){
@@ -96,12 +101,14 @@ function enter(){
 }
 
 function deleteAll(){
+    if(inGame === false) return;
     removeAnnounce();
     removeAllLetters();
     updateGrid();
 }
 
 function hint(){
+    if(inGame === false) return;
     for(let i = stats.currentRow; i <= 5; i++){
         const box = document.getElementById(`box${i}${hintLetter}`);
         box.textContent = stats.secret[hintLetter];
@@ -110,6 +117,7 @@ function hint(){
 }
 
 function hideHint(){
+    if(inGame === false) return;
     for(let i = stats.currentRow; i <= 5; i++){
         const box = document.getElementById(`box${i}${hintLetter}`);
         box.textContent = "";
@@ -169,27 +177,27 @@ function revealWord(guess){
     const audio2 = document.getElementById("audio3");
     const audio3 = document.getElementById("audio4");
     const audio4 = document.getElementById("audio5");
-
     for(let i = 0; i < 5; i++){
         const box = document.getElementById(`box${row}${i}`);
         const letter = box.textContent;
         const virtualKeyboard = document.getElementById(letter.toLowerCase());
-        setTimeout(() =>{
-            audio.play();
-        }, 0);
-        /* audio.play(); */
-        setTimeout(() =>{
-            audio1.play();
-        }, 250);
-        setTimeout(() =>{
-            audio2.play();
-        }, 500);
-        setTimeout(() =>{
-            audio3.play();
-        }, 750);
-        setTimeout(() =>{
-            audio4.play();
-        }, 1000);
+        if(sound){
+            setTimeout(() =>{
+                audio.play();
+            }, 0);
+            setTimeout(() =>{
+                audio1.play();
+            }, 250);
+            setTimeout(() =>{
+                audio2.play();
+            }, 500);
+            setTimeout(() =>{
+                audio3.play();
+            }, 750);
+            setTimeout(() =>{
+                audio4.play();
+            }, 1000);
+        }
 
         setTimeout(() =>{
             virtualKeyboard.classList.add("animated");
@@ -226,12 +234,14 @@ function revealWord(guess){
             youWin();
             inGame = false;
         }else if(gameOver){
-            youLose(`Better luck next time! the word was: ${stats.secret}.`);
+            youLose();
             inGame = false;
         }
 
     }, 3 * animation_duration);
 }
+
+
 
 function isLetter(key){
     return key.length === 1 && key.match(/[a-z]/i);
@@ -265,141 +275,92 @@ function removeAllLetters(){
 
 function announce(text){
     let annoncement = document.getElementById("annoncement");
-    annoncement.textContent = text;
+    if(language === "portuguese"){
+        annoncement.textContent = "Essa palavra não existe na lista";
+    }else{
+        annoncement.textContent = text;
+    }
+
 }
 
 function youWin(){
     setTimeout(() =>{
-        for(let i = 0; i <= 5; i++){
-            for(let j = 0; j <= 6; j++){
-                if(i === 0 && j === 0){
-                    endGame("Y", i, j, "correct");
-    
-                }
-    
-                if(i === 1 && j === 0){
-                    endGame("O", i, j, "correct");
-                }
-    
-                if(i === 2 && j === 0){
-                    endGame("U", i, j, "correct");
-                }
-    
-                if(i === 3 && j === 0){
-                    endGame("", i, j, "empty");
-                }
-    
-                if(i === 4 && j === 0){
-                    endGame("", i, j, "empty");
-                }
+        endGame("Y", 0, 0, "correct");
+        endGame("O", 1, 0, "correct");
+        endGame("U", 2, 0, "correct");
+        endGame("", 3, 0, "empty");
+        endGame("", 4, 0, "empty");
 
-                if(i === 0 && j === 1){
-                    endGame("", i, j, "empty");
-                }
+        endGame("", 0, 1, "empty");
+        endGame("W", 1, 1, "correct");
+        endGame("O", 2, 1, "correct");
+        endGame("N", 3, 1, "correct");
+        endGame("!", 4, 1, "correct");
 
-                if(i === 1 && j === 1){
-                    endGame("W", i, j, "correct");
-                }
+        endGame("", 0, 2, "empty");
+        endGame("", 1, 2, "empty");
+        endGame("", 2, 2, "empty");
+        endGame("", 3, 2, "empty");
+        endGame("", 4, 2, "empty");
 
-                if(i === 2 && j === 1){
-                    endGame("O", i, j, "correct");
-                }
+        endGame("P", 0, 3, "correct");
+        endGame("L", 1, 3, "correct");
+        endGame("A", 2, 3, "correct");
+        endGame("Y", 3, 3, "correct");
+        endGame("", 4, 3, "empty");
 
-                if(i === 3 && j === 1){
-                    endGame("N", i, j, "correct");
-                }
+        endGame("A", 0, 4, "correct");
+        endGame("G", 1, 4, "correct");
+        endGame("A", 2, 4, "correct");
+        endGame("I", 3, 4, "correct");
+        endGame("N", 4, 4, "correct");
 
-                if(i === 4 && j === 1){
-                    endGame("!", i, j, "correct");
-                }
+        endGame("", 0, 5, "empty");
+        endGame("", 1, 5, "opt");
+        endGame("", 2, 5, "empty");
+        endGame("", 3, 5, "opt2");
+        endGame("", 4, 5, "empty");
+    }, 700);
 
-                
-                if(i === 4 && j === 2){
-                    endGame("", i, j, "empty");
-                }
+}
 
-                if(i === 0 && j === 2){
-                    endGame("", i, j, "empty");
-                }
+function youLose(){
+    setTimeout(() =>{
+        endGame("Y", 0, 0, "wrong");
+        endGame("O", 1, 0, "wrong");
+        endGame("U", 2, 0, "wrong");
+        endGame("", 3, 0, "empty");
+        endGame("", 4, 0, "empty");
 
-                if(i === 1 && j === 2){
-                    endGame("", i, j, "empty");
-                }
+        endGame("", 0, 1, "empty");
+        endGame("L", 1, 1, "wrong");
+        endGame("O", 2, 1, "wrong");
+        endGame("S", 3, 1, "wrong");
+        endGame("E", 4, 1, "wrong");
 
-                if(i === 2 && j === 2){
-                    endGame("", i, j, "empty");
-                }
+        endGame("", 0, 2, "empty");
+        endGame("", 1, 2, "empty");
+        endGame("", 2, 2, "empty");
+        endGame("", 3, 2, "empty");
+        endGame("", 4, 2, "empty");
 
-                if(i === 3 && j === 2){
-                    endGame("", i, j, "empty");
-                }
+        endGame("P", 0, 3, "correct");
+        endGame("L", 1, 3, "correct");
+        endGame("A", 2, 3, "correct");
+        endGame("Y", 3, 3, "correct");
+        endGame("", 4, 3, "empty");
 
-                if(i === 4 && j === 2){
-                    endGame("", i, j, "empty");
-                }
-
-                if(i === 0 && j === 3){
-                    endGame("P", i, j, "correct");
-                }
-
-                if(i === 1 && j === 3){
-                    endGame("L", i, j, "correct");
-                }
-
-                if(i === 2 && j === 3){
-                    endGame("A", i, j, "correct");
-                }
-
-                if(i === 3 && j === 3){
-                    endGame("Y", i, j, "correct");
-                }
-
-                if(i === 4 && j === 3){
-                    endGame("", i, j, "empty");
-                }
-
-
-                if(i === 0 && j === 4){
-                    endGame("A", i, j, "correct");
-                }
-
-                if(i === 1 && j === 4){
-                    endGame("G", i, j, "correct");
-                }
-
-                if(i === 2 && j === 4){
-                    endGame("A", i, j, "correct");
-                }
-
-                if(i === 3 && j === 4){
-                    endGame("I", i, j, "correct");
-                }
-
-                if(i === 4 && j === 4){
-                    endGame("N", i, j, "correct");
-                }
-
-                if(i === 0 && j === 5){
-                    endGame("", i, j, "empty");
-                }
-
-                if(i === 1 && j === 5){
-                    endGame("", i, j, "opt");
-                }
-
-                if(i === 2 && j === 5){
-                    endGame("", i, j, "empty");
-                }
-
-                if(i === 3 && j === 5){
-                    endGame("", i, j, "opt2");
-                }
-
-                if(i === 4 && j === 5){
-                    endGame("", i, j, "empty");
-                }
-            }
-        }              
+        endGame("A", 0, 4, "correct");
+        endGame("G", 1, 4, "correct");
+        endGame("A", 2, 4, "correct");
+        endGame("I", 3, 4, "correct");
+        endGame("N", 4, 4, "correct");
+        
+        endGame("", 0, 5, "empty");
+        endGame("", 1, 5, "opt");
+        endGame("", 2, 5, "empty");
+        endGame("", 3, 5, "opt2");
+        endGame("", 4, 5, "empty");
     }, 700);
 
 }
@@ -446,11 +407,13 @@ function removeAnnounce(){
 function mute(){
     const mute = document.getElementById("mute")
     mute.style.visibility = "visible";
+    sound = false;
 }
 
 function unmute(){
     const unmute = document.getElementById("mute");
     unmute.style.visibility = "hidden";
+    sound = true;
 }
 
 function createNewWordle(){
@@ -459,33 +422,46 @@ function createNewWordle(){
     document.getElementById("newWordle").style.visibility = "visible";
 }
 
-function cancelNewWordle(){
+document.getElementById("word").addEventListener("change", (e) => {
+    const notAWord = document.getElementById("noWord");
+    if(notAWord.length === 5 && notWord){
+        notAWord.style.visibility = "visible";
+    }else{
+        notAWord.style.visibility = "hidden";
+    }
+});
+
+function hide(){
     document.getElementById("shader").style.visibility = "hidden";
     document.getElementById("newWordle").style.visibility = "hidden";
+    document.getElementById("settings").style.visibility = "hidden";
     inGame = true;
 }
 
 function check(){
-    const notAWord = document.getElementById("noWord");
-    notAWord.style.visibility = "hidden";
     const newWord = document.getElementById("word");
     const word = newWord.value.toLowerCase();
     if(word.length === 5){
         if(WORDS.includes(word)){
-            restart(word);
-            cancelNewWordle();
+            restart(word.toUpperCase());
+            hide();
+            notWord = false;
         }else{
-            notAWord.style.visibility = "visible";
+            notWord = true;
         }
     }
 }
 
 function restart(word){
+    if(language === "portuguese"){
+        word = PALAVRAS[Math.floor(Math.random() * PALAVRAS.length)].toUpperCase();
+    }
     for(let i = 0; i <= stats.currentRow; i++){
         for(let j = 0; j < 5; j++){
             const box = document.getElementById(`box${i}${j}`);
-            if (box.textContent === "")
+            if (box.textContent === ""){
                 break;
+            }
             const letter = box.textContent;
             const virtualKeyboard = document.getElementById(letter.toLowerCase());
             virtualKeyboard.classList.remove("wrong");
@@ -503,14 +479,60 @@ function restart(word){
         }
     }    
     
+    hintLetter = Math.floor(Math.random() * 5);
     stats.currentCol = 0;
     stats.currentRow = 0;
-    
-    stats.secret = word.toUpperCase();
+    stats.secret = word;
+    inGame = true;
     console.log(stats.secret);  
 }
 
+function showLanguages(){
+    document.getElementById("language").style.visibility = "visible";
+}
+
+function hideLanguages(){
+    document.getElementById("language").style.visibility = "hidden";
+}
+
 function changePortuguese(){
-    language = "portuguese";
-    restart(restart(PALAVRAS[Math.floor(Math.random() * PALAVRAS.length)].toUpperCase()));
+    document.getElementById("bla").textContent = "Cria um novo jogo com uma palavra com 5 letras que queiras para desafiar um teu amigo.";
+    document.getElementById("bla2").textContent = "Aqui pode alterar o modo de jogo para numbrele, asteroider...";
+    document.getElementById("portugues").style.backgroundColor = "#538D4E";
+    document.getElementById("english").style.backgroundColor = "#474747";
+    let L = document.getElementById("L");
+    let c = document.getElementById("ç");
+
+    L.style.visibility = "visible";
+    c.style.visibility = "visible";
+
+    
+    if(language === "english"){
+        language = "portuguese";
+        restart();
+    }
+}
+
+function changeEnglish(){
+    document.getElementById("bla").textContent = "Create a new game with a word with 5 letters that you want to challenge a friend.";
+    document.getElementById("english").style.backgroundColor = "#538D4E";
+    document.getElementById("portugues").style.backgroundColor = "#474747";
+    if(language === "portuguese"){
+        language = "english";
+        restart(WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase());
+    }
+}
+
+function settings(){
+    inGame = false;
+    document.getElementById("shader").style.visibility = "visible";
+    document.getElementById("settings").style.visibility = "visible";
+}
+
+function info1(){
+    document.getElementById("bla").style.visibility = "visible";
+}
+
+function info1hide(){
+    document.getElementById("bla").style.visibility = "hidden";
 }

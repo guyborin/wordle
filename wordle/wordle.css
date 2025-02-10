@@ -100,6 +100,17 @@ body, html {
    align-content: center;
 }
 
+#ç{
+   position: absolute;
+   left: 45px;
+}
+
+#L{
+   position: fixed;
+   left: 30px;
+   top: 190px;
+}
+
 #del{
    background-color: #3a3a3c;
    border: none;
@@ -218,36 +229,29 @@ body, html {
    font-weight: 700;
    font-size: 35px;
    color: #FFFFFF;
+   width: 35px;
+   height: 35px;
+   padding: 5px;
+   margin-right: 5px;
+}
+
+#logo{
    width: 50px;
    height: 50px;
-   margin-right: 5px;
-   width: 52px;
-   height: 52px;
 }
 
-#title-W{
+#empty{
    background: #5C5656;
 }
 
-#title-O{
+#correct{
    background: #538D4E;
 }
 
-#title-R{
+#wrong{
    background: #B59F3B;
 }
 
-#title-D{
-   background: #538D4E;
-}
-
-#title-L{
-   background: #5C5656;
-}
-
-#title-E{
-   background: #B59F3B;
-}
 
 #top-bar{
    position:absolute;
@@ -263,7 +267,8 @@ body, html {
 
 #language{
    position: absolute;
-   left:90%;
+   width: 50%;
+   background-color: #474747;
 }
 
 #options{
@@ -275,10 +280,23 @@ body, html {
    padding: 10px;
    right: 95%;
    background-color:#3a3a3c;
-
 }
 
 #options:hover{
+   background-color:#474747;
+}
+
+#profile{
+   position: absolute;
+   border-radius: 14px;
+   width: 35px;
+   height: 35px;
+   padding: 10px;
+   left: 95%;
+   background-color: #3a3a3c;
+}
+
+#profile:hover{
    background-color:#474747;
 }
 
@@ -328,42 +346,32 @@ body, html {
    font-family: Montserrat, 'Open Sans', sans-serif;
 }
 
-#leaderboard{
-   display: flex;
-   height: 185px;
-   background-color: #784212;
+#bla{
+   border-radius: 10px;
    position: absolute;
-   top: 49%;
-   width: 53%;
-   left: 18%;
-   padding: 15px;
-   font-size: larger;
+   background-color: #806868;
+   border: solid #FFFFFF;
+   width: 210px;
+   top: 182px;
+   height: 80px;
+   left: 250px;
    color: white;
-   text-align: center;
-   border-radius: 8px;
-   font-family: Montserrat, 'Open Sans', sans-serif;
+   font-family: Arial, Helvetica, sans-serif;
 }
 
-#leaderboard p{
-   left: 59px;
-   height: 16px;
-   align-self: flex-start;
+#bla2{
+   border-radius: 10px;
    position: absolute;
-   top: 16px;
+   background-color: #806868;
+   border: solid #FFFFFF;
+   width: 210px;
+   top: 237px;
+   height: 96px;
+   left: 114px;
+   color: white;
+   font-family: Arial, Helvetica, sans-serif;
 }
 
-#leaderIcon{
-   position: relative;
-   width: 30px;
-   align-self: start;
-   background-color: #784212;
-   height: 30px;
-   padding: 10px;
-}
-
-#leaderIcon :hover{
-   background-color: #975317;
-}
 
 #CW{
    top: 39%;
@@ -393,6 +401,10 @@ body, html {
    margin-right: 15px;
 }
 
+#back01{
+   margin-left: 15px;
+}
+
 #create{
    position: absolute;
    top: 29%;
@@ -401,8 +413,8 @@ body, html {
 #rules{
    padding: 5px 79px;
    position: absolute;
-   top: 83%;
-   width: 10%;
+   top: 49%;
+   width: 9%;
    height: 40px;
 }
 
@@ -421,7 +433,7 @@ body, html {
 #gameMode{
    position: absolute;
    top: 39%;
-   left: 41%;
+   width: 55.5%;
 }
 
 #btn01{
@@ -448,6 +460,32 @@ body, html {
 
 @keyframes rotate {
    100%{transform:rotate(360deg);}
+}
+
+#lang{
+   position: absolute;
+   width: 28px;
+   border-radius: 8px;
+   right: 54px;
+   height: 28px;
+   top: 128px;
+   margin-left: 15px;
+   padding: 11px;
+   margin-bottom: 10px;
+}
+
+#lang:hover{
+   animation:0.5s rotate;
+}
+
+#uk{
+   width: 25px;
+   height: 25px;
+}
+
+#pt{
+   width: 25px;
+   height: 25px;
 }
 
 #unmute{
@@ -524,4 +562,86 @@ body, html {
 
 #newWordle button:hover{
    background-color: #d3d3d3;
+}
+
+#settings{
+   padding: 20px 43px;
+   text-align: center;
+   position: absolute;
+   bottom: 10%;
+   left: 35.4%;
+   height: 530px;
+   width: 380px;
+   background-color: #646464;
+   border-radius: 25px;
+   visibility: hidden;
+}
+
+#settings-title{
+   color: white;
+   font-family: Montserrat, 'Open Sans', sans-serif;
+   font-size: 30px;
+}
+
+#theme{
+   position: relative;
+   left: -151px;
+   top: 17px;
+   color: white;
+   font-family: Montserrat, 'Open Sans', sans-serif;
+   font-size: 20px;
+}
+
+.theme {
+   position: relative;
+   left: -63px;
+   top: -35px;
+   background-color: #3a3a3c;
+   border-radius: 10px;
+   height: 30px;
+}
+
+
+#light{
+   padding: 5px;
+}
+
+#dark{
+   padding: 5px 9px;
+}
+
+#english{
+   display: flex;
+   position: relative;
+   border-top-left-radius: 15px;
+   border-bottom-left-radius: 15px;
+   width: 65px;
+   height: 45px;
+   left: -5px;
+   top: 22px;
+   background-color:#474747;
+   justify-content: center;
+   align-items: center;
+}
+
+#english:hover{
+   background-color:#525252;
+}
+
+#portugues{
+   display: flex;
+   position: relative;
+   border-top-right-radius: 15px;
+   border-bottom-right-radius: 15px;
+   width: 65px;
+   height: 45px;
+   left: 60px;
+   top: -23px;
+   background-color:#474747;
+   justify-content: center;
+   align-items: center;
+}
+
+#portugues:hover{
+   background-color:#525252;
 }
