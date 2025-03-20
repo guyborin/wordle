@@ -17,7 +17,7 @@ const PALAVRAS = ["sagaz","amago","negro","termo","exito","mexer","nobre","senso
     "vemos","arduo","fonte","exato","marco","ponto","igual","labor","feixe","amplo","terno","lavra","remir","senao","cauda","hiato","debil",
     "capaz","tanto","gesto","otica","relva","inata","ambos","varao","jovem","imune","tenra","ciclo","vacuo","toada","sonsa","coçar","apoio",
     "raiva","caçar","velar","vimos","pouco","chuva","algum","serie","xeque","farao","horda","fusao","leito","feito","advem","entre","coesa",
-    "sente","probo","doido","carro","minha","cruel","frase","trama","anuir","torço","verso","brisa","impar","rigor","chata","lazer","botar",
+    "sente","probo","carro","minha","cruel","frase","trama","anuir","torço","verso","brisa","impar","rigor","chata","lazer","botar","copar",
     "massa","blase","prece","maior","sorte","pegar","dorso","signo","seita","fauna","moçao","preso","covil","credo","furor","morar","livro",
     "casto","flora","vetor","adeus","liame","comer","docil","plano","peste","senda","faina","ambas","ocaso","houve","nunca","pecha","saiba",
     "praia","arido","alias","setor","agora","manha","peixe","ardor","virus","meses","mudar","visse","salvo","parte","rezar","antro","beata",
@@ -29,17 +29,17 @@ const PALAVRAS = ["sagaz","amago","negro","termo","exito","mexer","nobre","senso
     "ligar","praga","venal","certa","quota","logro","nosso","magia","dessa","fixar","bonus","apego","nivel","oasis","afora","longe","coito",
     "pompa","sumir","mente","messe","soldo","nodoa","tocar","alado","caixa","jirau","perda","lidar","tinha","parca","livre","sexta","fraco",
     "verve","lindo","apelo","vezes","glosa","solto","firme","grave","porta","bater","opaco","virao","faixa","turva","sabia","astro","salve",
-    "doido","canon","abriu","trupe","irmao","fenda","exijo","navio","elite","grata","pardo","supra","atual","besta","parva","autor","deixa",
+    "canon","abriu","trupe","irmao","fenda","exijo","navio","elite","grata","pardo","supra","atual","besta","parva","autor","deixa","topas",
     "alçar","viria","pique","junco","curso","bicho","cioso","ficha","douto","etico","macio","reses","bioma","pagao","abuso","calda","cousa",
     "desta","posto","judeu","radio","caber","menos","locus","aluno","chato","verba","video","culpa","retem","supor","zelar","super","prive",
-    "extra","drops","gosto","molho","calao","torso","suave","lapis","vosso","baixo","advir","agudo","vinha","combo","igneo","asilo",
-    "ruina","facho","orfao","podio","turma","peito","sitio","traço","turvo","passa","estio","piada","louça","pisar","pilar","chama",
+    "extra","drops","gosto","molho","calao","torso","suave","lapis","vosso","baixo","advir","agudo","vinha","combo","igneo","asilo","mafia",
+    "ruina","facho","orfao","podio","turma","peito","sitio","traço","turvo","passa","estio","piada","louça","pisar","pilar","chama","cacau",
     "brabo","ereto","avida","amena","mosto","forem","mesma","finda","refem","meigo","museu","acola","local","pareo","metie","poeta","facto",
-    "rouca","surja","tento","autos","lasso","optar","medir","teste","rumor","poema","coral","paira","drama","geral","folga","busca",
+    "rouca","surja","tento","autos","lasso","optar","medir","teste","rumor","poema","coral","paira","drama","geral","folga","busca","rugir",
     "cocho","aviso","clima","hobby","feudo","urgia","boato","idoso","clean","calmo","rubro","cetro","pacto","feroz","tacha","tetra","amiga",
     "ateia","movel","monge","crime","açude","liçao","golpe","ponha","daqui","carta","ebano","ecoar","casar","plumo","riste","cacho","monte",
     "volta","verde","artur","vigia","aroma","corso","falha","saldo","fazia","manga","bença","briga","itens","conto","pasmo","vetar","letal",
-    "hoste","pedra","tribo","grama","escol","rival","forum","tarde","troça","penta","chefe","unica","manga","roupa","sucia","venha",
+    "hoste","pedra","tribo","grama","escol","rival","forum","tarde","troça","penta","chefe","unica","manga","roupa","sucia","venha","balir",
     "civil","natal","fruto","sosia","uteis","plebe","amada","plaga","vento","cover","lesse","sarau","ornar","cargo","nuvem","atimo","pinho",
     "finjo","orgao","macro","virar","axila","areia","arado","stand","vazao","tchau","jogar","berro","jejum","magna","seixo","farta","fosso",
     "beijo","catre","nesse","tiver","giria","troca","legua","pedro","perto","midia","varoa","traje","deste","inter","bruta","tiçao","bruto",
@@ -57,7 +57,7 @@ const PALAVRAS = ["sagaz","amago","negro","termo","exito","mexer","nobre","senso
     "farto","torna","demao","diabo","forro","ousar","valer","pagar","fugiu","pluma","sigla","sexto","bruxa","sabia","canil","xampu","reler",
     "gueto","repor","fatuo","choça","miope","bugre","corar","vario","lento","cardo","hifen","custo","corte","mania","pular","tumba","versa",
     "racio","nesga","voila","penca","modal","ferir","sadio","socio","sugar","harem","focar","digna","ceifa","patio","usual","colar","furar",
-    "loiça","perca","porco","chupa","funda","cusca","nadar","pilha","foice","solar","fusco","calar","girar","rodar","feder",//parei no meio da proxiamlinha
+    "loiça","perca","porco","chupa","funda","cusca","nadar","pilha","foice","solar","fusco","calar","girar","rodar","feder","amora","horta",
     "sarda","banir","mirar","clire","panda","lunar","filme","feira","horas","baile","poros","porto","salsa","barco","pente","abade","abalo",
     "abate","pudim","abono","actor","adega","somar","peças","vezes","sarar","natas","matas","rolha","vinho","pinha","pirar","papar","cabra",
     "garfo","gozar","afiar","pulso","manta","madre","praça","santa","lista","disco","penha","penol","raçao","raiar","ralho","galho","ranho",
@@ -72,179 +72,14 @@ const PALAVRAS = ["sagaz","amago","negro","termo","exito","mexer","nobre","senso
     "beber","idade","rumar","zinco","zonzo","zebra","tacho","tarte","tasca","tecla","telha","tenda","tocha","touca","tufao","urina","venda",
     "touro","trevo","trigo","trico","prato","verme","botao","xisto","talco","ultra","gordo","magro","medio","errar","pança","litro","dieta",
     "carie","polpa","abeto","aceno","adubo","agito","azedo","baeta","basta","bizar","bloco","cravo","curar","polar","bulha","globo","pesca",
-    "casca","caspa","limao"
-    /* 
-    acord
-    alcar
-    apito
-    argil
-    arido
-    
-    bento
-    blusa
-    bonde
-    brasa
-    brejo
-    broca
-    caira
-    cansa
-    casca
-    cavar
-    ceder
-    celha
-    cerca
-    cetro
-    chama
-    chave
-    chave
-    cheio
-    choca
-    chuva
-    circo
-    claro
-    claro
-    claro
-    clima
-    cobro
-    comer
-    conto
-    copai
-    copar
-    copas
-    corda
-    corto
-    couro
-    cozer
-    cravo
-    credo
-    criar
-    curto
-    danar
-    debru
-    decer
-    decor
-    deixa
-    demor
-    dente
-    dentro
-    doar
-    dobas
-    dobro
-    doçar
-    doido
-    ecoar
-    educo
-    empir
-    escal
-    esqui
-    faixa
-    falar
-    fardo
-    ferir
-    feste
-    ficar
-    fixar
-    focar
-    foice
-    fraco
-    frego
-    fugir
-    fumar
-    fundo
-    funil
-    gabar
-    galho
-    garra
-    gasto
-    girar
-    gosto
-    gotas
-    grato
-    gripe
-    gruta
-    haver
-    hotel
-    jogar
-    jovem
-    junto
-    jurar
-    lavar
-    leque
-    letal
-    levar
-    licor
-    lidar
-    limar
-    livrar
-    livro
-    lixar
-    local
-    lombo
-    lugar
-    lutar
-    luxar
-    luxor
-    mando
-    manja
-    mapas
-    marca
-    medal
-    mente
-    meues
-    moral
-    mover
-    mudar
-    mundo
-    nadar
-    nobre
-    norma
-    notar
-    olhar
-    outro
-    Parar
-    Pardo
-    Passa
-    Pegar
-    Penso
-    Pente
-    Perda
-    Pesos
-    Picar
-    Pinga
-    Plantar
-    Poeta
-    Prosa
-    Pulsar
-    Qual
-    Queda
-    Quimao
-    Raro
-    Renda
-    Revem
-    Rindo
-    Rodas
-    Rolar
-    Romar
-    Rotar
-    Sacar
-    Safar
-    Safra
-    Saltar
-    Seguir
-    Senda
-    Sentar
-    Sismo
-    Solto
-    Somar
-    Tacho
-    Tacos
-    Tentar
-    Terno
-    Terra
-    Tocar
-    Topas
-    Toque
-    Troco
-    Uivar
-    Usar
-    Varia */];
+    "casca","caspa","limao","acord","apito","argil","bento","blusa","bonde","brasa","brejo","broca","caira","cansa","celha","circo","movil",
+    "copas","debru","decer","decor","dobas","educo","empir","escal","esqui","feste","frego","funil","revem","romar","rotar","sobro","sobre",
+    "sobra","monge","pulso","dente","pulga","cinza","unido","pulir","afear","arear","arfar","bipar","bisar","brear","bufar","caiar","cevar",
+    "chiar","cocar","cotar","dedar","dobar","dopar","dosar","dotar","ecoar","eivar","fanar","fixar","frear","fuçar","bolar","buzir","ditar",
+    "galar","gamar","gomar","gorar","idear","inçar","iriar","laxar","libar","limar","lixar","locar","lotar","luxar","manar","maçar","ilhar",
+    "melar","mixar","mofar","nanar","nevar","obrar","olear","optar","orlar","ornar","orçar","pejar","pifar","posar","prear","raiar","ralar",
+    "rapar","rasar","rifar","ripar","rojar","roçar","rufar","sanar","sapar","sarar","sedar","segar","selar","socar","solar","somar","sovar",
+    "sujar","tacar","talar","tarar","taxar","tesar","torar","tosar","troar","tufar","uivar","unhar","untar","urrar","vaiar","vazar","vedar",
+    "vexar","visar","vogar","votar","zerar","zomar","zunir","zuzir","zuzar","zumir","zumar","zulir","zufar","zorar","zizar","arder","darar",
+    "fobia","fotar","gafar","gafir","gafur","lavor","laxar","laxir","laxur"
+];

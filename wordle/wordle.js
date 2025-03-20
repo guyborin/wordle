@@ -1,18 +1,42 @@
-let inGame = true;
+let inGame = false;
 let action = 0;
+let actionShop = 0;
+let actionPass = 0;
+let actionPodium = 0;
+let rightBar = 0;
+let langVisibility = 0;
 let language = "english";
 let sound = true;
-let hintLetter = Math.floor(Math.random() * 5);
 let notWord = false;
+let usedLetters = [];
+let hammerN = 0;
+let changeTime = false
+let mode = "easy";
+let roundMode = "easy";
+let rightGuesses = [];
+let guesses = 0;
+let hintN = false;
+
+let timer = {
+    seconds: 0,
+    decoseconds: 0,
+    minutes: 0,
+    decominutes: 0,
+}
 
 const stats = {
-    secret:WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase(),
+    secret:WORDS[Math.floor(Math.random() * WORDS.length + 1)].toUpperCase(),
     grid: Array(6)
         .fill()
         .map(() => Array(5).fill("")),
     currentRow: 0,
     currentCol: 0,
 };
+
+const game = document.getElementById("wrap");
+drawGrid(game);
+
+changeEnglish();
 
 function drawBox(container, row, column, letter = ""){
     const box = document.createElement("div");
@@ -47,24 +71,35 @@ function options(){
     }else if(action === 1){
         leftBarApperDesaper.classList.remove("in");
         leftBarApperDesaper.classList.add("out");
+        document.getElementById("language").style.visibility = "hidden";
 
         action = 0;
     }
 }
 
 function start(){
-    const game = document.getElementById("wrap");
-    drawGrid(game);
-
+    roundMode = mode
+    document.getElementById("restartBack").style.visibility = "visible";
+    document.getElementById("restart").style.visibility = "visible";
     keyboard();
-    changeEnglish();
+    changeTime = true;
+    inGame = true;
     console.log(stats.secret)
 }
 
-start();
+function backgroundR(){
+    document.getElementById("restartBack").style.backgroundColor = "#474747";
+    document.getElementById("restart").classList.add("ro");
+    setTimeout(() => {
+        document.getElementById("restart").classList.remove("ro");
+    }, 500)
+}
+
+function RbackgroundR(){
+    document.getElementById("restartBack").style.backgroundColor = "#2f2f30";
+}
 
 function updateGrid(){
-    
     for(let i = 0; i < stats.grid.length; i++){
         for(let j = 0; j < stats.grid[i].length; j++){
             const box = document.getElementById(`box${i}${j}`);
@@ -74,8 +109,30 @@ function updateGrid(){
 }
 
 function virtualKeyboardClick(e){
-    addLetter(e);
-    updateGrid();
+    if(inGame === false) return;
+    if(hintN){
+        let virtualKeyboard = document.getElementById(e);
+        let keys = document.getElementsByClassName("keys");
+        for(let i = 0; i < keys.length; i++){
+            keys[i].style.fontWeight = "normal";
+        }
+        virtualKeyboard.classList.add("animated");
+        if(stats.secret.includes(e.toUpperCase())){
+            virtualKeyboard.classList.add("wrong");
+        }else{
+            virtualKeyboard.classList.add("empty");
+        }
+        setTimeout(() =>{
+            virtualKeyboard.classList.remove("animated");
+        }, 500);
+        if(!usedLetters.includes(e)){
+            usedLetters.push(e);
+        }
+        hintN = false;
+    }else{
+        addLetter(e);
+        updateGrid();
+    }
 }
 
 function deleteVirtual(){
@@ -107,22 +164,36 @@ function deleteAll(){
     updateGrid();
 }
 
-function hint(){
+function hammer(){
     if(inGame === false) return;
-    for(let i = stats.currentRow; i <= 5; i++){
-        const box = document.getElementById(`box${i}${hintLetter}`);
-        box.textContent = stats.secret[hintLetter];
-        box.style.color = "#538d4e";
-    }
+    document.getElementById("arrow").style.visibility = "visible";
+    document.getElementById("annoncement").style.visibility = "hidden";
 }
 
-function hideHint(){
+function hint(){
     if(inGame === false) return;
-    for(let i = stats.currentRow; i <= 5; i++){
-        const box = document.getElementById(`box${i}${hintLetter}`);
-        box.textContent = "";
-        box.style.color = "white";
+    let keys = document.getElementsByClassName("keys");
+    for(let i = 0; i < keys.length; i++){
+        keys[i].style.fontWeight = "bold";
     }
+    hintN = true;
+}
+
+function line(line){
+    for(let i = stats.currentRow; i <= 5; i++){
+        const box = document.getElementById(`box${i}${line}`);
+        box.classList.add("rotate");
+        setTimeout(function(){
+            box.textContent = stats.secret[line];
+            stats.grid[i][line] = stats.secret[line];
+            box.style.color = "#538d4e";
+        }, 250)
+
+        setTimeout(function(){
+            box.classList.remove("rotate")
+        }, 500)
+    }
+    document.getElementById("arrow").style.visibility = "hidden";
 }
 
 function keyboard(){
@@ -132,7 +203,28 @@ function keyboard(){
             if(key === "Enter"){
                 if(stats.currentCol === 5){
                     const word = getCurrentWord();
-                    if(isWordValid(word)){
+                    if(roundMode === "mid" && rightGuesses.length > 0 && isWordValid(word)){
+                        for(let i = 0; i <= rightGuesses.length/2; i++){
+                            if(word[rightGuesses[i * 2]] === stats.secret[rightGuesses[i * 2]]){
+                                guesses++;
+                            }
+                        }
+
+                        if(guesses === rightGuesses.length/2){
+                            revealWord(word);
+                            stats.currentRow++;
+                            stats.currentCol = 0;
+                            guesses = 0;
+                        }else{
+                            announce("In this dificulty you need to write all right words in place");
+                            guesses = 0;
+                        }
+
+                    }else if(roundMode === "mid" && rightGuesses.length === 0 && isWordValid(word)){
+                        revealWord(word);
+                        stats.currentRow++;
+                        stats.currentCol = 0;
+                    }else if(roundMode === "easy" && isWordValid(word)){
                         revealWord(word);
                         stats.currentRow++;
                         stats.currentCol = 0;
@@ -161,11 +253,12 @@ function getCurrentWord() {
 }
 
 function isWordValid(word) {
-    if(language === "portuguese"){
+if(language === "portuguese"){
         return PALAVRAS.includes(word);
     }else{
         return WORDS.includes(word);
     }
+
 
 }
 
@@ -180,6 +273,9 @@ function revealWord(guess){
     for(let i = 0; i < 5; i++){
         const box = document.getElementById(`box${row}${i}`);
         const letter = box.textContent;
+        if(!usedLetters.includes(letter)){
+            usedLetters.push(letter);
+        }
         const virtualKeyboard = document.getElementById(letter.toLowerCase());
         if(sound){
             setTimeout(() =>{
@@ -205,6 +301,7 @@ function revealWord(guess){
             if(letter === stats.secret[i]){
                 box.style.borderColor = "#538d4e";
                 box.classList.add("correct");
+                rightGuesses.push(letter, i);
                 virtualKeyboard.classList.add("correct");
             }else if(stats.secret.includes(letter)){
                 box.style.borderColor = "#b59f3b";
@@ -248,12 +345,12 @@ function isLetter(key){
 }
 
 function addLetter(letter){
-    console.log(stats.currentRow,stats.currentCol);
-    if(stats.currentCol === 5) return;
+    if(stats.currentCol === 5 || !inGame) return;
 
     console.log(stats.currentRow,stats.currentCol);
     stats.grid[stats.currentRow][stats.currentCol] = letter;
     document.getElementById(`box${stats.currentRow}${stats.currentCol}`).style.borderColor = "#905f70";
+    document.getElementById(`box${stats.currentRow}${stats.currentCol}`).style.color = "white";
     stats.currentCol++;
 }
 
@@ -283,6 +380,63 @@ function announce(text){
 
 }
 
+setInterval(() => {
+    if(changeTime && inGame){
+        if(timer.decominutes >= 5){
+            document.getElementById("decominutes").style.color = "red";
+            document.getElementById("minutes").style.color = "red";
+            document.getElementById("timeDivision").style.color = "red";
+            document.getElementById("decoseconds").style.color = "red";
+            document.getElementById("seconds").style.color = "red";
+
+            setTimeout(() => {
+                document.getElementById("decominutes").style.color = "white";
+                document.getElementById("minutes").style.color = "white";
+                document.getElementById("timeDivision").style.color = "white";
+                document.getElementById("decoseconds").style.color = "white";
+                document.getElementById("seconds").style.color = "white";
+            }, 500)
+        }
+
+        timer.seconds++;
+        if(timer.decominutes === 5 && timer.minutes === 9 && timer.decoseconds === 5 && timer.seconds === 10){
+
+            setTimeout(() => {
+                youLose();
+                document.getElementById("decominutes").textContent = timer.decominutes;
+                document.getElementById("minutes").textContent = timer.minutes;
+                document.getElementById("decoseconds").textContent = timer.decoseconds;
+                document.getElementById("seconds").textContent = timer.seconds;
+            }, 250)
+            timer.decominutes = 0;
+            timer.minutes = 0;
+            timer.decoseconds = 0;
+            timer.seconds = 0;
+        }
+
+        if(timer.minutes === 9 && timer.decoseconds === 5 && timer.seconds === 10){
+            timer.decominutes++;
+            timer.minutes = 0;
+            timer.decoseconds = 0;
+            timer.seconds = 0;
+        }else if(timer.decoseconds === 5 && timer.seconds === 10){
+            timer.minutes++;
+            timer.decoseconds = 0;
+            timer.seconds = 0;
+        }
+        
+        if(timer.seconds === 10){
+            timer.decoseconds++;
+            timer.seconds = 0;
+        }
+
+        document.getElementById("decominutes").textContent = timer.decominutes;
+        document.getElementById("minutes").textContent = timer.minutes;
+        document.getElementById("decoseconds").textContent = timer.decoseconds;
+        document.getElementById("seconds").textContent = timer.seconds;
+    }
+}, 1000)
+
 function youWin(){
     setTimeout(() =>{
         endGame("Y", 0, 0, "correct");
@@ -304,22 +458,22 @@ function youWin(){
         endGame("", 4, 2, "empty");
 
         endGame("P", 0, 3, "correct");
-        endGame("L", 1, 3, "correct");
-        endGame("A", 2, 3, "correct");
-        endGame("Y", 3, 3, "correct");
+        endGame("I", 1, 3, "correct");
+        endGame("C", 2, 3, "correct");
+        endGame("K", 3, 3, "correct");
         endGame("", 4, 3, "empty");
 
-        endGame("A", 0, 4, "correct");
-        endGame("G", 1, 4, "correct");
-        endGame("A", 2, 4, "correct");
-        endGame("I", 3, 4, "correct");
-        endGame("N", 4, 4, "correct");
+        endGame("", 0, 4, "empty");
+        endGame("O", 1, 4, "correct");
+        endGame("N", 2, 4, "correct");
+        endGame("E", 3, 4, "correct");
+        endGame(":", 4, 4, "correct");
 
-        endGame("", 0, 5, "empty");
-        endGame("", 1, 5, "opt");
-        endGame("", 2, 5, "empty");
-        endGame("", 3, 5, "opt2");
-        endGame("", 4, 5, "empty");
+        endGame("", 0, 5, "gift1");
+        endGame("", 1, 5, "gift2");
+        endGame("", 2, 5, "gift3");
+        endGame("", 3, 5, "gift4");
+        endGame("", 4, 5, "gift5");
     }, 700);
 
 }
@@ -339,59 +493,105 @@ function youLose(){
         endGame("E", 4, 1, "wrong");
 
         endGame("", 0, 2, "empty");
-        endGame("", 1, 2, "empty");
-        endGame("", 2, 2, "empty");
-        endGame("", 3, 2, "empty");
+        endGame("T", 1, 2, "wrong");
+        endGame("H", 2, 2, "wrong");
+        endGame("E", 3, 2, "wrong");
         endGame("", 4, 2, "empty");
 
-        endGame("P", 0, 3, "correct");
-        endGame("L", 1, 3, "correct");
-        endGame("A", 2, 3, "correct");
-        endGame("Y", 3, 3, "correct");
-        endGame("", 4, 3, "empty");
+        endGame("", 0, 3, "empty");
+        endGame("W", 1, 3, "wrong");
+        endGame("O", 2, 3, "wrong");
+        endGame("R", 3, 3, "wrong");
+        endGame("D", 4, 3, "wrong");
 
-        endGame("A", 0, 4, "correct");
-        endGame("G", 1, 4, "correct");
-        endGame("A", 2, 4, "correct");
-        endGame("I", 3, 4, "correct");
-        endGame("N", 4, 4, "correct");
+        endGame("W", 0, 4, "wrong");
+        endGame("A", 1, 4, "wrong");
+        endGame("S", 2, 4, "wrong");
+        endGame(":", 3, 4, "wrong");
+        endGame("", 4, 4, "empty");
         
-        endGame("", 0, 5, "empty");
-        endGame("", 1, 5, "opt");
-        endGame("", 2, 5, "empty");
-        endGame("", 3, 5, "opt2");
-        endGame("", 4, 5, "empty");
+        endGame(stats.secret[0], 0, 5, "correct");
+        endGame(stats.secret[1], 1, 5, "correct");
+        endGame(stats.secret[2], 2, 5, "correct");
+        endGame(stats.secret[3], 3, 5, "correct");
+        endGame(stats.secret[4], 4, 5, "correct");
     }, 700);
 
 }
 
 function endGame(letter, boxI, boxJ, value){
+    changeTime = false;
     const box = document.getElementById(`box${boxJ}${boxI}`);
     const animation_duration = 500;
-    
-    setTimeout(() =>{    
+    setTimeout(() => {
+        box.textContent = "";
+        box.style.color = "white";
+        stats.grid[boxJ][boxI] = "";
+    }, ((boxI + 1) * animation_duration) / 4)
+
+
+
+
+    setTimeout(() =>{  
+        for(let i = 0; i < usedLetters.length; i++){
+            const virtualKeyboard = document.getElementById(usedLetters[i].toLowerCase());
+            virtualKeyboard.classList.remove("wrong");
+            virtualKeyboard.classList.remove("correct");
+            virtualKeyboard.classList.remove("empty");
+            virtualKeyboard.classList.remove("animated");
+        }
+
         box.classList.remove("correct");
         box.classList.remove("wrong");
         box.classList.remove("empty");
         box.style.borderColor = "#3a3a3c";
 
-        if(value === "opt"){
+        if(value === "gift1"){
+            let gift = document.getElementById("gift1");
             box.style.backgroundColor = "#fa7e44";
             box.style.borderColor = "#fa7e44";
-        }else if(value === "opt2"){
+            box.appendChild(gift);
+            gift.classList.remove("hidden")
+            gift.style.visibility = "visible";
+        }else if(value === "gift2"){
+            let gift = document.getElementById("gift2");
             box.style.backgroundColor = "#fa7e44";
             box.style.borderColor = "#fa7e44";
+            box.appendChild(gift);
+            gift.classList.remove("hidden")
+            gift.style.visibility = "visible";
+        }else if(value === "gift3"){
+            let gift = document.getElementById("gift3");
+            box.style.backgroundColor = "#fa7e44";
+            box.style.borderColor = "#fa7e44";
+            box.appendChild(gift);
+            gift.classList.remove("hidden")
+        }else if(value === "gift4"){
+            let gift = document.getElementById("gift4");
+            box.style.backgroundColor = "#fa7e44";
+            box.style.borderColor = "#fa7e44";
+            box.appendChild(gift);
+            gift.classList.remove("hidden")
+        }else if(value === "gift5"){
+            let gift = document.getElementById("gift5");
+            box.style.backgroundColor = "#fa7e44";
+            box.style.borderColor = "#fa7e44";
+            box.appendChild(gift);
+            gift.classList.remove("hidden")
         }else if(value === "correct"){
             box.classList.add("correct");
             box.style.borderColor = "#538d4e";
+            box.textContent = letter;
         }else if(value === "wrong"){
             box.classList.add("wrong");
             box.style.borderColor = "#b59f3b";
+            box.textContent = letter;
         }else{
             box.classList.add("empty");
             box.style.borderColor = "#5c5656";
+            box.textContent = letter;
         }
-        box.textContent = letter;
+        
     }, ((boxI + 1) * animation_duration) / 2);
 
     box.classList.add("animated");
@@ -422,23 +622,14 @@ function createNewWordle(){
     document.getElementById("newWordle").style.visibility = "visible";
 }
 
-document.getElementById("word").addEventListener("change", (e) => {
-    const notAWord = document.getElementById("noWord");
-    if(notAWord.length === 5 && notWord){
-        notAWord.style.visibility = "visible";
-    }else{
-        notAWord.style.visibility = "hidden";
-    }
-});
-
 function hide(){
     document.getElementById("shader").style.visibility = "hidden";
     document.getElementById("newWordle").style.visibility = "hidden";
-    document.getElementById("settings").style.visibility = "hidden";
     inGame = true;
 }
 
 function check(){
+    const notAWord = document.getElementById("noWord");
     const newWord = document.getElementById("word");
     const word = newWord.value.toLowerCase();
     if(word.length === 5){
@@ -446,67 +637,88 @@ function check(){
             restart(word.toUpperCase());
             hide();
             notWord = false;
+            notAWord.style.visibility = "hidden";
         }else{
             notWord = true;
+            notAWord.style.visibility = "visible";
         }
     }
 }
 
 function restart(word){
+    removeAnnounce();
+    roundMode = mode
     if(language === "portuguese"){
         word = PALAVRAS[Math.floor(Math.random() * PALAVRAS.length)].toUpperCase();
     }
-    for(let i = 0; i <= stats.currentRow; i++){
+
+    for(let i = 0; i < usedLetters.length; i++){
+        const virtualKeyboard = document.getElementById(usedLetters[i].toLowerCase());
+        virtualKeyboard.classList.remove("wrong");
+        virtualKeyboard.classList.remove("correct");
+        virtualKeyboard.classList.remove("empty");
+        virtualKeyboard.classList.remove("animated");
+    }
+
+    for(let i = 0; i < 6; i++){
         for(let j = 0; j < 5; j++){
             const box = document.getElementById(`box${i}${j}`);
-            if (box.textContent === ""){
-                break;
-            }
-            const letter = box.textContent;
-            const virtualKeyboard = document.getElementById(letter.toLowerCase());
-            virtualKeyboard.classList.remove("wrong");
-            virtualKeyboard.classList.remove("correct");
-            virtualKeyboard.classList.remove("empty");
-            virtualKeyboard.classList.remove("animated");
+            if (box.textContent)
+                box.textContent = "";
 
             box.classList.remove("wrong");
             box.classList.remove("correct");
             box.classList.remove("empty");
             box.classList.remove("animated");
             box.style.borderColor = "#3a3a3c";
+            box.style.backgroundColor = "";
             stats.grid[i][j] = "";
-            box.textContent = "";
         }
     }    
     
-    hintLetter = Math.floor(Math.random() * 5);
+    for(let i = 1; i <= 5; i++){
+        document.getElementById("gift" + i).style.visibility = "hidden";
+    }
+
     stats.currentCol = 0;
     stats.currentRow = 0;
     stats.secret = word;
-    inGame = true;
+    timer.decominutes = 0;
+    timer.minutes = 0;
+    timer.decoseconds = 0;
+    timer.seconds = 0;
+    document.getElementById("decominutes").textContent = timer.decominutes;
+    document.getElementById("minutes").textContent = timer.minutes;
+    document.getElementById("decoseconds").textContent = timer.decoseconds;
+    document.getElementById("seconds").textContent = timer.seconds;
+    setTimeout(() => {
+        changeTime = true;
+        inGame = true;
+    }, 2000)
     console.log(stats.secret);  
 }
 
-function showLanguages(){
-    document.getElementById("language").style.visibility = "visible";
-}
-
-function hideLanguages(){
-    document.getElementById("language").style.visibility = "hidden";
+function changeLanguages(){
+    if(langVisibility === 0){
+        document.getElementById("language").style.visibility = "visible";
+        langVisibility = 1
+    }else if(langVisibility === 1){
+        document.getElementById("language").style.visibility = "hidden";
+        langVisibility = 0
+    }
+    
 }
 
 function changePortuguese(){
-    document.getElementById("bla").textContent = "Cria um novo jogo com uma palavra com 5 letras que queiras para desafiar um teu amigo.";
-    document.getElementById("bla2").textContent = "Aqui pode alterar o modo de jogo para numbrele, asteroider...";
     document.getElementById("portugues").style.backgroundColor = "#538D4E";
     document.getElementById("english").style.backgroundColor = "#474747";
-    let L = document.getElementById("L");
     let c = document.getElementById("ç");
-
-    L.style.visibility = "visible";
-    c.style.visibility = "visible";
-
+    let blank = document.getElementById("bl");
     
+    c.style.visibility = "visible";
+    blank.classList.remove("blank");
+
+
     if(language === "english"){
         language = "portuguese";
         restart();
@@ -514,19 +726,18 @@ function changePortuguese(){
 }
 
 function changeEnglish(){
-    document.getElementById("bla").textContent = "Create a new game with a word with 5 letters that you want to challenge a friend.";
-    document.getElementById("english").style.backgroundColor = "#538D4E";
     document.getElementById("portugues").style.backgroundColor = "#474747";
+    document.getElementById("english").style.backgroundColor = "#538D4E"
+    let c = document.getElementById("ç");
+    let blank = document.getElementById("bl");
+
+    c.style.visibility = "hidden";
+    blank.classList.add("blank");
+
     if(language === "portuguese"){
         language = "english";
         restart(WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase());
     }
-}
-
-function settings(){
-    inGame = false;
-    document.getElementById("shader").style.visibility = "visible";
-    document.getElementById("settings").style.visibility = "visible";
 }
 
 function info1(){
@@ -535,4 +746,122 @@ function info1(){
 
 function info1hide(){
     document.getElementById("bla").style.visibility = "hidden";
+}
+
+function homePage(){
+    window.location.assign("../BrainStorm/BrainStorm.html")
+}
+
+function shopChange(){
+    let shop = document.getElementById("shop");
+    shop.classList.remove("init");
+    shop.classList.remove("appear");
+    shop.classList.remove("desapear");
+
+    if (actionShop === 1 && rightBar === 1){
+        shop.classList.add("desapear");
+        actionShop = 0;
+        rightBar = 0;
+    }else if(rightBar === 2){
+        let pass = document.getElementById("pass");
+        pass.classList.add("desapear");
+        actionPass = 0;
+        shop.classList.remove("desapear");
+        shop.classList.add("appear");
+        actionShop = 1;
+        rightBar = 1;
+    }else if(rightBar === 3){
+        let podium = document.getElementById("leaderboard");
+        podium.classList.add("desapear");
+        actionPodium = 0;
+        shop.classList.add("appear");
+        actionShop = 1;
+        rightBar = 1;
+    }else{
+        shop.classList.add("appear");
+        actionShop = 1;
+        rightBar = 1;
+    }
+}
+
+function passChange(){
+    let pass = document.getElementById("pass");
+    pass.classList.remove("init");
+    pass.classList.remove("appear");
+    pass.classList.remove("desapear");
+
+    if (actionPass === 1 && rightBar === 2){
+        pass.classList.add("desapear");
+        actionPass = 0;
+        rightBar = 0;
+    }else if(rightBar === 1){
+        let shop = document.getElementById("shop");
+        shop.classList.add("desapear");
+        actionShop = 0;
+        pass.classList.remove("desapear");
+        pass.classList.add("appear");
+        actionPass = 1;
+        rightBar = 2;
+    }else if(rightBar === 3){
+        let podium = document.getElementById("leaderboard");
+        podium.classList.add("desapear");
+        actionPodium = 0;
+        pass.classList.add("appear");
+        actionPass = 1;
+        rightBar = 2;
+    }else{
+        pass.classList.add("appear");
+        actionPass = 1;
+        rightBar = 2;
+    }
+    
+}
+
+function podiumChange(){
+    let podium = document.getElementById("leaderboard");
+    podium.classList.remove("init");
+    podium.classList.remove("appear");
+    podium.classList.remove("desapear");
+
+    if (actionPodium === 1 && rightBar === 3){
+        podium.classList.add("desapear");
+        actionPodium = 0;
+        rightBar = 0;
+    }else if(rightBar === 2){
+        let pass = document.getElementById("pass");
+        pass.classList.add("desapear");
+        actionPass = 0;
+        podium.classList.remove("desapear");
+        podium.classList.add("appear");
+        actionPodium = 1;
+        rightBar = 3;
+    }else if(rightBar === 1){
+        let shop = document.getElementById("shop");
+        shop.classList.add("desapear");
+        actionShop = 0;
+        podium.classList.add("appear");
+        actionPodium = 1;
+        rightBar = 3;
+    }else{
+        podium.classList.add("appear");
+        actionPodium = 1;
+        rightBar = 3;
+    }
+    
+}
+
+function midBattery(){
+    document.getElementById("midBattery").style.visibility = "visible";
+    mode = "mid";
+}
+
+function highBattery(){
+    document.getElementById("highBattery").style.visibility = "visible";
+    mode = "hard";
+}
+
+function lowBattery(){
+    document.getElementById("highBattery").style.visibility = "hidden";
+    document.getElementById("midBattery").style.visibility = "hidden";
+    mode = "easy";
 }

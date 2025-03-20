@@ -1,6 +1,8 @@
 body, html {
    margin:0;
    padding:0;
+   height: 98%;
+   width: 100%;
    background-color: #121213;
 }
 
@@ -10,6 +12,8 @@ body, html {
    grid-template-columns: repeat(5, auto);
    justify-content: center;
    position:relative;
+   width: 80%;
+   left: 10%;
    top: 125px;
 }
 
@@ -46,12 +50,76 @@ body, html {
    background-color: #538d4e;
 }
 
+.box.rotate{
+   animation: rotate 0.5s;
+}
+
+#arrow{
+   position: absolute;
+   top: 112px;
+   display: flex;
+   flex-direction: row;
+   left: calc(50% - 173px);
+   height: 50px;
+   width: 342px;
+   visibility: hidden;
+}
+
+.arrows{
+   margin: 0 4px;
+   width: 43px;
+   padding: 5px 10px;
+   height: 50px;
+   border-radius: 30px;
+}
+
+.arrows:hover{
+   background-color: #202020;
+}
+
+#gift1{
+   position: relative;
+   top: 3px;
+   width: 40px;
+}
+
+#gift2{
+   position: relative;
+   position: relative;
+   top: 3px;
+   width: 40px;
+}
+
+#gift3{
+   position: relative;
+   top: 3px;
+   width: 40px;
+}
+
+#gift4{
+   position: relative;
+   top: 3px;
+   width: 40px;
+}
+
+#gift5{
+   position: relative;
+   top: 3px;
+   width: 40px;
+}
+
+.hidden{
+   visibility:hidden;
+}
+
 #annoncement{
-   color:red;
+   color: red;
    font-family: Arial, Helvetica, sans-serif;
    position: relative;
-   top:120px;
+   top: 103px;
+   left: 10%;
    height: 20px;
+   width: 80%;
 }
 
 .animated{
@@ -70,6 +138,117 @@ body, html {
    100%{
       transform: scaleY(1);
    }
+}
+
+#gameOptions{
+   position: absolute;
+   left: calc(50% - 293px);
+   width: 57px;
+   height: 151px;
+   top: 79.6%;
+   text-align: start;
+   background-color: #2f2f30;
+   border-radius: 8px;
+}
+
+#play{
+   background-color: #2f2f30;
+   border: none;
+   margin-top: 6px;
+   margin-bottom: -14px;
+   margin-left: 5px;
+   border-radius: 8px;
+   width: 26px;
+   height: 28px;
+   padding: 6px 9px 6px 11px;
+   align-content: center;
+}
+
+#play:hover{
+   background-color: #474747;
+}
+
+#restartBack{
+   position: absolute;
+   top: 6px;
+   left: 5px;
+   background-color: #2f2f30;
+   border: none;
+   border-radius: 8px;
+   width: 26px;
+   height: 28px;
+   padding: 6px 9px 6px 11px;
+   align-content: center;
+   visibility: hidden;
+}
+
+#restart{
+   position: absolute;
+   top: 11px;
+   left: 15px;
+   border: none;
+   border-radius: 8px;
+   width: 26px;
+   height: 28px;
+   align-content: center;
+   visibility: hidden;
+}
+
+#restart.ro{
+   animation: rotate 0.5s;
+}
+
+#lowBattery{
+   position: absolute;
+   top: 54px;
+   left: 5px;
+   background-color: #2f2f30;
+   border: none;
+   border-radius: 8px;
+   width: 26px;
+   height: 24px;
+   padding: 8px 9px 8px 11px;
+   align-content: center;
+}
+
+#lowBattery:hover{
+   background-color: #474747;
+}
+
+#midBattery{
+   position: absolute;
+   top: 54px;
+   left: 5px;
+   background-color: #2f2f30;
+   border: none;
+   border-radius: 8px;
+   width: 26px;
+   height: 24px;
+   padding: 8px 9px 8px 11px;
+   align-content: center;
+   visibility: hidden;
+}
+
+#midBattery:hover{
+   background-color: #474747;
+}
+
+#highBattery{
+   position: absolute;
+   top: 54px;
+   left: 5px;
+   background-color: #2f2f30;
+   border: none;
+   border-radius: 8px;
+   width: 26px;
+   height: 24px;
+   padding: 8px 9px 8px 11px;
+   align-content: center;
+   visibility: hidden;
+}
+
+#highBattery:hover{
+   background-color: #474747;
 }
 
 .keys{
@@ -93,22 +272,21 @@ body, html {
 }
 
 #keyboard{
-   position:absolute;
-   top:79%;
-   width: 100%;
+   position: absolute;
+   top: 79%;
+   width: 60%;
+   height: 50px;
+   left: 20%;
    text-align: center;
    align-content: center;
 }
 
 #ç{
-   position: absolute;
-   left: 45px;
+   visibility: hidden;
 }
 
-#L{
-   position: fixed;
-   left: 30px;
-   top: 190px;
+.blank{
+   background-color: #252525;
 }
 
 #del{
@@ -156,19 +334,93 @@ body, html {
    background-color: #474747;
 }
 
-#hint{
-   background-color: #3a3a3c;
-   border: none;
-   margin-bottom: -14px;
+#helps{
+   position: absolute;
+   left: calc(50% + 235px);
+   width: 83px;
+   height: 150px;
+   top: 79.6%;
+   text-align: start;
+   background-color: #2f2f30;
    border-radius: 8px;
-   width: 22px;
+}
+
+#hint{
+   background-color: #2f2f30;
+   border: none;
+   margin-top: 6px;
+   margin-bottom: -14px;
+   margin-left: 5px;
+   border-radius: 8px;
+   width: 26px;
    height: 30px;
-   padding: 8px 10px;
+   padding: 5px 10px;
    align-content: center;
 }
 
 #hint:hover{
    background-color: #474747;
+}
+
+#hintValue{
+   color: #ffffff;
+   position: relative;
+   font-family: Arial, Helvetica, sans-serif;
+   left: 61px;
+   top: -140px;
+   font-size: 20px;
+}
+
+#chance{
+   background-color: #2f2f30;
+   border: none;
+   margin-top: 20px;
+   margin-bottom: -14px;
+   margin-left: 5px;
+   border-radius: 8px;
+   width: 26px;
+   height: 30px;
+   padding: 5px 10px;
+   align-content: center;
+}
+
+#chance:hover{
+   background-color: #474747;
+}
+
+#chanceValue{
+   color: #ffffff;
+   position: relative;
+   font-family: Arial, Helvetica, sans-serif;
+   left: 61px;
+   top: -134px;
+   font-size: 20px;
+}
+
+#hammer{
+   background-color: #2f2f30;
+   border: none;
+   margin-top: 20px;
+   margin-bottom: -14px;
+   margin-left: 5px;
+   border-radius: 8px;
+   width: 26px;
+   height: 30px;
+   padding: 5px 10px;
+   align-content: center;
+}
+
+#hammer:hover{
+   background-color: #474747;
+}
+
+#hammerValue{
+   color: #ffffff;
+   position: relative;
+   font-family: Arial, Helvetica, sans-serif;
+   left: 61px;
+   top: -127px;
+   font-size: 20px;
 }
 
 .keys.correct{
@@ -266,9 +518,30 @@ body, html {
 }
 
 #language{
+   display: flex;
+   flex-direction: column;
+   visibility: hidden;
    position: absolute;
-   width: 50%;
+   top: 183px;
+   left: 182px;
+   height: 130px;
+   width: 68px;
+   align-items: center;
+   justify-content: space-around;
+   border-radius: 9px;
    background-color: #474747;
+}
+
+@keyframes lang {
+   0%{
+      visibility: hidden;
+      height: 0px;
+   }
+
+   100%{
+      visibility: hidden;
+      height: 130px;
+   }
 }
 
 #options{
@@ -288,11 +561,11 @@ body, html {
 
 #profile{
    position: absolute;
-   border-radius: 14px;
+   border-radius: 10px;
    width: 35px;
    height: 35px;
    padding: 10px;
-   left: 95%;
+   right: 23px;
    background-color: #3a3a3c;
 }
 
@@ -300,12 +573,159 @@ body, html {
    background-color:#474747;
 }
 
+#right-bar{
+   position:absolute;
+   right:0px;
+   top:0px;
+   display: flex;
+   flex-direction: column-reverse;
+   align-items: center;
+   justify-content: space-around;
+   text-align: center;
+   width: 105px;
+   height:100%;
+   background-color:#2f2f30;
+}
+
+#shopIcon{
+   position: relative;
+   border-radius: 10px;
+   width: 35px;
+   height: 35px;
+   padding: 10px;
+   background-color: #2f2f30;
+}
+
+#passIcon:hover{
+   background-color:#474747;
+}
+
+#passIcon{
+   position: relative;
+   border-radius: 10px;
+   width: 35px;
+   height: 35px;
+   padding: 10px;
+   background-color: #2f2f30;
+}
+
+#shopIcon:hover{
+   background-color:#474747;
+}
+
+#podiumIcon{
+   position: relative;
+   border-radius: 10px;
+   width: 45px;
+   height: 45px;
+   padding: 5px;
+   background-color: #2f2f30;
+}
+
+#podiumIcon:hover{
+   background-color:#474747;
+}
+
+#shop{
+   padding: 43px;
+   text-align: center;
+   position:absolute;
+   bottom:10px;
+   height: 77%;
+   width: 210px;
+   background-color: #646464;
+   border-radius: 25px;
+   right: 120px;
+}
+
+#shop.appear{
+   animation: appear 2s;
+   opacity: 1;
+}
+
+#shop.desapear{
+   animation: desappear 2s;
+   opacity: 0;
+}
+
+#shop.init{
+   opacity: 0;
+}
+
+#pass{
+   padding: 43px;
+   text-align: center;
+   position:absolute;
+   bottom:10px;
+   height: 77%;
+   width: 210px;
+   background-color: #646464;
+   border-radius: 25px;
+   right: 120px;
+}
+
+#pass.appear{
+   animation: appear 2s;
+   opacity: 1;
+}
+
+#pass.desapear{
+   animation: desappear 2s;
+   opacity: 0;
+}
+
+#pass.init{
+   opacity: 0;
+}
+
+#leaderboard{
+   padding: 43px;
+   text-align: center;
+   position:absolute;
+   bottom:10px;
+   height: 77%;
+   width: 210px;
+   background-color: #646464;
+   border-radius: 25px;
+   right: 120px;
+}
+
+#leaderboard.appear{
+   animation: appear 2s;
+   opacity: 1;
+}
+
+#leaderboard.desapear{
+   animation: desappear 2s;
+   opacity: 0;
+}
+
+#leaderboard.init{
+   opacity: 0;
+}
+
+@keyframes appear{
+   0% {opacity: 0;}
+   100% {opacity: 1;}
+}
+
+@keyframes desappear{
+   0% {opacity: 1;}
+   100% {opacity: 0;}
+}
+
+#right-title{
+   color: white;
+   text-align: center;
+   font-family: Montserrat, 'Open Sans', sans-serif;
+}
+
 .left-btns{
    height: 30px;
    background-color: #f58855;
    position: absolute;
    top: 30%;
-   width: 33.6%;
+   width: 56.6%;
    left: 18%;
    padding: 10px;
    font-size: larger;
@@ -346,32 +766,6 @@ body, html {
    font-family: Montserrat, 'Open Sans', sans-serif;
 }
 
-#bla{
-   border-radius: 10px;
-   position: absolute;
-   background-color: #806868;
-   border: solid #FFFFFF;
-   width: 210px;
-   top: 182px;
-   height: 80px;
-   left: 250px;
-   color: white;
-   font-family: Arial, Helvetica, sans-serif;
-}
-
-#bla2{
-   border-radius: 10px;
-   position: absolute;
-   background-color: #806868;
-   border: solid #FFFFFF;
-   width: 210px;
-   top: 237px;
-   height: 96px;
-   left: 114px;
-   color: white;
-   font-family: Arial, Helvetica, sans-serif;
-}
-
 
 #CW{
    top: 39%;
@@ -402,7 +796,7 @@ body, html {
 }
 
 #back01{
-   margin-left: 15px;
+   margin-left: 69px;
 }
 
 #create{
@@ -414,7 +808,7 @@ body, html {
    padding: 5px 79px;
    position: absolute;
    top: 49%;
-   width: 9%;
+   width: 10%;
    height: 40px;
 }
 
@@ -433,14 +827,13 @@ body, html {
 #gameMode{
    position: absolute;
    top: 39%;
-   width: 55.5%;
 }
 
 #btn01{
    position: absolute;
    width: 30px;
    left: 64px;
-   top: 138px;
+   top: 136px;
 }
 
 #btn01:hover{
@@ -488,15 +881,6 @@ body, html {
    height: 25px;
 }
 
-#unmute{
-   margin-left: 15px;
-   height: 30px;
-}
-
-.change:hover{
-   background-color: #fa7e44;
-}
-
 #mute{
    position: absolute;
    background-color: #f58855;
@@ -505,9 +889,20 @@ body, html {
    padding: 11px;
    margin-bottom: 10px;
    height: 28px;
-   right: 54px;
+   right: 122px;
    top: 128px;
    visibility: hidden;
+}
+
+#unmute{
+   position: absolute;
+   background-color: #f58855;
+   width: 28px;
+   border-radius: 8px;
+   padding: 11px;
+   margin-bottom: 10px;
+   height: 28px;
+   right: 122px;
 }
 
 #shader{
@@ -564,61 +959,12 @@ body, html {
    background-color: #d3d3d3;
 }
 
-#settings{
-   padding: 20px 43px;
-   text-align: center;
-   position: absolute;
-   bottom: 10%;
-   left: 35.4%;
-   height: 530px;
-   width: 380px;
-   background-color: #646464;
-   border-radius: 25px;
-   visibility: hidden;
-}
-
-#settings-title{
-   color: white;
-   font-family: Montserrat, 'Open Sans', sans-serif;
-   font-size: 30px;
-}
-
-#theme{
-   position: relative;
-   left: -151px;
-   top: 17px;
-   color: white;
-   font-family: Montserrat, 'Open Sans', sans-serif;
-   font-size: 20px;
-}
-
-.theme {
-   position: relative;
-   left: -63px;
-   top: -35px;
-   background-color: #3a3a3c;
-   border-radius: 10px;
-   height: 30px;
-}
-
-
-#light{
-   padding: 5px;
-}
-
-#dark{
-   padding: 5px 9px;
-}
-
 #english{
    display: flex;
    position: relative;
-   border-top-left-radius: 15px;
-   border-bottom-left-radius: 15px;
-   width: 65px;
-   height: 45px;
-   left: -5px;
-   top: 22px;
+   border-radius: 9px;
+   width: 55px;
+   height: 55px;
    background-color:#474747;
    justify-content: center;
    align-items: center;
@@ -631,12 +977,9 @@ body, html {
 #portugues{
    display: flex;
    position: relative;
-   border-top-right-radius: 15px;
-   border-bottom-right-radius: 15px;
-   width: 65px;
-   height: 45px;
-   left: 60px;
-   top: -23px;
+   border-radius: 9px;
+   width: 55px;
+   height: 55px;
    background-color:#474747;
    justify-content: center;
    align-items: center;
@@ -644,4 +987,83 @@ body, html {
 
 #portugues:hover{
    background-color:#525252;
+}
+
+#points{
+   color: white;
+   border-radius: 6px;
+   position: absolute;
+   height: 29px;
+   width: 61px;
+   background-color: #538d4e;
+   left: calc(50% - 169px);
+   top: 143px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#xp{
+   color: white;
+   padding: 2px;
+   border-radius: 12px;
+   position: absolute;
+   left: calc(50% + 6px);
+   font-size: 20px;
+   top: -18px;
+   font-family: "Jersey 25", sans-serif;
+}
+
+#xpnum{
+   color: white;
+   padding: 2px;
+   border-radius: 12px;
+   position: absolute;
+   left: calc(50% + -29px);
+   font-size: 20px;
+   top: -18px;
+   font-family: "Jersey 25", sans-serif;
+}
+
+#decominutes{
+   color: white;
+   position: absolute;
+   left: calc(50% - 34px);
+   font-size: 25px;
+   top: 116px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#minutes{
+   color: white;
+   position: absolute;
+   left: calc(50% - 19px);
+   font-size: 25px;
+   top: 116px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#timeDivision{
+   color: white;
+   position: absolute;
+   left: calc(50% - 4.6px);
+   font-size: 30px;
+   top: 106px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#decoseconds{
+   color: white;
+   position: absolute;
+   left: calc(50% + 5px);
+   font-size: 25px;
+   top: 116px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#seconds{
+   color: white;
+   position: absolute;
+   left: calc(50% + 20px);
+   font-size: 25px;
+   top: 116px;
+   font-family: Arial, Helvetica, sans-serif;
 }
