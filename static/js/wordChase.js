@@ -8,14 +8,30 @@ let langVisibility = 0;
 let language = "english";
 let sound = true;
 let notWord = false;
-let usedLetters = [];
-let hammerN = 0;
 let changeTime = false
 let mode = "easy";
 let roundMode = "easy";
+let roundlanguage = "english";
 let rightGuesses = [];
-let guesses = 0;
 let hintN = false;
+let hammerN = false;
+let chanceN = false;
+let hintValue = 2;
+let hammerValue = 2;
+let chanceValue = 2;
+const slider = document.getElementById("slider");
+const box = document.getElementById("box");
+
+slider.addEventListener("input", () => {
+    /* box.style.top = slider.value + "px"; */
+});
+
+let costs = {
+    restart: 150,
+    hint: 100,
+    hammer: 200,
+    chance: 300,
+}
 
 let timer = {
     seconds: 0,
@@ -25,7 +41,8 @@ let timer = {
 }
 
 const stats = {
-    secret:WORDS[Math.floor(Math.random() * WORDS.length + 1)].toUpperCase(),
+    secret:"",
+    usedLetters: [],
     grid: Array(6)
         .fill()
         .map(() => Array(5).fill("")),
@@ -35,6 +52,9 @@ const stats = {
 
 const game = document.getElementById("wrap");
 drawGrid(game);
+document.getElementById("hintValue").textContent = hintValue;
+document.getElementById("hammerValue").textContent = hammerValue;
+document.getElementById("chanceValue").textContent = chanceValue;
 
 changeEnglish();
 
@@ -63,6 +83,7 @@ function drawGrid(container){
 
 function options(){
     let leftBarApperDesaper = document.getElementById("left-bar");
+    let screenWidth = window.innerWidth;
     leftBarApperDesaper.classList.remove("init")
     if(action === 0){
         leftBarApperDesaper.classList.remove("out");
@@ -71,16 +92,27 @@ function options(){
     }else if(action === 1){
         leftBarApperDesaper.classList.remove("in");
         leftBarApperDesaper.classList.add("out");
-        document.getElementById("language").style.visibility = "hidden";
-
         action = 0;
     }
+
 }
 
 function start(){
-    roundMode = mode
+    roundMode = mode;
+    roundlanguage = language;
+    if(roundlanguage === "portuguese"){
+        stats.secret = PALAVRAS[Math.floor(Math.random() * PALAVRAS.length)].toUpperCase();
+        let c = document.getElementById("ç");
+        let blank = document.getElementById("bl");
+        
+        c.style.visibility = "visible";
+        blank.classList.remove("blank");    
+    }else{
+        stats.secret =  WORDS[Math.floor(Math.random() * WORDS.length + 1)].toUpperCase()
+    }
     document.getElementById("restartBack").style.visibility = "visible";
     document.getElementById("restart").style.visibility = "visible";
+    document.getElementById("restartCount").style.visibility = "visible";
     keyboard();
     changeTime = true;
     inGame = true;
@@ -99,6 +131,18 @@ function RbackgroundR(){
     document.getElementById("restartBack").style.backgroundColor = "#2f2f30";
 }
 
+function backgroundL(){
+    document.getElementById("langBack").style.backgroundColor = "#474747";
+    document.getElementById("lang").classList.add("ro");
+    setTimeout(() => {
+        document.getElementById("lang").classList.remove("ro");
+    }, 500)
+}
+
+function LbackgroundL(){
+    document.getElementById("langBack").style.backgroundColor = "#2f2f30";
+}
+
 function updateGrid(){
     for(let i = 0; i < stats.grid.length; i++){
         for(let j = 0; j < stats.grid[i].length; j++){
@@ -110,7 +154,25 @@ function updateGrid(){
 
 function virtualKeyboardClick(e){
     if(inGame === false) return;
-    if(hintN){
+    if(hintN && e === "ç"){
+        let virtualKeyboard = document.getElementById("blank");
+        let keys = document.getElementsByClassName("keys");
+        for(let i = 0; i < keys.length; i++){
+            keys[i].style.fontWeight = "normal";
+        }
+        virtualKeyboard.classList.add("animated");
+        if(stats.secret.includes(e.toUpperCase())){
+            virtualKeyboard.classList.add("wrong");
+        }else{
+            virtualKeyboard.classList.add("empty");
+        }
+        setTimeout(() =>{
+            virtualKeyboard.classList.remove("animated");
+        }, 500);
+        if(!stats.usedLetters.includes(e)){
+            stats.usedLetters.push(e);
+        }
+    }else if(hintN){
         let virtualKeyboard = document.getElementById(e);
         let keys = document.getElementsByClassName("keys");
         for(let i = 0; i < keys.length; i++){
@@ -125,9 +187,11 @@ function virtualKeyboardClick(e){
         setTimeout(() =>{
             virtualKeyboard.classList.remove("animated");
         }, 500);
-        if(!usedLetters.includes(e)){
-            usedLetters.push(e);
+        if(!stats.usedLetters.includes(e)){
+            stats.usedLetters.push(e);
         }
+        hintValue--;
+        document.getElementById("hintValue").textContent = hintValue;
         hintN = false;
     }else{
         addLetter(e);
@@ -166,17 +230,66 @@ function deleteAll(){
 
 function hammer(){
     if(inGame === false) return;
-    document.getElementById("arrow").style.visibility = "visible";
-    document.getElementById("annoncement").style.visibility = "hidden";
+    if(hammerValue > 0){
+        if(hammerN){
+            document.getElementById("arrow").style.visibility = "hidden";
+            document.getElementById("decominutes").style.visibility = "visible";
+            document.getElementById("minutes").style.visibility = "visible";
+            document.getElementById("timeDivision").style.visibility = "visible";
+            document.getElementById("decoseconds").style.visibility = "visible";
+            document.getElementById("seconds").style.visibility = "visible";
+            document.getElementById("points").style.visibility = "visible";
+            hammerN = false;
+        }else{
+            document.getElementById("arrow").style.visibility = "visible";
+            document.getElementById("decominutes").style.visibility = "hidden";
+            document.getElementById("minutes").style.visibility = "hidden";
+            document.getElementById("timeDivision").style.visibility = "hidden";
+            document.getElementById("decoseconds").style.visibility = "hidden";
+            document.getElementById("seconds").style.visibility = "hidden";
+            document.getElementById("points").style.visibility = "hidden";
+            removeAnnounce();
+            hammerN = true;
+        }
+    }
 }
 
 function hint(){
     if(inGame === false) return;
-    let keys = document.getElementsByClassName("keys");
-    for(let i = 0; i < keys.length; i++){
-        keys[i].style.fontWeight = "bold";
+    if(hintValue > 0){
+        if(hintN){
+            let keys = document.getElementsByClassName("keys");
+            for(let i = 0; i < keys.length; i++){
+                keys[i].style.fontWeight = "normal";
+            }
+            hintN = false;
+        }else{
+            let keys = document.getElementsByClassName("keys");
+            for(let i = 0; i < keys.length; i++){
+                keys[i].style.fontWeight = "bold";
+            }
+            hintN = true;
+        }
     }
-    hintN = true;
+}
+
+function chance(){
+    if(inGame === false) return;
+    const grid = document.getElementsByClassName("grid")[0];
+    if(!chanceN){
+        let i = stats.grid.length;
+        for(let j = 0; j < 5; j++){
+            drawBox(grid, i, j);
+        }
+
+        for(let y = 0; y <= i; y++){
+            for(let x = 0; x < 5; x++){
+                const box = document.getElementById(`box${y}${x}`);
+                box.style.height = "50px";
+            }
+        }
+        chanceN = true;
+    }
 }
 
 function line(line){
@@ -193,7 +306,15 @@ function line(line){
             box.classList.remove("rotate")
         }, 500)
     }
+    hammerValue--;
+    document.getElementById("hammerValue").textContent = hammerValue;
     document.getElementById("arrow").style.visibility = "hidden";
+    document.getElementById("decominutes").style.visibility = "visible";
+    document.getElementById("minutes").style.visibility = "visible";
+    document.getElementById("timeDivision").style.visibility = "visible";
+    document.getElementById("decoseconds").style.visibility = "visible";
+    document.getElementById("seconds").style.visibility = "visible";
+    document.getElementById("points").style.visibility = "visible";
 }
 
 function keyboard(){
@@ -204,20 +325,23 @@ function keyboard(){
                 if(stats.currentCol === 5){
                     const word = getCurrentWord();
                     if(roundMode === "mid" && rightGuesses.length > 0 && isWordValid(word)){
-                        for(let i = 0; i <= rightGuesses.length/2; i++){
-                            if(word[rightGuesses[i * 2]] === stats.secret[rightGuesses[i * 2]]){
+                        console.log(rightGuesses, word, stats.secret);
+                        let guesses = 0;
+                        for(let i = 0; i < rightGuesses.length; i++){
+                        console.log(rightGuesses[i]);
+                        console.log(word[rightGuesses[i].index].toUpperCase(), stats.secret[rightGuesses[i].index]);
+                            if(word[rightGuesses[i].index] === stats.secret[rightGuesses[i].index]){
                                 guesses++;
                             }
                         }
+                        console.log(guesses, rightGuesses.length);
 
-                        if(guesses === rightGuesses.length/2){
+                        if(guesses === rightGuesses.length){
                             revealWord(word);
                             stats.currentRow++;
                             stats.currentCol = 0;
-                            guesses = 0;
                         }else{
-                            announce("In this dificulty you need to write all right words in place");
-                            guesses = 0;
+                            announce("In this dfficulty you need to write all right letters in place");
                         }
 
                     }else if(roundMode === "mid" && rightGuesses.length === 0 && isWordValid(word)){
@@ -253,7 +377,7 @@ function getCurrentWord() {
 }
 
 function isWordValid(word) {
-if(language === "portuguese"){
+if(roundlanguage === "portuguese"){
         return PALAVRAS.includes(word);
     }else{
         return WORDS.includes(word);
@@ -273,8 +397,8 @@ function revealWord(guess){
     for(let i = 0; i < 5; i++){
         const box = document.getElementById(`box${row}${i}`);
         const letter = box.textContent;
-        if(!usedLetters.includes(letter)){
-            usedLetters.push(letter);
+        if(!stats.usedLetters.includes(letter)){
+            stats.usedLetters.push(letter);
         }
         const virtualKeyboard = document.getElementById(letter.toLowerCase());
         if(sound){
@@ -301,7 +425,9 @@ function revealWord(guess){
             if(letter === stats.secret[i]){
                 box.style.borderColor = "#538d4e";
                 box.classList.add("correct");
-                rightGuesses.push(letter, i);
+                if(!rightGuesses.includes(letter, i)){
+                    rightGuesses.push({letter: letter, index: i});
+                }
                 virtualKeyboard.classList.add("correct");
             }else if(stats.secret.includes(letter)){
                 box.style.borderColor = "#b59f3b";
@@ -326,10 +452,17 @@ function revealWord(guess){
 
     const isWinning = stats.secret === guess.toUpperCase();
     const gameOver = stats.currentRow === 5;
+    console.log(chanceN);
     setTimeout(() => {
         if(isWinning){
             youWin();
             inGame = false;
+        }else if(chanceN){
+            if(stats.currentRow === 7){
+                youLose();
+                inGame = false;
+                chanceN = false;
+            }
         }else if(gameOver){
             youLose();
             inGame = false;
@@ -345,7 +478,10 @@ function isLetter(key){
 }
 
 function addLetter(letter){
-    if(stats.currentCol === 5 || !inGame) return;
+    if(!chanceN && stats.currentCol === 5){
+        if(stats.currentCol === 5 || !inGame) return;
+    }
+    
 
     console.log(stats.currentRow,stats.currentCol);
     stats.grid[stats.currentRow][stats.currentCol] = letter;
@@ -368,11 +504,12 @@ function removeAllLetters(){
         document.getElementById(`box${stats.currentRow}${stats.currentCol - 1}`).style.borderColor = "#3a3a3c";
         stats.currentCol--;
     }
+    stats.currentCol = 0;
 }
 
 function announce(text){
     let annoncement = document.getElementById("annoncement");
-    if(language === "portuguese"){
+    if(roundlanguage === "portuguese"){
         annoncement.textContent = "Essa palavra não existe na lista";
     }else{
         annoncement.textContent = text;
@@ -529,12 +666,9 @@ function endGame(letter, boxI, boxJ, value){
         stats.grid[boxJ][boxI] = "";
     }, ((boxI + 1) * animation_duration) / 4)
 
-
-
-
     setTimeout(() =>{  
-        for(let i = 0; i < usedLetters.length; i++){
-            const virtualKeyboard = document.getElementById(usedLetters[i].toLowerCase());
+        for(let i = 0; i < stats.usedLetters.length; i++){
+            const virtualKeyboard = document.getElementById(stats.usedLetters[i].toLowerCase());
             virtualKeyboard.classList.remove("wrong");
             virtualKeyboard.classList.remove("correct");
             virtualKeyboard.classList.remove("empty");
@@ -546,38 +680,13 @@ function endGame(letter, boxI, boxJ, value){
         box.classList.remove("empty");
         box.style.borderColor = "#3a3a3c";
 
-        if(value === "gift1"){
-            let gift = document.getElementById("gift1");
+        if(value.includes("gift")){
+            let gift = document.getElementById(value);
             box.style.backgroundColor = "#fa7e44";
             box.style.borderColor = "#fa7e44";
             box.appendChild(gift);
-            gift.classList.remove("hidden")
+            gift.classList.remove("hidden");
             gift.style.visibility = "visible";
-        }else if(value === "gift2"){
-            let gift = document.getElementById("gift2");
-            box.style.backgroundColor = "#fa7e44";
-            box.style.borderColor = "#fa7e44";
-            box.appendChild(gift);
-            gift.classList.remove("hidden")
-            gift.style.visibility = "visible";
-        }else if(value === "gift3"){
-            let gift = document.getElementById("gift3");
-            box.style.backgroundColor = "#fa7e44";
-            box.style.borderColor = "#fa7e44";
-            box.appendChild(gift);
-            gift.classList.remove("hidden")
-        }else if(value === "gift4"){
-            let gift = document.getElementById("gift4");
-            box.style.backgroundColor = "#fa7e44";
-            box.style.borderColor = "#fa7e44";
-            box.appendChild(gift);
-            gift.classList.remove("hidden")
-        }else if(value === "gift5"){
-            let gift = document.getElementById("gift5");
-            box.style.backgroundColor = "#fa7e44";
-            box.style.borderColor = "#fa7e44";
-            box.appendChild(gift);
-            gift.classList.remove("hidden")
         }else if(value === "correct"){
             box.classList.add("correct");
             box.style.borderColor = "#538d4e";
@@ -594,6 +703,8 @@ function endGame(letter, boxI, boxJ, value){
         
     }, ((boxI + 1) * animation_duration) / 2);
 
+    document.getElementById("restartCount").style.visibility = "hidden";
+
     box.classList.add("animated");
     box.style.animationDelay = `${(boxI * animation_duration) / 2}ms`;
 }
@@ -605,14 +716,14 @@ function removeAnnounce(){
 }
 
 function mute(){
-    const mute = document.getElementById("mute")
-    mute.style.visibility = "visible";
+    document.getElementById("mute").style.visibility = "visible";
+    document.getElementById("unmute").style.visibility = "hidden";
     sound = false;
 }
 
 function unmute(){
-    const unmute = document.getElementById("mute");
-    unmute.style.visibility = "hidden";
+    document.getElementById("mute").style.visibility = "hidden";
+    document.getElementById("unmute").style.visibility = "visible";
     sound = true;
 }
 
@@ -625,6 +736,7 @@ function createNewWordle(){
 function hide(){
     document.getElementById("shader").style.visibility = "hidden";
     document.getElementById("newWordle").style.visibility = "hidden";
+    document.getElementById("account").style.visibility = "hidden";
     inGame = true;
 }
 
@@ -646,65 +758,98 @@ function check(){
 }
 
 function restart(word){
-    removeAnnounce();
-    roundMode = mode
-    if(language === "portuguese"){
-        word = PALAVRAS[Math.floor(Math.random() * PALAVRAS.length)].toUpperCase();
-    }
-
-    for(let i = 0; i < usedLetters.length; i++){
-        const virtualKeyboard = document.getElementById(usedLetters[i].toLowerCase());
-        virtualKeyboard.classList.remove("wrong");
-        virtualKeyboard.classList.remove("correct");
-        virtualKeyboard.classList.remove("empty");
-        virtualKeyboard.classList.remove("animated");
-    }
-
-    for(let i = 0; i < 6; i++){
-        for(let j = 0; j < 5; j++){
-            const box = document.getElementById(`box${i}${j}`);
-            if (box.textContent)
-                box.textContent = "";
-
-            box.classList.remove("wrong");
-            box.classList.remove("correct");
-            box.classList.remove("empty");
-            box.classList.remove("animated");
-            box.style.borderColor = "#3a3a3c";
-            box.style.backgroundColor = "";
-            stats.grid[i][j] = "";
+    let restartCount = document.getElementById("restartCount");
+    restartCount.style.visibility = "visible";
+    if(restartCount.textContent > 0 || !inGame){
+        removeAnnounce();
+        roundMode = mode
+        roundlanguage = language
+        if(roundlanguage === "portuguese"){
+            word = PALAVRAS[Math.floor(Math.random() * PALAVRAS.length)].toUpperCase();
+            let c = document.getElementById("ç");
+            let blank = document.getElementById("bl");
+            
+            c.style.visibility = "visible";
+            blank.classList.remove("blank");        
         }
-    }    
-    
-    for(let i = 1; i <= 5; i++){
-        document.getElementById("gift" + i).style.visibility = "hidden";
-    }
 
-    stats.currentCol = 0;
-    stats.currentRow = 0;
-    stats.secret = word;
-    timer.decominutes = 0;
-    timer.minutes = 0;
-    timer.decoseconds = 0;
-    timer.seconds = 0;
-    document.getElementById("decominutes").textContent = timer.decominutes;
-    document.getElementById("minutes").textContent = timer.minutes;
-    document.getElementById("decoseconds").textContent = timer.decoseconds;
-    document.getElementById("seconds").textContent = timer.seconds;
-    setTimeout(() => {
-        changeTime = true;
-        inGame = true;
-    }, 2000)
-    console.log(stats.secret);  
+        for(let i = 0; i < stats.usedLetters.length; i++){
+            const virtualKeyboard = document.getElementById(stats.usedLetters[i].toLowerCase());
+            virtualKeyboard.classList.remove("wrong");
+            virtualKeyboard.classList.remove("correct");
+            virtualKeyboard.classList.remove("empty");
+            virtualKeyboard.classList.remove("animated");
+        }
+
+        for(let i = 0; i < 6; i++){
+            for(let j = 0; j < 5; j++){
+                const box = document.getElementById(`box${i}${j}`);
+                if (box.textContent)
+                    box.textContent = "";
+
+                box.classList.remove("wrong");
+                box.classList.remove("correct");
+                box.classList.remove("empty");
+                box.classList.remove("animated");
+                box.style.borderColor = "#3a3a3c";
+                box.style.backgroundColor = "";
+                stats.grid[i][j] = "";
+            }
+        }    
+        
+        for(let i = 1; i <= 5; i++){
+            document.getElementById("gift" + i).style.visibility = "hidden";
+        }
+
+        stats.currentCol = 0;
+        stats.currentRow = 0;
+        stats.secret = word;
+        timer.decominutes = 0;
+        timer.minutes = 0;
+        timer.decoseconds = 0;
+        timer.seconds = 0;
+        document.getElementById("decominutes").textContent = timer.decominutes;
+        document.getElementById("minutes").textContent = timer.minutes;
+        document.getElementById("decoseconds").textContent = timer.decoseconds;
+        document.getElementById("seconds").textContent = timer.seconds;
+        setTimeout(() => {
+            changeTime = true;
+            inGame = true;
+        }, 2000)
+        console.log(stats.secret);
+        if(inGame){
+            restartCount.textContent = parseInt(restartCount.textContent) - 1;
+        }
+    }else{
+        restartCount.style.color = "red";
+        restartCount.style.fontStyle = "bold";
+        setTimeout(() => {
+            restartCount.style.color = "white";
+            restartCount.style.fontStyle = "normal";
+        }, 500)
+    }
 }
 
 function changeLanguages(){
     if(langVisibility === 0){
-        document.getElementById("language").style.visibility = "visible";
+        document.getElementById("language").classList.remove("hidden");
+        document.getElementById("language").classList.add("appearLang");
         langVisibility = 1
+        setTimeout(() => {
+            document.getElementById("language").classList.remove("appearLang");
+            document.getElementById("portugues").style.visibility = "visible";
+            document.getElementById("english").style.visibility = "visible";
+        }, 500);
     }else if(langVisibility === 1){
-        document.getElementById("language").style.visibility = "hidden";
+        document.getElementById("language").classList.add("desappearLang");         
+        document.getElementById("portugues").style.visibility = "hidden";
+        document.getElementById("english").style.visibility = "hidden";
+
         langVisibility = 0
+        setTimeout(() => {
+            document.getElementById("language").classList.remove("desappearLang");
+            document.getElementById("language").classList.add("hidden");
+        }, 490);
     }
     
 }
@@ -712,16 +857,9 @@ function changeLanguages(){
 function changePortuguese(){
     document.getElementById("portugues").style.backgroundColor = "#538D4E";
     document.getElementById("english").style.backgroundColor = "#474747";
-    let c = document.getElementById("ç");
-    let blank = document.getElementById("bl");
-    
-    c.style.visibility = "visible";
-    blank.classList.remove("blank");
-
 
     if(language === "english"){
         language = "portuguese";
-        restart();
     }
 }
 
@@ -736,7 +874,6 @@ function changeEnglish(){
 
     if(language === "portuguese"){
         language = "english";
-        restart(WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase());
     }
 }
 
@@ -864,4 +1001,143 @@ function lowBattery(){
     document.getElementById("highBattery").style.visibility = "hidden";
     document.getElementById("midBattery").style.visibility = "hidden";
     mode = "easy";
+}
+
+function gift(gift){
+    let present = document.getElementById("gift" + gift);
+    const box = document.getElementById(`box${5}${gift-1}`);
+    present.classList.add("present");
+    setTimeout(() => {
+        present.classList.remove("present");
+        present.classList.add("hidden");
+        let reward = Math.floor(Math.random() * 500 + 1);
+        if(reward < 250){
+            let money = Math.floor(Math.random() * (250 - 50) + 50);
+            updateMoney(money + parseInt(document.getElementById("money").textContent));
+            document.getElementById("moneyR").textContent = money;
+            let moneyR = document.getElementById("moneyReward");
+            moneyR.classList.remove("hidden");
+            if (box) { // Ensure box exists before appending
+                box.appendChild(moneyR);
+            }
+        }
+    }, 2000)
+}
+
+function buyHint(){
+    if(document.getElementById("money").textContent >= costs.hint){
+        updateMoney(parseInt(document.getElementById("money").textContent) - costs.hint);
+        hintValue++;
+        document.getElementById("hintValue").textContent = hintValue;
+    }
+}
+
+function buyHammer(){
+    if(document.getElementById("money").textContent >= costs.hammer){
+        updateMoney(parseInt(document.getElementById("money").textContent) - costs.hammer);
+        hammerValue++;
+        document.getElementById("hammerValue").textContent = hammerValue;
+    }
+}
+
+function buyChance(){
+    if(document.getElementById("money").textContent >= costs.chance){
+        updateMoney(parseInt(document.getElementById("money").textContent) - costs.chance);
+        chanceValue++;
+        document.getElementById("chanceValue").textContent = chanceValue;
+    }
+}
+
+function buyRestart(){
+    if(document.getElementById("money").textContent >= costs.restart){
+        updateMoney(parseInt(document.getElementById("money").textContent) - costs.restart);
+        document.getElementById("restartCount").textContent = parseInt(document.getElementById("restartCount").textContent) + 1;
+        console.log(document.getElementById("restartCount").textContent);
+    }
+}
+
+function account(){
+    document.getElementById("account").style.visibility = "visible";
+    document.getElementById("shader").style.visibility = "visible";
+}
+
+function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+}
+
+gapi.load('auth2', function(){
+    gapi.auth2.init();
+});
+
+async function getUsers() {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/users');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const users = await response.json();
+        console.log('Users:', users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+}
+
+async function createUser(userName) {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: userName })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log('User created:', result);
+    } catch (error) {
+        console.error('Error creating user:', error);
+    }
+}
+
+async function getMoney() {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/money', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const Money = await response.json();
+        console.log('Money:', Money.amount);
+        document.getElementById("money").textContent = Money.amount;
+    } catch (error) {
+        console.error('Error fetching money:', error);
+    }
+}
+
+async function updateMoney(newAmount) {
+    try{
+        const response = await fetch(`http://127.0.0.1:5000/money`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ new_amount: newAmount })
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        getMoney()
+    }catch (error) {
+        console.error('Error fetching money:', error);
+    }
+}
+
+function bug(){
+    console.log("bug");
 }

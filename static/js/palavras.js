@@ -81,5 +81,5 @@ const PALAVRAS = ["sagaz","amago","negro","termo","exito","mexer","nobre","senso
     "rapar","rasar","rifar","ripar","rojar","roçar","rufar","sanar","sapar","sarar","sedar","segar","selar","socar","solar","somar","sovar",
     "sujar","tacar","talar","tarar","taxar","tesar","torar","tosar","troar","tufar","uivar","unhar","untar","urrar","vaiar","vazar","vedar",
     "vexar","visar","vogar","votar","zerar","zomar","zunir","zuzir","zuzar","zumir","zumar","zulir","zufar","zorar","zizar","arder","darar",
-    "fobia","fotar","gafar","gafir","gafur","lavor","laxar","laxir","laxur"
+    "fobia","fotar","gafar","gafir","gafur","lavor","laxar","laxir","laxur","pavao","motor","mugir"
 ];
