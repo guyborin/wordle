@@ -9,16 +9,16 @@ let language = "english";
 let sound = true;
 let notWord = false;
 let changeTime = false
-let mode = "easy";
-let roundMode = "easy";
 let roundlanguage = "english";
-let rightGuesses = [];
 let hintN = false;
 let hammerN = false;
 let chanceN = false;
-let hintValue = 2;
-let hammerValue = 2;
-let chanceValue = 2;
+let hintValue = 0;
+let hammerValue = 0;
+let chanceValue = 0;
+let openG = true;
+let accountB = false;
+let userLoged = "";
 const slider = document.getElementById("slider");
 const box = document.getElementById("box");
 
@@ -79,26 +79,44 @@ function drawGrid(container){
     }
 
     container.appendChild(grid);
+
 }
 
 function options(){
     let leftBarApperDesaper = document.getElementById("left-bar");
-    let screenWidth = window.innerWidth;
     leftBarApperDesaper.classList.remove("init")
     if(action === 0){
         leftBarApperDesaper.classList.remove("out");
         leftBarApperDesaper.classList.add("in");
+        document.getElementById("shop").classList.add("optopen");
+        document.getElementById("leaderboard").classList.add("optopen");
+        document.getElementById("pass").classList.add("optopen");
         action = 1;
+        setTimeout(() => {
+            document.getElementById("shop").classList.remove("optopen");
+            document.getElementById("leaderboard").classList.remove("optopen");
+            document.getElementById("pass").classList.remove("optopen");
+            document.getElementById("shop").style.left = "105px";
+        }, 1000);
     }else if(action === 1){
         leftBarApperDesaper.classList.remove("in");
         leftBarApperDesaper.classList.add("out");
+        document.getElementById("shop").classList.add("optclose");
+        document.getElementById("leaderboard").classList.add("optclose");
+        document.getElementById("pass").classList.add("optclose");
         action = 0;
+        setTimeout(() => {
+            document.getElementById("shop").classList.remove("optclose");
+            document.getElementById("leaderboard").classList.remove("optclose");
+            document.getElementById("pass").classList.remove("optclose");
+            document.getElementById("shop").style.left = "8px";
+        }, 1000);
     }
-
 }
-
+document.getElementById("shop").style.zIndex = -1;
+document.getElementById("pass").style.zIndex = -1;
+document.getElementById("leaderboard").style.zIndex = -1;
 function start(){
-    roundMode = mode;
     roundlanguage = language;
     if(roundlanguage === "portuguese"){
         stats.secret = PALAVRAS[Math.floor(Math.random() * PALAVRAS.length)].toUpperCase();
@@ -324,31 +342,7 @@ function keyboard(){
             if(key === "Enter"){
                 if(stats.currentCol === 5){
                     const word = getCurrentWord();
-                    if(roundMode === "mid" && rightGuesses.length > 0 && isWordValid(word)){
-                        console.log(rightGuesses, word, stats.secret);
-                        let guesses = 0;
-                        for(let i = 0; i < rightGuesses.length; i++){
-                        console.log(rightGuesses[i]);
-                        console.log(word[rightGuesses[i].index].toUpperCase(), stats.secret[rightGuesses[i].index]);
-                            if(word[rightGuesses[i].index] === stats.secret[rightGuesses[i].index]){
-                                guesses++;
-                            }
-                        }
-                        console.log(guesses, rightGuesses.length);
-
-                        if(guesses === rightGuesses.length){
-                            revealWord(word);
-                            stats.currentRow++;
-                            stats.currentCol = 0;
-                        }else{
-                            announce("In this dfficulty you need to write all right letters in place");
-                        }
-
-                    }else if(roundMode === "mid" && rightGuesses.length === 0 && isWordValid(word)){
-                        revealWord(word);
-                        stats.currentRow++;
-                        stats.currentCol = 0;
-                    }else if(roundMode === "easy" && isWordValid(word)){
+                    if(isWordValid(word)){
                         revealWord(word);
                         stats.currentRow++;
                         stats.currentCol = 0;
@@ -425,9 +419,6 @@ function revealWord(guess){
             if(letter === stats.secret[i]){
                 box.style.borderColor = "#538d4e";
                 box.classList.add("correct");
-                if(!rightGuesses.includes(letter, i)){
-                    rightGuesses.push({letter: letter, index: i});
-                }
                 virtualKeyboard.classList.add("correct");
             }else if(stats.secret.includes(letter)){
                 box.style.borderColor = "#b59f3b";
@@ -452,7 +443,6 @@ function revealWord(guess){
 
     const isWinning = stats.secret === guess.toUpperCase();
     const gameOver = stats.currentRow === 5;
-    console.log(chanceN);
     setTimeout(() => {
         if(isWinning){
             youWin();
@@ -575,6 +565,7 @@ setInterval(() => {
 }, 1000)
 
 function youWin(){
+    openG = true
     setTimeout(() =>{
         endGame("Y", 0, 0, "correct");
         endGame("O", 1, 0, "correct");
@@ -736,7 +727,10 @@ function createNewWordle(){
 function hide(){
     document.getElementById("shader").style.visibility = "hidden";
     document.getElementById("newWordle").style.visibility = "hidden";
+    document.getElementById("Log-In").classList.remove("hidden");
     document.getElementById("account").style.visibility = "hidden";
+    document.getElementById("bug").style.visibility = "hidden";
+    document.getElementById("Sign-Up").classList.add("hidden");
     inGame = true;
 }
 
@@ -762,7 +756,6 @@ function restart(word){
     restartCount.style.visibility = "visible";
     if(restartCount.textContent > 0 || !inGame){
         removeAnnounce();
-        roundMode = mode
         roundlanguage = language
         if(roundlanguage === "portuguese"){
             word = PALAVRAS[Math.floor(Math.random() * PALAVRAS.length)].toUpperCase();
@@ -798,7 +791,7 @@ function restart(word){
         }    
         
         for(let i = 1; i <= 5; i++){
-            document.getElementById("gift" + i).style.visibility = "hidden";
+            document.getElementById("gift" + i).classList.add("hidden");
         }
 
         stats.currentCol = 0;
@@ -889,171 +882,118 @@ function homePage(){
     window.location.assign("../BrainStorm/BrainStorm.html")
 }
 
-function shopChange(){
-    let shop = document.getElementById("shop");
-    shop.classList.remove("init");
-    shop.classList.remove("appear");
-    shop.classList.remove("desapear");
+function toggleBar(elementId, action, barValue) {
+    const element = document.getElementById(elementId);
+    element.classList.remove("init", "appear", "desapear");
 
-    if (actionShop === 1 && rightBar === 1){
-        shop.classList.add("desapear");
-        actionShop = 0;
-        rightBar = 0;
-    }else if(rightBar === 2){
-        let pass = document.getElementById("pass");
-        pass.classList.add("desapear");
-        actionPass = 0;
-        shop.classList.remove("desapear");
-        shop.classList.add("appear");
-        actionShop = 1;
-        rightBar = 1;
-    }else if(rightBar === 3){
-        let podium = document.getElementById("leaderboard");
-        podium.classList.add("desapear");
-        actionPodium = 0;
-        shop.classList.add("appear");
-        actionShop = 1;
-        rightBar = 1;
-    }else{
-        shop.classList.add("appear");
-        actionShop = 1;
-        rightBar = 1;
+    if (action === 1 && rightBar === barValue) {
+        element.classList.add("desapear");
+        element.style.zIndex = -1; // Reset zIndex when closing
+        return 0;
+    } else {
+        if (rightBar === 1) {
+            const shop = document.getElementById("shop");
+            shop.classList.add("desapear");
+            shop.style.zIndex = -1;
+            actionShop = 0;
+        } else if (rightBar === 2) {
+            const pass = document.getElementById("pass");
+            pass.classList.add("desapear");
+            pass.style.zIndex = -1;
+            actionPass = 0;
+        } else if (rightBar === 3) {
+            const leaderboard = document.getElementById("leaderboard");
+            leaderboard.classList.add("desapear");
+            leaderboard.style.zIndex = -1;
+            actionPodium = 0;
+        }
+
+        element.classList.add("appear");
+        element.style.zIndex = 1;
+        return 1;
     }
 }
 
-function passChange(){
-    let pass = document.getElementById("pass");
-    pass.classList.remove("init");
-    pass.classList.remove("appear");
-    pass.classList.remove("desapear");
-
-    if (actionPass === 1 && rightBar === 2){
-        pass.classList.add("desapear");
-        actionPass = 0;
-        rightBar = 0;
-    }else if(rightBar === 1){
-        let shop = document.getElementById("shop");
-        shop.classList.add("desapear");
-        actionShop = 0;
-        pass.classList.remove("desapear");
-        pass.classList.add("appear");
-        actionPass = 1;
-        rightBar = 2;
-    }else if(rightBar === 3){
-        let podium = document.getElementById("leaderboard");
-        podium.classList.add("desapear");
-        actionPodium = 0;
-        pass.classList.add("appear");
-        actionPass = 1;
-        rightBar = 2;
-    }else{
-        pass.classList.add("appear");
-        actionPass = 1;
-        rightBar = 2;
-    }
-    
+function shopChange() {
+    actionShop = toggleBar("shop", actionShop, 1);
+    document.getElementById("shop").style.left = "105px";
+    rightBar = actionShop === 1 ? 1 : 0;
 }
 
-function podiumChange(){
-    let podium = document.getElementById("leaderboard");
-    podium.classList.remove("init");
-    podium.classList.remove("appear");
-    podium.classList.remove("desapear");
-
-    if (actionPodium === 1 && rightBar === 3){
-        podium.classList.add("desapear");
-        actionPodium = 0;
-        rightBar = 0;
-    }else if(rightBar === 2){
-        let pass = document.getElementById("pass");
-        pass.classList.add("desapear");
-        actionPass = 0;
-        podium.classList.remove("desapear");
-        podium.classList.add("appear");
-        actionPodium = 1;
-        rightBar = 3;
-    }else if(rightBar === 1){
-        let shop = document.getElementById("shop");
-        shop.classList.add("desapear");
-        actionShop = 0;
-        podium.classList.add("appear");
-        actionPodium = 1;
-        rightBar = 3;
-    }else{
-        podium.classList.add("appear");
-        actionPodium = 1;
-        rightBar = 3;
-    }
-    
+function passChange() {
+    actionPass = toggleBar("pass", actionPass, 2);
+    rightBar = actionPass === 1 ? 2 : 0;
 }
 
-function midBattery(){
-    document.getElementById("midBattery").style.visibility = "visible";
-    mode = "mid";
-}
-
-function highBattery(){
-    document.getElementById("highBattery").style.visibility = "visible";
-    mode = "hard";
-}
-
-function lowBattery(){
-    document.getElementById("highBattery").style.visibility = "hidden";
-    document.getElementById("midBattery").style.visibility = "hidden";
-    mode = "easy";
+function podiumChange() {
+    actionPodium = toggleBar("leaderboard", actionPodium, 3);
+    rightBar = actionPodium === 1 ? 3 : 0;
 }
 
 function gift(gift){
-    let present = document.getElementById("gift" + gift);
-    const box = document.getElementById(`box${5}${gift-1}`);
-    present.classList.add("present");
-    setTimeout(() => {
-        present.classList.remove("present");
-        present.classList.add("hidden");
-        let reward = Math.floor(Math.random() * 500 + 1);
-        if(reward < 250){
-            let money = Math.floor(Math.random() * (250 - 50) + 50);
-            updateMoney(money + parseInt(document.getElementById("money").textContent));
-            document.getElementById("moneyR").textContent = money;
-            let moneyR = document.getElementById("moneyReward");
-            moneyR.classList.remove("hidden");
-            if (box) { // Ensure box exists before appending
-                box.appendChild(moneyR);
+    if(openG){
+        let present = document.getElementById("gift" + gift);
+        const box = document.getElementById(`box${5}${gift-1}`);
+        present.classList.add("present");
+        setTimeout(() => {
+            present.classList.remove("present");
+            present.classList.add("hidden");
+            let reward = Math.floor(Math.random() * 500 + 1);
+            /* if(reward < 250){ */
+                let money = Math.floor(Math.random() * (250 - 50) + 50);
+                document.getElementById("money").textContent = money + parseInt(document.getElementById("money").textContent);
+                document.getElementById("moneyR").textContent = money;
+                let moneyR = document.getElementById("moneyReward");
+                moneyR.classList.remove("hidden");
+                if (box) { 
+                    box.appendChild(moneyR);
+                }
+            /* } */
+            present.classList.add("hidden");
+            for(let i = 1; i <= 5; i++){
+                document.getElementById("gift" + i).style.fill = "#cacaca";
             }
-        }
-    }, 2000)
+            updateUser();
+        }, 1900)
+    }
+    openG = false;
 }
 
 function buyHint(){
     if(document.getElementById("money").textContent >= costs.hint){
-        updateMoney(parseInt(document.getElementById("money").textContent) - costs.hint);
+        document.getElementById("money").textContent = parseInt(document.getElementById("money").textContent) - costs.hint;
         hintValue++;
+        console.log(hintValue);
         document.getElementById("hintValue").textContent = hintValue;
     }
+    updateUser();
 }
 
 function buyHammer(){
     if(document.getElementById("money").textContent >= costs.hammer){
-        updateMoney(parseInt(document.getElementById("money").textContent) - costs.hammer);
+        document.getElementById("money").textContent = parseInt(document.getElementById("money").textContent) - costs.hammer;
         hammerValue++;
         document.getElementById("hammerValue").textContent = hammerValue;
     }
+    updateUser();
 }
 
 function buyChance(){
     if(document.getElementById("money").textContent >= costs.chance){
-        updateMoney(parseInt(document.getElementById("money").textContent) - costs.chance);
+        document.getElementById("money").textContent = parseInt(document.getElementById("money").textContent) - costs.chance;
         chanceValue++;
         document.getElementById("chanceValue").textContent = chanceValue;
     }
+    updateUser();
 }
 
 function buyRestart(){
     if(document.getElementById("money").textContent >= costs.restart){
-        updateMoney(parseInt(document.getElementById("money").textContent) - costs.restart);
+        document.getElementById("money").textContent = parseInt(document.getElementById("money").textContent) - costs.restart;
         document.getElementById("restartCount").textContent = parseInt(document.getElementById("restartCount").textContent) + 1;
         console.log(document.getElementById("restartCount").textContent);
     }
+    updateUser();
 }
 
 function account(){
@@ -1061,21 +1001,9 @@ function account(){
     document.getElementById("shader").style.visibility = "visible";
 }
 
-function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-}
-
-gapi.load('auth2', function(){
-    gapi.auth2.init();
-});
-
-async function getUsers() {
+async function userLogin() {
     try {
-        const response = await fetch('http://127.0.0.1:5000/users');
+        const response = await fetch('http://127.0.0.1:8080/user/login');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -1086,58 +1014,174 @@ async function getUsers() {
     }
 }
 
-async function createUser(userName) {
-    try {
-        const response = await fetch('http://127.0.0.1:5000/users', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: userName })
-        });
+async function createUser() {
+    let email = document.getElementById("email").value;
+    let name = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const result = await response.json();
-        console.log('User created:', result);
-    } catch (error) {
-        console.error('Error creating user:', error);
+    if(email === "" || name === "" || password === ""){
+        document.getElementById("information").textContent = "Missing email, name or password";
+        document.getElementById("information").style.color = "red";
+        document.getElementById("information").style.visibility = "visible";
+        document.getElementById("information").style.fontSize = "16px";
+        document.getElementById("information").style.top = "-111px";
+
+        setTimeout(() => {
+            document.getElementById("information").style.visibility = "hidden";
+            document.getElementById("information").value = "";
+            document.getElementById("information").style.color = "";
+            document.getElementById("information").style.fontSize = "";
+            document.getElementById("information").style.top = "";
+        }, 5000);
+        return;
     }
+
+    const response = await fetch('http://127.0.0.1:8080/user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            email: email,
+            name: name,
+            password: password,
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const result = await response.json();
+    console.log('User created:', result);
+    document.getElementById("Log-In").classList.remove("hidden");
+    document.getElementById("Sign-Up").classList.add("hidden");
 }
 
-async function getMoney() {
-    try {
-        const response = await fetch('http://127.0.0.1:5000/money', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-        });
+async function getUser() {
+    const emailname = document.getElementById("email-username").value;
+    const password = document.getElementById("passwordL").value;
+    const response = await fetch(`http://127.0.0.1:8080/user?emailname=${encodeURIComponent(emailname)}&password=${encodeURIComponent(password)}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const Money = await response.json();
-        console.log('Money:', Money.amount);
-        document.getElementById("money").textContent = Money.amount;
-    } catch (error) {
-        console.error('Error fetching money:', error);
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
     }
+    const result = await response.json();
+    console.log('User :', result);
+    if(result === "Incorrect password"){
+        document.getElementById("informationL").textContent = result;
+        document.getElementById("informationL").style.color = "red";
+        document.getElementById("informationL").style.visibility = "visible";
+        document.getElementById("informationL").style.fontSize = "18px";
+        document.getElementById("informationL").style.top = "-115px";
+        document.getElementById("informationL").style.left = "152px";
+
+        setTimeout(() => {
+            document.getElementById("informationL").style.visibility = "hidden";
+            document.getElementById("informationL").value = "";
+            document.getElementById("informationL").style.color = "";
+        }, 5000);
+        return;
+    }
+
+    if(result === "User or email not found"){
+        document.getElementById("informationL").textContent = result;
+        document.getElementById("informationL").style.color = "red";
+        document.getElementById("informationL").style.visibility = "visible";
+        document.getElementById("informationL").style.fontSize = "18px";
+        document.getElementById("informationL").style.top = "-115px";
+        document.getElementById("informationL").style.left = "134px";
+
+        setTimeout(() => {
+            document.getElementById("informationL").style.visibility = "hidden";
+            document.getElementById("informationL").value = "";
+            document.getElementById("informationL").style.color = "";
+            document.getElementById("informationL").style.fontSize = "";
+            document.getElementById("informationL").style.top = "";
+            document.getElementById("informationL").style.left = "";
+        }, 5000);
+        return;
+    }
+
+    if(result === "Missing email/name or password"){
+        document.getElementById("informationL").textContent = result;
+        document.getElementById("informationL").style.color = "red";
+        document.getElementById("informationL").style.visibility = "visible";
+        document.getElementById("informationL").style.fontSize = "16px";
+        document.getElementById("informationL").style.top = "-111px";
+
+        setTimeout(() => {
+            document.getElementById("informationL").style.visibility = "hidden";
+            document.getElementById("informationL").value = "";
+            document.getElementById("informationL").style.color = "";
+            document.getElementById("informationL").style.fontSize = "";
+            document.getElementById("informationL").style.top = "";
+        }, 5000);
+        return;
+    }
+    updateValues(result);
+    userLoged = result.name;
+    console.log(userLoged);
 }
 
-async function updateMoney(newAmount) {
-    try{
-        const response = await fetch(`http://127.0.0.1:5000/money`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ new_amount: newAmount })
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        getMoney()
-    }catch (error) {
-        console.error('Error fetching money:', error);
+async function updateUser() {
+    let experience_points = document.getElementById("xpnum").textContent;
+    let coins = document.getElementById("money").textContent;
+    let hint_keyboard_letter = document.getElementById("hintValue").textContent;
+    let hint_column_letter = document.getElementById("hammerValue").textContent;
+    let hint_chance = document.getElementById("chanceValue").textContent;
+    let restart_counter = document.getElementById("restartCount").textContent;
+
+    const response = await fetch('http://127.0.0.1:8080/user', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            name: userLoged,
+            experience_points: parseInt(experience_points),
+            coins: parseInt(coins),
+            hint_keyboard_letter: parseInt(hint_keyboard_letter),
+            hint_column_letter: parseInt(hint_column_letter),
+            hint_chance: parseInt(hint_chance),
+            restart_counter: parseInt(restart_counter)
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
     }
+    const result = await response.json();
+    console.log('User updated:', result);
+    document.getElementById("Log-In").classList.remove("hidden");
+    document.getElementById("Sign-Up").classList.add("hidden");
 }
 
 function bug(){
-    console.log("bug");
+    document.getElementById("bug").style.visibility = "visible";
+    document.getElementById("shader").style.visibility = "visible";
+}
+
+function updateValues(result){
+    document.getElementById("money").textContent = result.coins;
+    document.getElementById("hammerValue").textContent = result.hint_column_letter;
+    document.getElementById("hintValue").textContent = result.hint_keyboard_letter;
+    document.getElementById("chanceValue").textContent = result.hint_chance;
+    document.getElementById("restartCount").textContent = result.restart_counter;
+    document.getElementById("Log-In").style.visibility = "hidden";
+    document.getElementById("user-account").classList.remove("hidden");
+    document.getElementById("profileName").textContent = result.name;
+    document.getElementById("passwordL").value = "";
+    document.getElementById("email-username").value = "";
+    hintValue = result.hint_keyboard_letter;
+    hammerValue = result.hint_column_letter;
+    chanceValue = result.hint_chance;
+    restartCount = result.restart_counter;
+    accountB = true;
+}
+
+function signUp(){
+    document.getElementById("Sign-Up").classList.remove("hidden");
+    document.getElementById("Log-In").classList.add("hidden");
+    document.getElementById("email-username").value = "";
+    document.getElementById("passwordL").value = "";
+    document.getElementById("information").textContent = "";
 }

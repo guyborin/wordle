@@ -73,7 +73,7 @@ const PALAVRAS = ["sagaz","amago","negro","termo","exito","mexer","nobre","senso
     "touro","trevo","trigo","trico","prato","verme","botao","xisto","talco","ultra","gordo","magro","medio","errar","pança","litro","dieta",
     "carie","polpa","abeto","aceno","adubo","agito","azedo","baeta","basta","bizar","bloco","cravo","curar","polar","bulha","globo","pesca",
     "casca","caspa","limao","acord","apito","argil","bento","blusa","bonde","brasa","brejo","broca","caira","cansa","celha","circo","movil",
-    "copas","debru","decer","decor","dobas","educo","empir","escal","esqui","feste","frego","funil","revem","romar","rotar","sobro","sobre",
+    "copas","decer","decor","dobas","educo","empir","escal","esqui","feste","frego","funil","revem","romar","rotar","sobro","sobre",
     "sobra","monge","pulso","dente","pulga","cinza","unido","pulir","afear","arear","arfar","bipar","bisar","brear","bufar","caiar","cevar",
     "chiar","cocar","cotar","dedar","dobar","dopar","dosar","dotar","ecoar","eivar","fanar","fixar","frear","fuçar","bolar","buzir","ditar",
     "galar","gamar","gomar","gorar","idear","inçar","iriar","laxar","libar","limar","lixar","locar","lotar","luxar","manar","maçar","ilhar",
@@ -81,5 +81,6 @@ const PALAVRAS = ["sagaz","amago","negro","termo","exito","mexer","nobre","senso
     "rapar","rasar","rifar","ripar","rojar","roçar","rufar","sanar","sapar","sarar","sedar","segar","selar","socar","solar","somar","sovar",
     "sujar","tacar","talar","tarar","taxar","tesar","torar","tosar","troar","tufar","uivar","unhar","untar","urrar","vaiar","vazar","vedar",
     "vexar","visar","vogar","votar","zerar","zomar","zunir","zuzir","zuzar","zumir","zumar","zulir","zufar","zorar","zizar","arder","darar",
-    "fobia","fotar","gafar","gafir","gafur","lavor","laxar","laxir","laxur","pavao","motor","mugir"
+    "fobia","fotar","gafar","gafir","gafur","lavor","laxar","laxir","laxur","pavao","motor","mugir","grito","ladra","ladro","tripa","tripe",
+    "fogao","bingo","tinta","bocal","tosta","invas","casco","braço","urubu"
 ];

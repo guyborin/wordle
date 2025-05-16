@@ -1,0 +1,25 @@
+cd /Guy/wordle
+
+Local docker Setup
+
+    1. Local build
+        docker build -t flask-static .
+
+    2. Local run
+        docker run -p 8080:8080 flask-static
+
+Local watchdog setup
+
+    1. watchmedo auto-restart --patterns="*.py;*.html;*.css;*.js" --recursive -- python app.py
+
+Remore Setup
+
+    1. Build
+        docker build -t flask-cloudrun .
+
+    2. Prepare Docker
+        docker tag flask-cloudrun gcr.io/vocal-camera-456614-a5/flask-cloudrun
+        docker push gcr.io/vocal-camera-456614-a5/flask-cloudrun
+
+    3. Deploy
+        gcloud run deploy flask-cloudrun --image gcr.io/vocal-camera-456614-a5/flask-cloudrun --platform managed --region europe-west10 --allow-unauthenticated

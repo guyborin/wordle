@@ -84,35 +84,43 @@ body, html {
    position: relative;
    top: 3px;
    width: 40px;
+   fill:white;
 }
 
 #gift2{
    position: relative;
-   position: relative;
    top: 3px;
    width: 40px;
+   fill:white;
 }
 
 #gift3{
    position: relative;
    top: 3px;
    width: 40px;
+   fill:white;
+
 }
 
 #gift4{
    position: relative;
    top: 3px;
    width: 40px;
+   fill:white;
+
 }
 
 #gift5{
    position: relative;
    top: 3px;
    width: 40px;
+   fill:white;
+
 }
 
-.hidden{
-   visibility:hidden;
+.hidden {
+   visibility: hidden;
+   display: none;
 }
 
 #annoncement{
@@ -147,8 +155,8 @@ body, html {
    position: absolute;
    left: calc(50% - 293px);
    width: 57px;
-   height: 150px;
-   bottom: 48.5px;
+   height: 151px;
+   bottom: 47px;
    text-align: start;
    background-color: #2f2f30;
    border-radius: 8px;
@@ -217,7 +225,7 @@ body, html {
    visibility: hidden;
 }
 
-#lowBattery{
+#skull{
    position: absolute;
    top: 57px;
    left: 5px;
@@ -230,43 +238,7 @@ body, html {
    align-content: center;
 }
 
-#lowBattery:hover{
-   background-color: #474747;
-}
-
-#midBattery{
-   position: absolute;
-   top: 57px;
-   left: 5px;
-   background-color: #2f2f30;
-   border: none;
-   border-radius: 8px;
-   width: 26px;
-   height: 24px;
-   padding: 8px 9px 8px 11px;
-   align-content: center;
-   visibility: hidden;
-}
-
-#midBattery:hover{
-   background-color: #474747;
-}
-
-#highBattery{
-   position: absolute;
-   top: 57px;
-   left: 5px;
-   background-color: #2f2f30;
-   border: none;
-   border-radius: 8px;
-   width: 26px;
-   height: 24px;
-   padding: 8px 9px 8px 11px;
-   align-content: center;
-   visibility: hidden;
-}
-
-#highBattery:hover{
+#skull:hover{
    background-color: #474747;
 }
 
@@ -694,7 +666,6 @@ body, html {
    width: 210px;
    background-color: #646464;
    border-radius: 25px;
-   left: 105px;
 }
 
 #shop.appear{
@@ -888,6 +859,56 @@ body, html {
    100% {opacity: 0;}
 }
 
+#shop.optclose{
+   animation: optclose 1s;
+   left: 8px;
+}
+
+#leaderboard.optclose{
+   animation: optclose 1s;
+   left: 8px;
+}
+
+#pass.optclose{
+   animation: optclose 1s;
+   left: 8px;
+}
+
+#shop.optopen{
+   animation: optopen 1s;
+   left: 105px;
+}
+
+#leaderboard.optopen{
+   animation: optopen 1s;
+   left: 105px;
+}
+
+#pass.optopen{
+   animation: optopen 1s;
+   left: 105px;
+}
+
+@keyframes optclose {
+   0%{
+      left: 105px;
+   }
+
+   100%{
+      left: 8px;
+   }
+}
+
+@keyframes optopen {
+   0%{
+      left: 8px;
+   }
+
+   100%{
+      left: 105px;
+   }
+}
+
 #right-title{
    color: white;
    text-align: center;
@@ -967,6 +988,56 @@ body, html {
 
 #unmute:hover{
    background-color: #474747;
+}
+
+#musicIcon{
+   position: absolute;
+   background-color: #2f2f30;
+   width: 18px;
+   border-radius: 5px;
+   padding: 4px 4px 4px 2px;
+   bottom: 3px;
+   height: 15px;
+   left: 39px;
+}
+
+#musicIcon:hover{
+   background-color: #474747;
+}
+
+#musicSlider{
+   appearance: none;
+   position: absolute;
+   left: 66px;
+   width: 93px;
+   height: 11px;
+   background: #474747;
+   border-radius: 18px;
+   outline: none;
+   cursor: pointer;
+}
+ 
+#musicSlider:hover{
+   opacity: 1;
+}
+ 
+#musicSlider::-webkit-slider-thumb{
+   -webkit-appearance: none;
+   appearance: none;
+   top:3px;
+   width: 15px;
+   height: 9px;
+   border-radius: 30px;
+   background: #ffffff;
+   cursor: pointer;
+}
+ 
+#musicSlider::-moz-range-thumb {
+   width: 30px;
+   height: 25px;
+   border-radius: 30px;
+   background: #ffffff;
+   cursor: pointer;
 }
 
 #shader{
@@ -1136,6 +1207,7 @@ body, html {
 
 .present{
    animation: gift 2s;
+   visibility: hidden;
 }
 
 @keyframes gift {
@@ -1168,14 +1240,14 @@ body, html {
    border-radius: 5px;
    position: relative;
    left: 19%;
-   top: -36px;
+   top: 11px;
    padding-right: 0px;
 }
 
 #coinR{
    position: relative;
    left: -16px;
-   top: -72px;
+   top: -24px;
    width: 31px;
 }
 
@@ -1247,10 +1319,10 @@ input[type="range"]::-moz-range-thumb {
 
 #account{
    position: absolute;
-   top: 77px;
-   left: calc(50% - 294px);
-   width: 612px;
-   height: 619px;
+   top: 148px;
+   left: calc(50% - 237px);
+   width: 476px;
+   height: 466px;
    background-color: #252525;
    visibility: hidden;
    border-radius: 30px;
@@ -1258,8 +1330,8 @@ input[type="range"]::-moz-range-thumb {
 
 #password{
    position: relative;
-   left: calc(50% - 422px);
-   top: 117px;
+   left: calc(50% - 140px);
+   top: 74px;
    height: 30px;
    border-radius: 30px;
    padding: 5px 28px;
@@ -1267,9 +1339,9 @@ input[type="range"]::-moz-range-thumb {
    border: none;
 }
 
-#email-username{
+#email{
    position: relative;
-   left: calc(50% - 146px);
+   left: calc(50% - 141px);
    top: 49px;
    height: 30px;
    border-radius: 30px;
@@ -1278,133 +1350,65 @@ input[type="range"]::-moz-range-thumb {
    border: none;
 }
 
+#username{
+   position: relative;
+   left: calc(50% - 140px);
+   top: 61px;
+   height: 30px;
+   border-radius: 30px;
+   padding: 5px 28px;
+   font-size: 17px;
+   border: none;
+}
+
+#signup{
+   color: white;
+   text-align: start;
+   width: 115px;
+   position: relative;
+   left: 36%;
+   top: 39px;
+   font-size: 30px;
+   font-family: Arial, Helvetica, sans-serif;
+   font-weight: 600;
+}
+ 
 #login{
    color: white;
    text-align: start;
-   width: 100px;
+   width: 115px;
    position: relative;
-   left: 244px;
+   left: 38%;
    top: 39px;
    font-size: 30px;
    font-family: Arial, Helvetica, sans-serif;
    font-weight: 600;
 }
 
-.gsi-material-button {
-   -moz-user-select: none;
-   -moz-user-select: none;
-   -webkit-user-select: none;
-   -ms-user-select: none;
-   -webkit-appearance: none;
-   background-color: WHITE;
-   background-image: none;
-   border: 1px solid #747775;
-   -webkit-border-radius: 20px;
-   border-radius: 20px;
-   -webkit-box-sizing: border-box;
-   box-sizing: border-box;
-   color: #1f1f1f;
-   cursor: pointer;
-   font-family: 'Roboto', arial, sans-serif;
-   font-size: 14px;
-   height: 40px;
-   letter-spacing: 0.25px;
-   outline: none;
-   overflow: hidden;
-   padding: 0 12px;
+#signupBtn{
    position: relative;
-   text-align: center;
-   -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
-   transition: background-color .218s, border-color .218s, box-shadow .218s;
-   vertical-align: middle;
-   white-space: nowrap;
+   background-color: white;
+   left: calc(50% - 138px);
+   top: 71px;
+   height: 38px;
    width: 270px;
-   max-width: 400px;
-   min-width: min-content;
-   top: 203px;
-   left: -114px;
- }
- 
-.gsi-material-button .gsi-material-button-icon {
-   height: 20px;
-   margin-right: 12px;
-   min-width: 20px;
-   width: 20px;
+   border-radius: 30px;
+   padding: 5px 28px;
+   font-size: 22px;
+   border: none;
 }
- 
-.gsi-material-button .gsi-material-button-content-wrapper {
-   -webkit-align-items: center;
-   align-items: center;
-   display: flex;
-   -webkit-flex-direction: row;
-   flex-direction: row;
-   -webkit-flex-wrap: nowrap;
-   flex-wrap: nowrap;
-   height: 100%;
-   justify-content: space-between;
-   position: relative;
-   width: 100%;
+
+#signupBtn:hover{
+   background-color: #538d4e;
+   color: white;
 }
- 
-.gsi-material-button .gsi-material-button-contents {
-   -webkit-flex-grow: 1;
-   flex-grow: 1;
-   font-family: 'Roboto', arial, sans-serif;
-   font-weight: 500;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   vertical-align: top;
- }
- 
-.gsi-material-button .gsi-material-button-state {
-   -webkit-transition: opacity .218s;
-   transition: opacity .218s;
-   bottom: 0;
-   left: 0;
-   opacity: 0;
-   position: absolute;
-   right: 0;
-   top: 0;
- }
- 
-.gsi-material-button:disabled {
-   cursor: default;
-   background-color: #ffffff61;
-   border-color: #1f1f1f1f;
- }
- 
-.gsi-material-button:disabled .gsi-material-button-contents {
-   opacity: 38%;
-}
- 
- .gsi-material-button:disabled .gsi-material-button-icon {
-   opacity: 38%;
- }
- 
-.gsi-material-button:not(:disabled):active .gsi-material-button-state, 
-.gsi-material-button:not(:disabled):focus .gsi-material-button-state {
-   background-color: #303030;
-   opacity: 12%;
-}
- 
-.gsi-material-button:not(:disabled):hover {
-   -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
-   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
-}
- 
-.gsi-material-button:not(:disabled):hover .gsi-material-button-state {
-   background-color: #303030;
-   opacity: 8%;
- }
-/*  Código copiado. */
- 
 
 #loginBtn{
    position: relative;
    background-color: white;
-   left: calc(50% - 146px);
-   top: 123px;
-   height: 39px;
+   left: calc(50% - 138px);
+   top: 73px;
+   height: 38px;
    width: 270px;
    border-radius: 30px;
    padding: 5px 28px;
@@ -1415,6 +1419,65 @@ input[type="range"]::-moz-range-thumb {
 #loginBtn:hover{
    background-color: #538d4e;
    color: white;
+}
+
+
+#information{
+   position: relative;
+   bottom: -68px;
+   left: 117px;
+   font-size: 20px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#email-username{
+   position: relative;
+   left: calc(50% - 141px);
+   top: 49px;
+   height: 30px;
+   border-radius: 30px;
+   padding: 5px 28px;
+   font-size: 17px;
+   border: none;
+}
+
+#passwordL{
+   position: relative;
+   left: calc(50% - 140px);
+   top: 61px;
+   height: 30px;
+   border-radius: 30px;
+   padding: 5px 28px;
+   font-size: 17px;
+   border: none;
+}
+
+#informationL{
+   position: relative;
+   bottom: 119px;
+   left: 116px;
+   font-size: 20px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#Log-In{
+   position: relative;
+   bottom: -25px;
+}
+
+#createAccount{
+   position: relative;
+   top: 103px;
+   font-size: 16px;
+   right: 40px;
+   color: white;
+   font-family: Arial, Helvetica, sans-serif;
+   text-decoration: none;
+}
+
+#createAccount:hover{
+   text-decoration: underline;
+   color: #3362d9;
 }
 
 #shopmenu{
@@ -1443,7 +1506,7 @@ input[type="range"]::-moz-range-thumb {
    font-size: 14px;
    text-align: center;
    height: 10px;
-   width: 323px;
+   width: 390px;
    display: flex;
    align-items: center;
    justify-content: center;
@@ -1467,4 +1530,71 @@ input[type="range"]::-moz-range-thumb {
 #bottomText a:hover{
    text-decoration: underline;
    color: #3362d9;
+}
+
+#bug{
+   position: absolute;
+   top: 147px;
+   left: calc(50% - 249px);
+   width: 503px;
+   height: 518px;
+   background-color: #252525;
+   visibility: hidden;
+   border-radius: 30px;
+}
+
+#bug p{
+   color: white;
+   font-size: 30px;
+   text-align: center;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#bug textarea{
+   position: relative;
+   width: 76%;
+   height: 315px;
+   left: 10%;
+   font-size: 17px;
+   border-radius: 5px;
+   padding: 6px 10px;
+   max-width: 76%;
+   max-height: 315px;
+   min-width: 76%;
+}
+
+#bug svg{
+   position: relative;
+   height: 10px;
+   width: 10px;
+   left: 49px;
+   top: -2px;
+   background: white;
+   padding: 8px;
+   border-radius: 6px;
+}
+
+#bug svg:hover{
+   background: #0262f1;
+   fill: white;
+}
+
+#bugSelect{
+   position: relative;
+   bottom: 10px;
+   left: 50px;
+   border-radius: 6px;
+   padding: 3.3px;
+   font-size: 14px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#bug h4{
+   color: rgb(255, 24, 24);
+   font-size: 17px;
+   left: 54px;
+   width: 395px;
+   position: relative;
+   bottom: 20px;
+   font-family: Arial, Helvetica, sans-serif;
 }

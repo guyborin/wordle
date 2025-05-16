@@ -1,56 +1,57 @@
 from flask import Flask, render_template, request, jsonify
 # from flask_cors import CORS  # Import Flask-CORS
-from models import Money
+from models import addUser, getUser, updateUser  # Import your models
 import os  # Import os module
-import firebase_admin
-from firebase_admin import credentials, firestore
-
-cred = credentials.Certificate("guy-wordle-firebase-adminsdk-fbsvc-18932c889a.json")
-firebase_admin.initialize_app(cred)
-db = firestore.client()
 
 app = Flask(__name__)
 
 # CORS(app)  # Enable CORS for all routes
 
-
-@app.route('/add', methods=['POST'])
-def add():
+@app.route('/user', methods=['POST'])
+def sign_up():
     data = request.json
-    db.collection('users').add(data)
-    return jsonify({"message": "Data added successfully!"})
+    try:
+        addUser(data["email"], data["name"], data["password"])
+        return jsonify({"message": "User signed in successfully!"})
+    except Exception as e:
+        return jsonify({'error': f"Error adding record: {e}"}), 400
 
-money = Money()
+@app.route('/user', methods=['GET'])
+def log_in():
+    emailname = request.args.get("emailname")
+    password = request.args.get("password")
 
-@app.route('/money', methods=['GET'])
-def get_money():
-    # users = User.query.all()
-    # return jsonify([{'id': user.id, 'name': user.name} for user in users])
-    return jsonify({'amount': money.amount})
+    if not emailname or not password:
+        return jsonify("Missing email/name or password")
 
-@app.route('/money', methods=['PUT'])
-def update_money():
+    # print("log_in: ", emailname, password)
+    user = getUser(emailname, password)
+    return jsonify(user)
+    
+@app.route('/user', methods=['PUT'])
+def update_user():
+    print("update_user")
     data = request.json
-    new_amount = data.get('new_amount')
-    if new_amount is None:
-        return jsonify({'error': 'Amount not provided'}), 400
-
-    money.amount = new_amount
-    # Here you'd normally update the money in a database or global variable
-    return jsonify({'message': f'Money updated to {new_amount}'}), 200
-
+    try:
+        updateUser(
+            data["name"],
+            data["experience_points"],
+            data["coins"],
+            data["hint_keyboard_letter"],
+            data["hint_column_letter"],
+            data["hint_chance"],
+            data["restart_counter"]
+        )
+        return jsonify({"message": "User updated successfully!"})
+    except Exception as e:
+        print("Update error:", e)
+        return jsonify({'error': f"Error updating record: {e}"}), 400
+    
 
 @app.route("/")
 def home():
     return render_template("wordChase.html")
     #return jsonify({"message": "Hello, Cloud Run!"})
-
-@app.route("/add-data", methods=["POST"])
-def add_data():
-    data = request.json
-    doc_ref = db.collection("items").document()
-    doc_ref.set(data)
-    return jsonify({"message": "Data added!", "id": doc_ref.id})
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
