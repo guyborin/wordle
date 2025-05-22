@@ -18,20 +18,24 @@ defaultUser = dict(
 
 def addUser(email, username, password):
     print("addUser: ", email, username, password)
-
-    user_data = defaultUser
-    print("addUser2", user_data)
+    
+    users_ref = db.collection('users')
+    query = users_ref.where("name", "==", username)
+    query2 = users_ref.where("email", "==", email)
+    if any(query.stream()):
+        return "User already taken"
+    if any(query2.stream()):
+        return "Account with this email already exists"
+    user_data = defaultUser.copy()
     user_data["email"] = email
     user_data["name"] = username
     user_data["password"] = password
-    
     try:
         print("addUser3", user_data)
-        doc_ref = db.collection('users').add(user_data)
+        doc_ref = users_ref.add(user_data)
+        return "User created successfully!"
     except Exception as e:
         print("Error adding record:", e)
-
-    print(f"New user added with id: {doc_ref[1].id}")
 
 def getUser(emailname, password):
     try:

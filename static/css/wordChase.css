@@ -1330,8 +1330,8 @@ input[type="range"]::-moz-range-thumb {
 
 #password{
    position: relative;
-   left: calc(50% - 140px);
-   top: 74px;
+   left: calc(50% - 134px);
+   top: 79px;
    height: 30px;
    border-radius: 30px;
    padding: 5px 28px;
@@ -1341,8 +1341,8 @@ input[type="range"]::-moz-range-thumb {
 
 #email{
    position: relative;
-   left: calc(50% - 141px);
-   top: 49px;
+   left: calc(50% - 134px);
+   top: 61px;
    height: 30px;
    border-radius: 30px;
    padding: 5px 28px;
@@ -1352,8 +1352,8 @@ input[type="range"]::-moz-range-thumb {
 
 #username{
    position: relative;
-   left: calc(50% - 140px);
-   top: 61px;
+   left: calc(50% - 134px);
+   top: 70px;
    height: 30px;
    border-radius: 30px;
    padding: 5px 28px;
@@ -1364,10 +1364,11 @@ input[type="range"]::-moz-range-thumb {
 #signup{
    color: white;
    text-align: start;
-   width: 115px;
+   width: 100%;
    position: relative;
-   left: 36%;
-   top: 39px;
+   left: 0%;
+   top: 60px;
+   text-align: center;
    font-size: 30px;
    font-family: Arial, Helvetica, sans-serif;
    font-weight: 600;
@@ -1376,10 +1377,11 @@ input[type="range"]::-moz-range-thumb {
 #login{
    color: white;
    text-align: start;
-   width: 115px;
+   width: 100%;
    position: relative;
-   left: 38%;
-   top: 39px;
+   left: 0%;
+   top: 54px;
+   text-align: center;
    font-size: 30px;
    font-family: Arial, Helvetica, sans-serif;
    font-weight: 600;
@@ -1388,8 +1390,8 @@ input[type="range"]::-moz-range-thumb {
 #signupBtn{
    position: relative;
    background-color: white;
-   left: calc(50% - 138px);
-   top: 71px;
+   left: calc(50% - 133px);
+   top: 72px;
    height: 38px;
    width: 270px;
    border-radius: 30px;
@@ -1406,8 +1408,8 @@ input[type="range"]::-moz-range-thumb {
 #loginBtn{
    position: relative;
    background-color: white;
-   left: calc(50% - 138px);
-   top: 73px;
+   left: calc(50% - 131px);
+   top: 74px;
    height: 38px;
    width: 270px;
    border-radius: 30px;
@@ -1424,16 +1426,17 @@ input[type="range"]::-moz-range-thumb {
 
 #information{
    position: relative;
-   bottom: -68px;
-   left: 117px;
+   bottom: 153px;
+   left: 0px;
    font-size: 20px;
+   text-align: center;
    font-family: Arial, Helvetica, sans-serif;
 }
 
 #email-username{
    position: relative;
-   left: calc(50% - 141px);
-   top: 49px;
+   left: calc(50% - 132px);
+   top: 54px;
    height: 30px;
    border-radius: 30px;
    padding: 5px 28px;
@@ -1443,8 +1446,8 @@ input[type="range"]::-moz-range-thumb {
 
 #passwordL{
    position: relative;
-   left: calc(50% - 140px);
-   top: 61px;
+   left: calc(50% - 132px);
+   top: 64px;
    height: 30px;
    border-radius: 30px;
    padding: 5px 28px;
@@ -1454,9 +1457,10 @@ input[type="range"]::-moz-range-thumb {
 
 #informationL{
    position: relative;
-   bottom: 119px;
-   left: 116px;
+   bottom: 104px;
+   left: 0px;
    font-size: 20px;
+   text-align: center;
    font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -1469,7 +1473,7 @@ input[type="range"]::-moz-range-thumb {
    position: relative;
    top: 103px;
    font-size: 16px;
-   right: 40px;
+   right: 34px;
    color: white;
    font-family: Arial, Helvetica, sans-serif;
    text-decoration: none;
@@ -1478,6 +1482,115 @@ input[type="range"]::-moz-range-thumb {
 #createAccount:hover{
    text-decoration: underline;
    color: #3362d9;
+}
+
+#profileName{
+   color: white;
+   font-size: 40px;
+   position: relative;
+   width: 100%;
+   text-align: center;
+   bottom: 200px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#end-session{
+   position: relative;
+   top: -159px;
+   left: 85%;
+   height: 30px;
+   width: 30px;
+   background-color: #252525;
+   border-radius: 8px;
+   padding: 12px;
+   border: none;
+}
+
+#end-session:hover{
+   background-color: #2f2f30;
+}
+
+.shots-text{
+   color: white;
+   font-size: 20px;
+   position: relative;
+   width: 100%;
+   margin-bottom: -17px;
+   text-align: start;
+   bottom: 200px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#shots-text-container{
+   position: relative;
+   bottom: -200px;
+   left: 11px;
+   font-size: 20px;
+   text-align: center;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#shots-stats{
+   position: relative;
+   bottom: 211px;
+   left: 43px;
+   width: 158px;
+   height: 175px;
+}
+
+.shots{
+   width: 100%;
+   height: 19px;
+   margin-bottom: 7px;
+   border-radius: 30px;
+}
+
+#first-shot-win{
+   background-color: #538d4e;
+}
+
+#second-shot-win{
+   background-color: #60a55a;
+}
+
+#third-shot-win{
+   background-color: #6bb565;
+}
+
+#fourth-shot-win{
+   background-color: #7ab375;
+}
+
+#fifth-shot-win{
+   background-color: #80ab7c;
+}
+
+#sixth-shot-win{
+   background-color: #a4c9a1;
+}
+
+#seventh-shot-win{
+   background-color: #b8e1c2;
+}
+
+#shots-percent-container{
+   position: relative;
+   bottom: 206px;
+   left: 205px;
+   font-size: 20px;
+   text-align: center;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#user-stats{
+   position: relative;
+   bottom: 235px;
+   left: 50px;
+   height: 217px;
+   width: 257px;
+   font-size: 20px;
+   text-align: center;
+   font-family: Arial, Helvetica, sans-serif;
 }
 
 #shopmenu{

@@ -17,8 +17,6 @@ let hintValue = 0;
 let hammerValue = 0;
 let chanceValue = 0;
 let openG = true;
-let accountB = false;
-let userLoged = "";
 const slider = document.getElementById("slider");
 const box = document.getElementById("box");
 
@@ -55,6 +53,10 @@ drawGrid(game);
 document.getElementById("hintValue").textContent = hintValue;
 document.getElementById("hammerValue").textContent = hammerValue;
 document.getElementById("chanceValue").textContent = chanceValue;
+
+if(localStorage.getItem("userLoged") !== null && localStorage.getItem("userLoged") !== undefined && localStorage.getItem("userLogedPass") !== "null" && localStorage.getItem("userLogedPass") !== undefined){
+    getUser(localStorage.getItem("userLoged"), localStorage.getItem("userLogedPass"));
+}
 
 changeEnglish();
 
@@ -269,6 +271,7 @@ function hammer(){
             removeAnnounce();
             hammerN = true;
         }
+        updateUser();
     }
 }
 
@@ -288,14 +291,18 @@ function hint(){
             }
             hintN = true;
         }
+        updateUser();
     }
 }
 
 function chance(){
     if(inGame === false) return;
     const grid = document.getElementsByClassName("grid")[0];
-    if(!chanceN){
+    if(chanceValue > 0 && !chanceN && inGame){
+        console.log(inGame);
         let i = stats.grid.length;
+        // Add a new row to stats.grid
+        stats.grid.push(Array(5).fill(""));
         for(let j = 0; j < 5; j++){
             drawBox(grid, i, j);
         }
@@ -307,6 +314,29 @@ function chance(){
             }
         }
         chanceN = true;
+        chanceValue--;
+        document.getElementById("chanceValue").textContent = chanceValue;
+        updateUser();
+    }
+}
+
+function eraseChance() {
+    chanceN = false;
+    // Remove the extra row visually and from stats.grid
+    if (stats.grid.length > 6) {
+        stats.grid.pop();
+        // Remove the extra row's boxes from the DOM
+        for (let j = 0; j < 5; j++) {
+            const box = document.getElementById(`box6${j}`);
+            if (box) box.remove();
+        }
+    }
+    // Reset all box heights to normal (60px)
+    for(let y = 0; y < stats.grid.length; y++){
+        for(let x = 0; x < 5; x++){
+            const box = document.getElementById(`box${y}${x}`);
+            if (box) box.style.height = "60px";
+        }
     }
 }
 
@@ -447,17 +477,11 @@ function revealWord(guess){
         if(isWinning){
             youWin();
             inGame = false;
-        }else if(chanceN){
-            if(stats.currentRow === 7){
-                youLose();
-                inGame = false;
-                chanceN = false;
-            }
-        }else if(gameOver){
+        }else if((!chanceN && stats.currentRow === 6) || (chanceN && stats.currentRow === 7)){
             youLose();
             inGame = false;
+            chanceN = false;
         }
-
     }, 3 * animation_duration);
 }
 
@@ -468,16 +492,21 @@ function isLetter(key){
 }
 
 function addLetter(letter){
-    if(!chanceN && stats.currentCol === 5){
-        if(stats.currentCol === 5 || !inGame) return;
-    }
+    if(stats.currentCol === 5 || !inGame && stats.currentRow != 6) return;
     
-
-    console.log(stats.currentRow,stats.currentCol);
-    stats.grid[stats.currentRow][stats.currentCol] = letter;
-    document.getElementById(`box${stats.currentRow}${stats.currentCol}`).style.borderColor = "#905f70";
-    document.getElementById(`box${stats.currentRow}${stats.currentCol}`).style.color = "white";
-    stats.currentCol++;
+    if(stats.currentRow === 6){
+        console.log(stats.currentRow,stats.currentCol);
+        stats.grid[stats.currentRow][stats.currentCol] = letter;
+        document.getElementById(`box${6}${stats.currentCol}`).style.borderColor = "#905f70";
+        document.getElementById(`box${6}${stats.currentCol}`).style.color = "white";
+        stats.currentCol++; 
+    }else{
+        console.log(stats.currentRow,stats.currentCol);
+        stats.grid[stats.currentRow][stats.currentCol] = letter;
+        document.getElementById(`box${stats.currentRow}${stats.currentCol}`).style.borderColor = "#905f70";
+        document.getElementById(`box${stats.currentRow}${stats.currentCol}`).style.color = "white";
+        stats.currentCol++; 
+    }
 }
 
 function removeLetter(){
@@ -565,86 +594,178 @@ setInterval(() => {
 }, 1000)
 
 function youWin(){
-    openG = true
-    setTimeout(() =>{
-        endGame("Y", 0, 0, "correct");
-        endGame("O", 1, 0, "correct");
-        endGame("U", 2, 0, "correct");
-        endGame("", 3, 0, "empty");
-        endGame("", 4, 0, "empty");
+    openG = true;
+    if(chanceN){
+        setTimeout(() =>{
+            endGame("Y", 0, 0, "correct");
+            endGame("O", 1, 0, "correct");
+            endGame("U", 2, 0, "correct");
+            endGame("", 3, 0, "empty");
+            endGame("", 4, 0, "empty");
 
-        endGame("", 0, 1, "empty");
-        endGame("W", 1, 1, "correct");
-        endGame("O", 2, 1, "correct");
-        endGame("N", 3, 1, "correct");
-        endGame("!", 4, 1, "correct");
+            endGame("", 0, 1, "empty");
+            endGame("W", 1, 1, "correct");
+            endGame("O", 2, 1, "correct");
+            endGame("N", 3, 1, "correct");
+            endGame("!", 4, 1, "correct");
 
-        endGame("", 0, 2, "empty");
-        endGame("", 1, 2, "empty");
-        endGame("", 2, 2, "empty");
-        endGame("", 3, 2, "empty");
-        endGame("", 4, 2, "empty");
+            endGame("", 0, 2, "empty");
+            endGame("", 1, 2, "empty");
+            endGame("", 2, 2, "empty");
+            endGame("", 3, 2, "empty");
+            endGame("", 4, 2, "empty");
+            
+            endGame("", 0, 3, "empty");
+            endGame("", 1, 3, "empty");
+            endGame("", 2, 3, "empty");
+            endGame("", 3, 3, "empty");
+            endGame("", 4, 3, "empty");
 
-        endGame("P", 0, 3, "correct");
-        endGame("I", 1, 3, "correct");
-        endGame("C", 2, 3, "correct");
-        endGame("K", 3, 3, "correct");
-        endGame("", 4, 3, "empty");
+            endGame("P", 0, 4, "correct");
+            endGame("I", 1, 4, "correct");
+            endGame("C", 2, 4, "correct");
+            endGame("K", 3, 4, "correct");
+            endGame("", 4, 4, "empty");
 
-        endGame("", 0, 4, "empty");
-        endGame("O", 1, 4, "correct");
-        endGame("N", 2, 4, "correct");
-        endGame("E", 3, 4, "correct");
-        endGame(":", 4, 4, "correct");
+            endGame("", 0, 5, "empty");
+            endGame("O", 1, 5, "correct");
+            endGame("N", 2, 5, "correct");
+            endGame("E", 3, 5, "correct");
+            endGame(":", 4, 5, "correct");
 
-        endGame("", 0, 5, "gift1");
-        endGame("", 1, 5, "gift2");
-        endGame("", 2, 5, "gift3");
-        endGame("", 3, 5, "gift4");
-        endGame("", 4, 5, "gift5");
-    }, 700);
+            endGame("", 0, 6, "gift1");
+            endGame("", 1, 6, "gift2");
+            endGame("", 2, 6, "gift3");
+            endGame("", 3, 6, "gift4");
+            endGame("", 4, 6, "gift5");
+        }, 700); 
+    }else{
+        setTimeout(() =>{
+            endGame("Y", 0, 0, "correct");
+            endGame("O", 1, 0, "correct");
+            endGame("U", 2, 0, "correct");
+            endGame("", 3, 0, "empty");
+            endGame("", 4, 0, "empty");
+
+            endGame("", 0, 1, "empty");
+            endGame("W", 1, 1, "correct");
+            endGame("O", 2, 1, "correct");
+            endGame("N", 3, 1, "correct");
+            endGame("!", 4, 1, "correct");
+
+            endGame("", 0, 2, "empty");
+            endGame("", 1, 2, "empty");
+            endGame("", 2, 2, "empty");
+            endGame("", 3, 2, "empty");
+            endGame("", 4, 2, "empty");
+
+            endGame("P", 0, 3, "correct");
+            endGame("I", 1, 3, "correct");
+            endGame("C", 2, 3, "correct");
+            endGame("K", 3, 3, "correct");
+            endGame("", 4, 3, "empty");
+
+            endGame("", 0, 4, "empty");
+            endGame("O", 1, 4, "correct");
+            endGame("N", 2, 4, "correct");
+            endGame("E", 3, 4, "correct");
+            endGame(":", 4, 4, "correct");
+
+            endGame("", 0, 5, "gift1");
+            endGame("", 1, 5, "gift2");
+            endGame("", 2, 5, "gift3");
+            endGame("", 3, 5, "gift4");
+            endGame("", 4, 5, "gift5");
+        }, 700);
+    }
+   
 
 }
 
 function youLose(){
-    setTimeout(() =>{
-        endGame("Y", 0, 0, "wrong");
-        endGame("O", 1, 0, "wrong");
-        endGame("U", 2, 0, "wrong");
-        endGame("", 3, 0, "empty");
-        endGame("", 4, 0, "empty");
+    if(chanceN){
+        setTimeout(() =>{
+            endGame("Y", 0, 0, "wrong");
+            endGame("O", 1, 0, "wrong");
+            endGame("U", 2, 0, "wrong");
+            endGame("", 3, 0, "empty");
+            endGame("", 4, 0, "empty");
 
-        endGame("", 0, 1, "empty");
-        endGame("L", 1, 1, "wrong");
-        endGame("O", 2, 1, "wrong");
-        endGame("S", 3, 1, "wrong");
-        endGame("E", 4, 1, "wrong");
+            endGame("", 0, 1, "empty");
+            endGame("L", 1, 1, "wrong");
+            endGame("O", 2, 1, "wrong");
+            endGame("S", 3, 1, "wrong");
+            endGame("E", 4, 1, "wrong");
 
-        endGame("", 0, 2, "empty");
-        endGame("T", 1, 2, "wrong");
-        endGame("H", 2, 2, "wrong");
-        endGame("E", 3, 2, "wrong");
-        endGame("", 4, 2, "empty");
+            endGame("", 0, 2, "empty");
+            endGame("", 1, 2, "empty");
+            endGame("", 2, 2, "empty");
+            endGame("", 3, 2, "empty");
+            endGame("", 4, 2, "empty");
 
-        endGame("", 0, 3, "empty");
-        endGame("W", 1, 3, "wrong");
-        endGame("O", 2, 3, "wrong");
-        endGame("R", 3, 3, "wrong");
-        endGame("D", 4, 3, "wrong");
+            endGame("", 0, 3, "empty");
+            endGame("T", 1, 3, "wrong");
+            endGame("H", 2, 3, "wrong");
+            endGame("E", 3, 3, "wrong");
+            endGame("", 4, 3, "empty");
 
-        endGame("W", 0, 4, "wrong");
-        endGame("A", 1, 4, "wrong");
-        endGame("S", 2, 4, "wrong");
-        endGame(":", 3, 4, "wrong");
-        endGame("", 4, 4, "empty");
-        
-        endGame(stats.secret[0], 0, 5, "correct");
-        endGame(stats.secret[1], 1, 5, "correct");
-        endGame(stats.secret[2], 2, 5, "correct");
-        endGame(stats.secret[3], 3, 5, "correct");
-        endGame(stats.secret[4], 4, 5, "correct");
-    }, 700);
+            endGame("", 0, 4, "empty");
+            endGame("W", 1, 4, "wrong");
+            endGame("O", 2, 4, "wrong");
+            endGame("R", 3, 4, "wrong");
+            endGame("D", 4, 4, "wrong");
 
+            endGame("W", 0, 5, "wrong");
+            endGame("A", 1, 5, "wrong");
+            endGame("S", 2, 5, "wrong");
+            endGame(":", 3, 5, "wrong");
+            endGame("", 4, 5, "empty");
+            
+            endGame(stats.secret[0], 0, 6, "correct");
+            endGame(stats.secret[1], 1, 6, "correct");
+            endGame(stats.secret[2], 2, 6, "correct");
+            endGame(stats.secret[3], 3, 6, "correct");
+            endGame(stats.secret[4], 4, 6, "correct");
+        }, 700);
+    }else{
+        setTimeout(() =>{
+            endGame("Y", 0, 0, "wrong");
+            endGame("O", 1, 0, "wrong");
+            endGame("U", 2, 0, "wrong");
+            endGame("", 3, 0, "empty");
+            endGame("", 4, 0, "empty");
+
+            endGame("", 0, 1, "empty");
+            endGame("L", 1, 1, "wrong");
+            endGame("O", 2, 1, "wrong");
+            endGame("S", 3, 1, "wrong");
+            endGame("E", 4, 1, "wrong");
+
+            endGame("", 0, 2, "empty");
+            endGame("T", 1, 2, "wrong");
+            endGame("H", 2, 2, "wrong");
+            endGame("E", 3, 2, "wrong");
+            endGame("", 4, 2, "empty");
+
+            endGame("", 0, 3, "empty");
+            endGame("W", 1, 3, "wrong");
+            endGame("O", 2, 3, "wrong");
+            endGame("R", 3, 3, "wrong");
+            endGame("D", 4, 3, "wrong");
+
+            endGame("W", 0, 4, "wrong");
+            endGame("A", 1, 4, "wrong");
+            endGame("S", 2, 4, "wrong");
+            endGame(":", 3, 4, "wrong");
+            endGame("", 4, 4, "empty");
+            
+            endGame(stats.secret[0], 0, 5, "correct");
+            endGame(stats.secret[1], 1, 5, "correct");
+            endGame(stats.secret[2], 2, 5, "correct");
+            endGame(stats.secret[3], 3, 5, "correct");
+            endGame(stats.secret[4], 4, 5, "correct");
+        }, 700);
+    }
 }
 
 function endGame(letter, boxI, boxJ, value){
@@ -675,9 +796,12 @@ function endGame(letter, boxI, boxJ, value){
             let gift = document.getElementById(value);
             box.style.backgroundColor = "#fa7e44";
             box.style.borderColor = "#fa7e44";
-            box.appendChild(gift);
-            gift.classList.remove("hidden");
-            gift.style.visibility = "visible";
+            if (gift) {
+                document.getElementById("gifts").removeChild(gift);
+                box.appendChild(gift);
+                gift.classList.remove("hidden");
+                gift.style.visibility = "visible";
+            }
         }else if(value === "correct"){
             box.classList.add("correct");
             box.style.borderColor = "#538d4e";
@@ -728,10 +852,10 @@ function hide(){
     document.getElementById("shader").style.visibility = "hidden";
     document.getElementById("newWordle").style.visibility = "hidden";
     document.getElementById("Log-In").classList.remove("hidden");
+    document.getElementById("Log-In").style.visibility = "hidden";
     document.getElementById("account").style.visibility = "hidden";
     document.getElementById("bug").style.visibility = "hidden";
     document.getElementById("Sign-Up").classList.add("hidden");
-    inGame = true;
 }
 
 function check(){
@@ -753,6 +877,7 @@ function check(){
 
 function restart(word){
     let restartCount = document.getElementById("restartCount");
+    eraseChance();
     restartCount.style.visibility = "visible";
     if(restartCount.textContent > 0 || !inGame){
         removeAnnounce();
@@ -791,7 +916,19 @@ function restart(word){
         }    
         
         for(let i = 1; i <= 5; i++){
-            document.getElementById("gift" + i).classList.add("hidden");
+            const gift = document.getElementById("gift" + i);
+            if (gift) {
+                gift.classList.add("hidden");
+                // Move gift back to the gifts container
+                document.getElementById("gifts").appendChild(gift);
+            }
+        }
+
+        for(let i = 1; i <= 5; i++){
+            const gift = document.getElementById("gift" + i);
+            if (gift) {
+                gift.style.fill = "white";
+            }
         }
 
         stats.currentCol = 0;
@@ -812,6 +949,7 @@ function restart(word){
         console.log(stats.secret);
         if(inGame){
             restartCount.textContent = parseInt(restartCount.textContent) - 1;
+            updateUser();
         }
     }else{
         restartCount.style.color = "red";
@@ -822,6 +960,69 @@ function restart(word){
         }, 500)
     }
 }
+
+function giveup(){
+    eraseChance();
+    restartCount.style.visibility = "visible";
+    removeAnnounce();
+
+    for(let i = 0; i < stats.usedLetters.length; i++){
+        const virtualKeyboard = document.getElementById(stats.usedLetters[i].toLowerCase());
+        virtualKeyboard.classList.remove("wrong");
+        virtualKeyboard.classList.remove("correct");
+        virtualKeyboard.classList.remove("empty");
+        virtualKeyboard.classList.remove("animated");
+    }
+
+    for(let i = 0; i < 6; i++){
+        for(let j = 0; j < 5; j++){
+            const box = document.getElementById(`box${i}${j}`);
+            if (box.textContent)
+                box.textContent = "";
+
+            box.classList.remove("wrong");
+            box.classList.remove("correct");
+            box.classList.remove("empty");
+            box.classList.remove("animated");
+            box.style.borderColor = "#3a3a3c";
+            box.style.backgroundColor = "";
+            stats.grid[i][j] = "";
+        }
+    }    
+    
+    for(let i = 1; i <= 5; i++){
+        const gift = document.getElementById("gift" + i);
+        if (gift) {
+            gift.classList.add("hidden");
+            // Move gift back to the gifts container
+            document.getElementById("gifts").appendChild(gift);
+        }
+    }
+
+    for(let i = 1; i <= 5; i++){
+        const gift = document.getElementById("gift" + i);
+        if (gift) {
+            gift.style.fill = "white";
+        }
+    }
+
+    stats.currentCol = 0;
+    stats.currentRow = 0;
+    timer.decominutes = 0;
+    timer.minutes = 0;
+    timer.decoseconds = 0;
+    timer.seconds = 0;
+    document.getElementById("decominutes").textContent = timer.decominutes;
+    document.getElementById("minutes").textContent = timer.minutes;
+    document.getElementById("decoseconds").textContent = timer.decoseconds;
+    document.getElementById("seconds").textContent = timer.seconds;
+    changeTime = false;
+    inGame = false;
+    document.getElementById("restartCount").style.visibility = "hidden";
+    document.getElementById("restart").style.visibility = "hidden";
+    document.getElementById("restartBack").style.visibility = "hidden";
+}
+
 
 function changeLanguages(){
     if(langVisibility === 0){
@@ -942,11 +1143,18 @@ function gift(gift){
             /* if(reward < 250){ */
                 let money = Math.floor(Math.random() * (250 - 50) + 50);
                 document.getElementById("money").textContent = money + parseInt(document.getElementById("money").textContent);
-                document.getElementById("moneyR").textContent = money;
-                let moneyR = document.getElementById("moneyReward");
-                moneyR.classList.remove("hidden");
-                if (box) { 
-                    box.appendChild(moneyR);
+                let moneyRElem = document.getElementById("moneyR");
+                if (moneyRElem) {
+                    moneyRElem.textContent = money;
+                }
+                const moneyReward = document.getElementById("moneyReward");
+                if (moneyReward) {
+                    moneyReward.classList.remove("hidden");
+                    // Optionally position it over the box using CSS instead of appendChild
+                    // Or, only append if not already a child:
+                    if (box && moneyReward.parentNode !== box) {
+                        box.appendChild(moneyReward);
+                    }
                 }
             /* } */
             present.classList.add("hidden");
@@ -998,6 +1206,7 @@ function buyRestart(){
 
 function account(){
     document.getElementById("account").style.visibility = "visible";
+    document.getElementById("Log-In").style.visibility = "visible";
     document.getElementById("shader").style.visibility = "visible";
 }
 
@@ -1014,25 +1223,92 @@ async function userLogin() {
     }
 }
 
-async function createUser() {
-    let email = document.getElementById("email").value;
-    let name = document.getElementById("username").value;
-    let password = document.getElementById("password").value;
+function createProblem(message, type){
+    if(type === "login"){
+        document.getElementById("informationL").textContent = message;
+        document.getElementById("informationL").style.color = "red";
+        document.getElementById("informationL").style.visibility = "visible";
+        document.getElementById("informationL").style.fontSize = "16px";
 
-    if(email === "" || name === "" || password === ""){
-        document.getElementById("information").textContent = "Missing email, name or password";
+        setTimeout(() => {
+            document.getElementById("informationL").style.visibility = "hidden";
+            document.getElementById("informationL").value = "";
+            document.getElementById("informationL").style.color = "";
+            document.getElementById("informationL").style.fontSize = "";
+        }, 5000);
+        return;
+    }else{
+        document.getElementById("information").textContent = message;
         document.getElementById("information").style.color = "red";
         document.getElementById("information").style.visibility = "visible";
         document.getElementById("information").style.fontSize = "16px";
-        document.getElementById("information").style.top = "-111px";
 
         setTimeout(() => {
             document.getElementById("information").style.visibility = "hidden";
             document.getElementById("information").value = "";
             document.getElementById("information").style.color = "";
             document.getElementById("information").style.fontSize = "";
-            document.getElementById("information").style.top = "";
         }, 5000);
+        return;
+    }
+}
+
+async function createUser() {
+    let email = document.getElementById("email").value;
+    let name = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+
+    if(email === "" || name === "" || password === ""){
+        createProblem("Missing email/name or password");
+        return;
+    }
+
+    if(!email.includes("@") || !email.includes(".")){
+        createProblem("Invalid email");
+        return;
+    }
+
+    if(name.length < 3){
+        createProblem("Name must be at least 3 characters long");
+        return;
+    }
+
+    if(name.length > 20){
+        createProblem("Name must be at most 20 characters long");
+        return;
+    }
+
+    if(name.includes("@") || name.includes("#") || name.includes("$") || name.includes("%") || name.includes("^") || name.includes("&") || name.includes("*") || name.includes("(") || name.includes(")") || name.includes("+") || name.includes("=") || name.includes("{") || name.includes("}") || name.includes("[") || name.includes("]") || name.includes(":") || name.includes(";") || name.includes("'") || name.includes('"') || name.includes("<") || name.includes(">") || name.includes(",") || name.includes(".") || name.includes("?") || name.includes("/") || name.includes("\\") || name.includes("|") || name.includes("~") || name.includes("`") || name.includes("!")){
+        createProblem("Name must not contain special characters except '-' and '_'");
+        return;
+    }
+
+    if(password.length < 8){
+        createProblem("Password must be at least 8 characters long");
+        return;
+    }
+
+    if(password.length > 20){
+        createProblem("Password must be at most 20 characters long");
+        return;
+    }
+
+    if(password.includes(" ")){
+        createProblem("Password must not contain spaces");
+        return;
+    }
+
+    if(name.includes(" ")){
+        createProblem("Name must not contain spaces");
+        return;
+    }
+
+    if(!password.includes(1) && !password.includes(2) && !password.includes(3) && !password.includes(4) && !password.includes(5) && !password.includes(6) && !password.includes(7) && !password.includes(8) && !password.includes(9) && !password.includes(0)){
+        createProblem("Password must contain at least one number");
+        return;
+    }
+    if(!password.includes("!") && !password.includes("@") && !password.includes("#") && !password.includes("$") && !password.includes("%") && !password.includes("^") && !password.includes("&") && !password.includes("*") && !password.includes("(") && !password.includes(")") && !password.includes("-") && !password.includes("_")){
+        createProblem("Password must contain at least one special character");
         return;
     }
 
@@ -1050,14 +1326,28 @@ async function createUser() {
         throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const result = await response.json();
+    if(result === "User already taken"){
+        createProblem(result);
+        return;
+    }
+    if(result === "Account with this email already exists"){
+        createProblem(result);
+        return;
+    }
     console.log('User created:', result);
     document.getElementById("Log-In").classList.remove("hidden");
     document.getElementById("Sign-Up").classList.add("hidden");
 }
 
-async function getUser() {
-    const emailname = document.getElementById("email-username").value;
-    const password = document.getElementById("passwordL").value;
+async function getUser(userLoged, userLogedPass){
+    if(userLoged != "none" && userLogedPass != "none"){
+        var emailname = userLoged;
+        var password = userLogedPass;
+    }else{
+        var emailname = document.getElementById("email-username").value;
+        var password = document.getElementById("passwordL").value;
+    }
+    
     const response = await fetch(`http://127.0.0.1:8080/user?emailname=${encodeURIComponent(emailname)}&password=${encodeURIComponent(password)}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -1069,59 +1359,23 @@ async function getUser() {
     const result = await response.json();
     console.log('User :', result);
     if(result === "Incorrect password"){
-        document.getElementById("informationL").textContent = result;
-        document.getElementById("informationL").style.color = "red";
-        document.getElementById("informationL").style.visibility = "visible";
-        document.getElementById("informationL").style.fontSize = "18px";
-        document.getElementById("informationL").style.top = "-115px";
-        document.getElementById("informationL").style.left = "152px";
-
-        setTimeout(() => {
-            document.getElementById("informationL").style.visibility = "hidden";
-            document.getElementById("informationL").value = "";
-            document.getElementById("informationL").style.color = "";
-        }, 5000);
+        createProblem(result, "login");
         return;
     }
 
     if(result === "User or email not found"){
-        document.getElementById("informationL").textContent = result;
-        document.getElementById("informationL").style.color = "red";
-        document.getElementById("informationL").style.visibility = "visible";
-        document.getElementById("informationL").style.fontSize = "18px";
-        document.getElementById("informationL").style.top = "-115px";
-        document.getElementById("informationL").style.left = "134px";
-
-        setTimeout(() => {
-            document.getElementById("informationL").style.visibility = "hidden";
-            document.getElementById("informationL").value = "";
-            document.getElementById("informationL").style.color = "";
-            document.getElementById("informationL").style.fontSize = "";
-            document.getElementById("informationL").style.top = "";
-            document.getElementById("informationL").style.left = "";
-        }, 5000);
+        createProblem(result, "login");
         return;
     }
 
     if(result === "Missing email/name or password"){
-        document.getElementById("informationL").textContent = result;
-        document.getElementById("informationL").style.color = "red";
-        document.getElementById("informationL").style.visibility = "visible";
-        document.getElementById("informationL").style.fontSize = "16px";
-        document.getElementById("informationL").style.top = "-111px";
-
-        setTimeout(() => {
-            document.getElementById("informationL").style.visibility = "hidden";
-            document.getElementById("informationL").value = "";
-            document.getElementById("informationL").style.color = "";
-            document.getElementById("informationL").style.fontSize = "";
-            document.getElementById("informationL").style.top = "";
-        }, 5000);
+        createProblem(result, "login");
         return;
     }
     updateValues(result);
-    userLoged = result.name;
-    console.log(userLoged);
+    localStorage.setItem("userLoged", result.name);
+    localStorage.setItem("userLogedPass", result.password);
+    console.log(localStorage.getItem("userLoged"));
 }
 
 async function updateUser() {
@@ -1175,7 +1429,6 @@ function updateValues(result){
     hammerValue = result.hint_column_letter;
     chanceValue = result.hint_chance;
     restartCount = result.restart_counter;
-    accountB = true;
 }
 
 function signUp(){
@@ -1184,4 +1437,28 @@ function signUp(){
     document.getElementById("email-username").value = "";
     document.getElementById("passwordL").value = "";
     document.getElementById("information").textContent = "";
+}
+
+function logOut(){
+    localStorage.removeItem("userLoged");
+    localStorage.removeItem("userLogedPass");
+    document.getElementById("Log-In").classList.remove("hidden");
+    document.getElementById("Log-In").style.visibility = "visible";
+    document.getElementById("Sign-Up").classList.add("hidden");
+    document.getElementById("user-account").classList.add("hidden");
+    document.getElementById("email-username").value = "";
+    document.getElementById("passwordL").value = "";
+    document.getElementById("information").textContent = "";
+    document.getElementById("informationL").textContent = "";
+    document.getElementById("informationL").style.visibility = "hidden";
+    document.getElementById("information").style.visibility = "hidden";
+    document.getElementById("hintValue").textContent = 0;
+    document.getElementById("hammerValue").textContent = 0;
+    document.getElementById("chanceValue").textContent = 0;
+    document.getElementById("restartCount").textContent = 0;
+    document.getElementById("money").textContent = 0;
+    hintValue = 0;
+    hammerValue = 0;
+    chanceValue = 0;
+    restartCount = 0;
 }

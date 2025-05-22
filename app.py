@@ -10,11 +10,10 @@ app = Flask(__name__)
 @app.route('/user', methods=['POST'])
 def sign_up():
     data = request.json
-    try:
-        addUser(data["email"], data["name"], data["password"])
-        return jsonify({"message": "User signed in successfully!"})
-    except Exception as e:
-        return jsonify({'error': f"Error adding record: {e}"}), 400
+    
+    user = addUser(data["email"], data["name"], data["password"])
+    return jsonify(user)
+
 
 @app.route('/user', methods=['GET'])
 def log_in():
