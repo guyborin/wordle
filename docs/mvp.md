@@ -10,7 +10,7 @@ MVP:
         change language {check}
     5. Right menu (3 hints) {check}
     6. Shop {semicheck}
-    7. Gifts {semicheck} //bug
+    7. Gifts {check}
     8. Account Managment {semicheck}
 
 Next:

@@ -39,7 +39,9 @@ def update_user():
             data["hint_keyboard_letter"],
             data["hint_column_letter"],
             data["hint_chance"],
-            data["restart_counter"]
+            data["restart_counter"],
+            data["total_games_played"],
+            data["total_games_won"]
         )
         return jsonify({"message": "User updated successfully!"})
     except Exception as e:

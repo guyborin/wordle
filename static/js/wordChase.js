@@ -17,6 +17,7 @@ let hintValue = 0;
 let hammerValue = 0;
 let chanceValue = 0;
 let openG = true;
+let giftTimeouts = [];
 const slider = document.getElementById("slider");
 const box = document.getElementById("box");
 
@@ -237,6 +238,8 @@ function enter(){
         }else{
             announce("The list doesn't contain this word");
         }
+    }else{
+        announce("You need to fill all the boxes");
     }
     updateGrid();
 }
@@ -379,6 +382,8 @@ function keyboard(){
                     }else{
                         announce("The list doesn't contain this word");
                     }
+                }else{
+                    announce("You need to fill all the boxes");
                 }
             }
 
@@ -387,8 +392,13 @@ function keyboard(){
                 removeLetter();
             }
 
-            if(isLetter(key)){
+            if(isLetter(key)){                
+                if(stats.currentCol != 5){
+                    removeAnnounce();
+                }
+
                 addLetter(key);
+
             }
             
             updateGrid();
@@ -678,11 +688,18 @@ function youWin(){
             endGame("", 4, 5, "gift5");
         }, 700);
     }
-   
+    const winsElem = document.getElementById("totalWins");
+    const currentWins = parseInt(winsElem.textContent.replace("Total Wins: ", "")) || 0;
+    winsElem.textContent = `Total Wins: ${currentWins + 1}`;   
+    const gamesElem = document.getElementById("totalGames"); 
+    const currentGames = parseInt(gamesElem.textContent.replace("Total Games: ", "")) || 0;
+    gamesElem.textContent = `Total Games: ${currentGames + 1}`;
+    updateUser();
 
 }
 
 function youLose(){
+     if (!inGame) return;
     if(chanceN){
         setTimeout(() =>{
             endGame("Y", 0, 0, "wrong");
@@ -766,6 +783,10 @@ function youLose(){
             endGame(stats.secret[4], 4, 5, "correct");
         }, 700);
     }
+    const gamesElem = document.getElementById("totalGames"); 
+    const currentGames = parseInt(gamesElem.textContent.replace("Total Games: ", "")) || 0;
+    gamesElem.textContent = `Total Games: ${currentGames + 1}`;
+    updateUser();
 }
 
 function endGame(letter, boxI, boxJ, value){
@@ -797,10 +818,10 @@ function endGame(letter, boxI, boxJ, value){
             box.style.backgroundColor = "#fa7e44";
             box.style.borderColor = "#fa7e44";
             if (gift) {
-                document.getElementById("gifts").removeChild(gift);
                 box.appendChild(gift);
                 gift.classList.remove("hidden");
                 gift.style.visibility = "visible";
+                gift.style.display = ""; // Ensure it's visible
             }
         }else if(value === "correct"){
             box.classList.add("correct");
@@ -819,7 +840,7 @@ function endGame(letter, boxI, boxJ, value){
     }, ((boxI + 1) * animation_duration) / 2);
 
     document.getElementById("restartCount").style.visibility = "hidden";
-
+    const gamesElem = document.getElementById("totalGames");
     box.classList.add("animated");
     box.style.animationDelay = `${(boxI * animation_duration) / 2}ms`;
 }
@@ -851,7 +872,7 @@ function createNewWordle(){
 function hide(){
     document.getElementById("shader").style.visibility = "hidden";
     document.getElementById("newWordle").style.visibility = "hidden";
-    document.getElementById("Log-In").classList.remove("hidden");
+    document.getElementById("Log-In").classList.add("hidden");
     document.getElementById("Log-In").style.visibility = "hidden";
     document.getElementById("account").style.visibility = "hidden";
     document.getElementById("bug").style.visibility = "hidden";
@@ -875,7 +896,36 @@ function check(){
     }
 }
 
+function moveAllGiftsHome() {
+    for (let i = 1; i <= 5; i++) {
+        const gift = document.getElementById("gift" + i);
+        const giftsContainer = document.getElementById("gifts");
+        if (gift && gift.parentNode !== giftsContainer) {
+            giftsContainer.appendChild(gift);
+        }
+        if (gift) {
+            gift.classList.add("hidden");
+            gift.style.visibility = "";
+            gift.style.display = "";
+            gift.style.fill = "white";
+        }
+    }
+}
+
+function moveMoneyRewardHome() {
+    const moneyReward = document.getElementById("moneyReward");
+    const container = document.getElementById("moneyRewardContainer");
+    if (moneyReward && container && moneyReward.parentNode !== container) {
+        container.appendChild(moneyReward);
+        moneyReward.classList.add("hidden");
+    }
+}
+
 function restart(word){
+    giftTimeouts.forEach(timeout => clearTimeout(timeout));
+    giftTimeouts = [];
+    moveAllGiftsHome();
+    moveMoneyRewardHome();
     let restartCount = document.getElementById("restartCount");
     eraseChance();
     restartCount.style.visibility = "visible";
@@ -919,15 +969,10 @@ function restart(word){
             const gift = document.getElementById("gift" + i);
             if (gift) {
                 gift.classList.add("hidden");
-                // Move gift back to the gifts container
+                gift.style.visibility = "";
+                gift.style.display = "";
+                gift.style.fill = "";
                 document.getElementById("gifts").appendChild(gift);
-            }
-        }
-
-        for(let i = 1; i <= 5; i++){
-            const gift = document.getElementById("gift" + i);
-            if (gift) {
-                gift.style.fill = "white";
             }
         }
 
@@ -951,6 +996,7 @@ function restart(word){
             restartCount.textContent = parseInt(restartCount.textContent) - 1;
             updateUser();
         }
+        openG = true;
     }else{
         restartCount.style.color = "red";
         restartCount.style.fontStyle = "bold";
@@ -962,6 +1008,10 @@ function restart(word){
 }
 
 function giveup(){
+    giftTimeouts.forEach(timeout => clearTimeout(timeout));
+    giftTimeouts = [];
+    moveAllGiftsHome();
+    moveMoneyRewardHome();
     eraseChance();
     restartCount.style.visibility = "visible";
     removeAnnounce();
@@ -988,23 +1038,7 @@ function giveup(){
             box.style.backgroundColor = "";
             stats.grid[i][j] = "";
         }
-    }    
-    
-    for(let i = 1; i <= 5; i++){
-        const gift = document.getElementById("gift" + i);
-        if (gift) {
-            gift.classList.add("hidden");
-            // Move gift back to the gifts container
-            document.getElementById("gifts").appendChild(gift);
-        }
-    }
-
-    for(let i = 1; i <= 5; i++){
-        const gift = document.getElementById("gift" + i);
-        if (gift) {
-            gift.style.fill = "white";
-        }
-    }
+    }   
 
     stats.currentCol = 0;
     stats.currentRow = 0;
@@ -1136,33 +1170,31 @@ function gift(gift){
         let present = document.getElementById("gift" + gift);
         const box = document.getElementById(`box${5}${gift-1}`);
         present.classList.add("present");
-        setTimeout(() => {
+        let timeout = setTimeout(() => {
             present.classList.remove("present");
             present.classList.add("hidden");
             let reward = Math.floor(Math.random() * 500 + 1);
-            /* if(reward < 250){ */
-                let money = Math.floor(Math.random() * (250 - 50) + 50);
-                document.getElementById("money").textContent = money + parseInt(document.getElementById("money").textContent);
-                let moneyRElem = document.getElementById("moneyR");
-                if (moneyRElem) {
-                    moneyRElem.textContent = money;
+            let money = Math.floor(Math.random() * (250 - 50) + 50);
+            document.getElementById("money").textContent = money + parseInt(document.getElementById("money").textContent);
+            let moneyRElem = document.getElementById("moneyR");
+            if (moneyRElem) {
+                moneyRElem.textContent = money;
+            }
+            const moneyReward = document.getElementById("moneyReward");
+            if (moneyReward) {
+                moneyReward.classList.remove("hidden");
+                if (box && moneyReward.parentNode !== box) {
+                    box.appendChild(moneyReward);
                 }
-                const moneyReward = document.getElementById("moneyReward");
-                if (moneyReward) {
-                    moneyReward.classList.remove("hidden");
-                    // Optionally position it over the box using CSS instead of appendChild
-                    // Or, only append if not already a child:
-                    if (box && moneyReward.parentNode !== box) {
-                        box.appendChild(moneyReward);
-                    }
-                }
-            /* } */
+            }
             present.classList.add("hidden");
             for(let i = 1; i <= 5; i++){
-                document.getElementById("gift" + i).style.fill = "#cacaca";
+                let g = document.getElementById("gift" + i);
+                if (g) g.style.fill = "#cacaca";
             }
             updateUser();
-        }, 1900)
+        }, 1900);
+        giftTimeouts.push(timeout);
     }
     openG = false;
 }
@@ -1206,20 +1238,15 @@ function buyRestart(){
 
 function account(){
     document.getElementById("account").style.visibility = "visible";
+    if(localStorage.getItem("userLoged") != null || localStorage.getItem("userLoged") != undefined){
+        document.getElementById("Log-In").style.visibility = "hidden";
+        document.getElementById("Log-In").classList.add("hidden");
+        document.getElementById("shader").style.visibility = "visible";
+    }else{
     document.getElementById("Log-In").style.visibility = "visible";
+    document.getElementById("Log-In").classList.remove("hidden");
+    document.getElementById("email-username").focus();
     document.getElementById("shader").style.visibility = "visible";
-}
-
-async function userLogin() {
-    try {
-        const response = await fetch('http://127.0.0.1:8080/user/login');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const users = await response.json();
-        console.log('Users:', users);
-    } catch (error) {
-        console.error('Error fetching users:', error);
     }
 }
 
@@ -1312,7 +1339,11 @@ async function createUser() {
         return;
     }
 
-    const response = await fetch('http://127.0.0.1:8080/user', {
+    const host = window.location.hostname === "127.0.0.1" ? 
+        "http://127.0.0.1:8080" : 
+        "https://flask-cloudrun-943017112681.europe-west10.run.app";
+
+    const response = await fetch(`${host}/user`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -1348,10 +1379,14 @@ async function getUser(userLoged, userLogedPass){
         var password = document.getElementById("passwordL").value;
     }
     
-    const response = await fetch(`http://127.0.0.1:8080/user?emailname=${encodeURIComponent(emailname)}&password=${encodeURIComponent(password)}`, {
+    const host = window.location.hostname === "127.0.0.1" ? 
+        "http://127.0.0.1:8080" : 
+        "https://flask-cloudrun-943017112681.europe-west10.run.app";
+    const response = await fetch(`${host}/user?emailname=${encodeURIComponent(emailname)}&password=${encodeURIComponent(password)}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     });
+    console.log("response:", response);
 
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -1379,24 +1414,31 @@ async function getUser(userLoged, userLogedPass){
 }
 
 async function updateUser() {
-    let experience_points = document.getElementById("xpnum").textContent;
-    let coins = document.getElementById("money").textContent;
-    let hint_keyboard_letter = document.getElementById("hintValue").textContent;
-    let hint_column_letter = document.getElementById("hammerValue").textContent;
-    let hint_chance = document.getElementById("chanceValue").textContent;
-    let restart_counter = document.getElementById("restartCount").textContent;
-
-    const response = await fetch('http://127.0.0.1:8080/user', {
+    const experience_points = document.getElementById("xpnum").textContent;
+    const coins = document.getElementById("money").textContent;
+    const hint_keyboard_letter = document.getElementById("hintValue").textContent;
+    const hint_column_letter = document.getElementById("hammerValue").textContent;
+    const hint_chance = document.getElementById("chanceValue").textContent;
+    const restart_counter = document.getElementById("restartCount").textContent;
+    const total_games_played = document.getElementById("totalGames").textContent.replace("Total Games: ", "");
+    const total_wins = document.getElementById("totalWins").textContent.replace("Total Wins: ", "");
+    
+    const host = window.location.hostname === "127.0.0.1" ? 
+        "http://127.0.0.1:8080" : 
+        "https://flask-cloudrun-943017112681.europe-west10.run.app";
+    const response = await fetch(`${host}/user`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-            name: userLoged,
+            name: localStorage.getItem("userLoged"),
             experience_points: parseInt(experience_points),
             coins: parseInt(coins),
             hint_keyboard_letter: parseInt(hint_keyboard_letter),
             hint_column_letter: parseInt(hint_column_letter),
             hint_chance: parseInt(hint_chance),
-            restart_counter: parseInt(restart_counter)
+            restart_counter: parseInt(restart_counter),
+            total_games_played: parseInt(total_games_played),
+            total_games_won: parseInt(total_wins),
         })
     });
 
@@ -1405,7 +1447,7 @@ async function updateUser() {
     }
     const result = await response.json();
     console.log('User updated:', result);
-    document.getElementById("Log-In").classList.remove("hidden");
+    document.getElementById("Log-In").classList.add("hidden");
     document.getElementById("Sign-Up").classList.add("hidden");
 }
 
@@ -1420,8 +1462,9 @@ function updateValues(result){
     document.getElementById("hintValue").textContent = result.hint_keyboard_letter;
     document.getElementById("chanceValue").textContent = result.hint_chance;
     document.getElementById("restartCount").textContent = result.restart_counter;
-    document.getElementById("Log-In").style.visibility = "hidden";
     document.getElementById("user-account").classList.remove("hidden");
+    document.getElementById("Log-In").style.visibility = "hidden";
+    document.getElementById("Log-In").classList.add("hidden");
     document.getElementById("profileName").textContent = result.name;
     document.getElementById("passwordL").value = "";
     document.getElementById("email-username").value = "";
@@ -1429,10 +1472,17 @@ function updateValues(result){
     hammerValue = result.hint_column_letter;
     chanceValue = result.hint_chance;
     restartCount = result.restart_counter;
+    if(result.total_games_won != undefined){
+        document.getElementById("totalWins").textContent = `Total Wins: ${result.total_games_won}`;
+    }
+    if(result.total_games_played != undefined){
+        document.getElementById("totalGames").textContent = `Total Games: ${result.total_games_played}`;
+    }
 }
 
 function signUp(){
     document.getElementById("Sign-Up").classList.remove("hidden");
+    document.getElementById("email").focus();
     document.getElementById("Log-In").classList.add("hidden");
     document.getElementById("email-username").value = "";
     document.getElementById("passwordL").value = "";

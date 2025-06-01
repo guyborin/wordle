@@ -12,7 +12,16 @@ defaultUser = dict(
     hint_keyboard_letter=0,
     hint_column_letter=0,
     hint_chance=0,
-    restart_counter=2
+    restart_counter=2,
+    total_games_played=0,
+    total_games_won=0,
+    games_won_first_try=0,
+    games_won_second_try=0,
+    games_won_third_try=0,
+    games_won_fourth_try=0,
+    games_won_fifth_try=0,
+    games_won_sixth_try=0,
+    games_won_seventh_try=0,
 )
 
 
@@ -65,7 +74,7 @@ def getUser(emailname, password):
     except Exception as e:
         print("Error adding record:", e)
 
-def updateUser(username, experience_points, coins, hint_keyboard_letter, hint_column_letter, hint_chance, restart_counter):
+def updateUser(username, experience_points, coins, hint_keyboard_letter, hint_column_letter, hint_chance, restart_counter, total_games_played, total_games_won):
     users_ref = db.collection("users")
     query = users_ref.where("name", "==", username)
     print("query: ", query.stream())
@@ -77,7 +86,9 @@ def updateUser(username, experience_points, coins, hint_keyboard_letter, hint_co
             "hint_keyboard_letter": hint_keyboard_letter,
             "hint_column_letter": hint_column_letter,
             "hint_chance": hint_chance,
-            "restart_counter": restart_counter
+            "restart_counter": restart_counter,
+            "total_games_played": total_games_played,
+            "total_games_won": total_games_won
         })
     print(f"User {username} updated successfully.", query)
     return "User updated successfully!"
