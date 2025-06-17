@@ -24,10 +24,7 @@ defaultUser = dict(
     games_won_seventh_try=0,
 )
 
-
-def addUser(email, username, password):
-    print("addUser: ", email, username, password)
-    
+def verifyUser(email, username):
     users_ref = db.collection('users')
     query = users_ref.where("name", "==", username)
     query2 = users_ref.where("email", "==", email)
@@ -35,6 +32,11 @@ def addUser(email, username, password):
         return "User already taken"
     if any(query2.stream()):
         return "Account with this email already exists"
+
+def addUser(email, username, password):
+    print("addUser: ", email, username, password)
+    
+    users_ref = db.collection('users')
     user_data = defaultUser.copy()
     user_data["email"] = email
     user_data["name"] = username
@@ -42,7 +44,7 @@ def addUser(email, username, password):
     try:
         print("addUser3", user_data)
         doc_ref = users_ref.add(user_data)
-        return "User created successfully!"
+        return user_data
     except Exception as e:
         print("Error adding record:", e)
 

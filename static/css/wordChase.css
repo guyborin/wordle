@@ -77,7 +77,7 @@ body, html {
 
 #arrow{
    position: absolute;
-   top: 112px;
+   top: 16px;
    display: flex;
    flex-direction: row;
    left: calc(50% - 173px);
@@ -302,6 +302,8 @@ body, html {
    text-decoration: none;
    display: inline-block;
    font-size: 26px;
+
+   
 }
 
 .keys:hover{
@@ -317,13 +319,6 @@ body, html {
    text-align: center;
    align-content: center;
 }
-
-/* @media (max-width: 400px) {
-    #keyboard {
-         width: 100%;
-         left: 0;
-    }
-} */
 
 #ç{
    visibility: hidden;
@@ -715,8 +710,10 @@ body, html {
 }
 
 #money{
-   font-family: cursive;
-   font-size: 22px;
+   font-family: "Coiny", system-ui;
+   font-weight: 400;
+   font-style: normal;
+   font-size: 19px;
    background-color: #3a3a3c;
    color: white;
    width: 50px;
@@ -725,6 +722,7 @@ body, html {
    position: relative;
    left: 35%;
    padding-right: 13px;
+   padding-top: 2px;
 }
 
 .coinb{
@@ -735,8 +733,10 @@ body, html {
 }
 
 .moneyb{
-   font-family: cursive;
-   font-size: 19px;
+   font-family: "Coiny", system-ui;
+   font-weight: 400;
+   font-style: normal;
+   font-size: 17px;
    background-color: #2f2f30;
    color: white;
    width: 32px;
@@ -746,6 +746,7 @@ body, html {
    left: 32%;
    top: 16px;
    padding-right: 13px;
+   padding-top: 2px;
 }
 
 #buyhint{
@@ -882,56 +883,6 @@ body, html {
 @keyframes desappear{
    0% {opacity: 1;}
    100% {opacity: 0;}
-}
-
-#shop.optclose{
-   animation: optclose 1s;
-   left: 8px;
-}
-
-#leaderboard.optclose{
-   animation: optclose 1s;
-   left: 8px;
-}
-
-#pass.optclose{
-   animation: optclose 1s;
-   left: 8px;
-}
-
-#shop.optopen{
-   animation: optopen 1s;
-   left: 105px;
-}
-
-#leaderboard.optopen{
-   animation: optopen 1s;
-   left: 105px;
-}
-
-#pass.optopen{
-   animation: optopen 1s;
-   left: 105px;
-}
-
-@keyframes optclose {
-   0%{
-      left: 105px;
-   }
-
-   100%{
-      left: 8px;
-   }
-}
-
-@keyframes optopen {
-   0%{
-      left: 8px;
-   }
-
-   100%{
-      left: 105px;
-   }
 }
 
 #right-title{
@@ -1256,17 +1207,20 @@ body, html {
 }
 
 #moneyR{
-   font-family: cursive;
-   font-size: 14px;
+   font-family: "Coiny", system-ui;
+   font-weight: 400;
+   font-style: normal;
+   font-size: 12px;
    background-color: #3a3a3c;
    color: white;
    width: 29px;
    padding-left: 15px;
-   border-radius: 5px;
+   border-radius: 4px;
    position: relative;
    left: 19%;
    top: 11px;
    padding-right: 0px;
+   padding-top: 2px;
 }
 
 #coinR{
@@ -1515,6 +1469,129 @@ input[type="range"]::-moz-range-thumb {
    color: #3362d9;
 }
 
+#Verification-Code{
+   position: relative;
+   top: 130px;
+}
+
+#verification{
+   color: white;
+   font-size: 20px;
+   font-family: Arial, Helvetica, sans-serif;
+   text-align: center;
+   position: relative;
+   top: -87px;
+}
+
+#decominutesV{
+   color: white;
+   position: absolute;
+   left: calc(50% - 49px);
+   font-size: 40px;
+   top: -22px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#minutesV{
+   color: white;
+   position: absolute;
+   left: calc(50% - 24px);
+   font-size: 40px;
+   top: -22px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#timeDivisionV{
+   color: white;
+   position: absolute;
+   left: 50%;
+   font-size: 40px;
+   top: -26px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#decosecondsV{
+   color: white;
+   position: absolute;
+   left: calc(50% - -13px);
+   font-size: 40px;
+   top: -22px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#secondsV{
+   color: white;
+   position: absolute;
+   left: calc(50% - -38px);
+   font-size: 40px;
+   top: -22px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#verificationcode{
+   position: relative;
+   left: calc(50% - 132px);
+   top: 61px;
+   height: 30px;
+   border-radius: 30px;
+   padding: 5px 28px;
+   font-size: 17px;
+   border: none;
+}
+
+#loginVBtn{
+   position: relative;
+   background-color: white;
+   left: calc(50% - 131px);
+   top: 0px;
+   height: 38px;
+   width: 270px;
+   border-radius: 30px;
+   padding: 5px 28px;
+   font-size: 22px;
+   border: none;
+}
+
+#loginVBtn:hover{
+   background-color: #538d4e;
+   color: white;
+}
+
+#resend{
+   position: relative;
+   top: 30px;
+   font-size: 16px;
+   right: 5px;
+   color: white;
+   font-family: Arial, Helvetica, sans-serif;
+   text-decoration: none;
+}
+
+#resend:hover{
+   text-decoration: underline;
+   color: #3362d9;
+}
+
+#informationV{
+   position: relative;
+   bottom: 137px;
+   left: 0px;
+   font-size: 20px;
+   text-align: center;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#warning{
+   position: relative;
+   bottom: -133px;
+   left: 0px;
+   font-size: 16px;
+   text-align: center;
+   font-family: Arial, Helvetica, sans-serif;
+   color: #ff0000;
+}
+
+
 #profileName{
    color: white;
    font-size: 40px;
@@ -1607,7 +1684,9 @@ input[type="range"]::-moz-range-thumb {
 #shots-percent-container{
    position: relative;
    bottom: 206px;
-   left: 205px;
+   left: 208px;
+   width: 10px;
+   height: 10px;
    font-size: 20px;
    text-align: center;
    font-family: Arial, Helvetica, sans-serif;

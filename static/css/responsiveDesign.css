@@ -1,0 +1,510 @@
+@media screen and (max-width: 600px) {
+    html, body {
+        width: 100vw;
+        max-width: 100vw;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }   
+
+    #top-bar {
+        position: absolute;
+        top: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 50px;
+        background-color: #3a3a3c;
+        z-index: 2;
+    }
+
+    .title{
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-family: Montserrat, 'Open Sans', sans-serif;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 18px;
+        color: #FFFFFF;
+        width: 10px;
+        height: 10px;
+        padding: 8px;
+        margin-right: 3px;
+    }
+
+    #logo{
+        width: 35px;
+        height: 35px;
+        margin-top: 5.5px;
+        margin-right: -7px;
+    }
+
+    #profile{
+        position: absolute;
+        border-radius: 5px;
+        color: white;
+        width: 20px;
+        height: 20px;
+        padding: 6px;
+        right: 10px;
+        background-color: #3a3a3c;
+    }
+
+    #options{
+        position: absolute;
+        border-radius: 5px;
+        color: white;
+        width: 16px;
+        height: 16px;
+        padding: 7px;
+        left: 10px;
+        background-color: #3a3a3c;
+    }
+
+    #shader{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+        opacity: 0.8;
+        visibility: hidden;
+    }
+
+    #account{   
+        position: absolute;
+        top: 17px;
+        left: 15px;
+        width: 92%;
+        height: 95%;
+        background-color: #252525;
+        visibility: hidden;
+        border-radius: 40px;
+    }
+
+    #wrap {
+        width: 100vw;
+        max-width: 100vw;
+        position: absolute;
+        left: 0;
+        top: 50px;
+        margin: 0 auto;
+        height: auto;
+        box-sizing: border-box;
+    }
+    .box{   
+        border-radius: 10%;
+        border-style: solid;
+        border-color: #3a3a3c;
+        border-width: 2px;
+        width: 50px;
+        height: 50px;
+        font-family: Montserrat, 'Open Sans', sans-serif;
+        color: white;
+        font-size: 28px;
+        font-weight: 600;
+        text-align: center;
+        align-content: center;
+        margin: 2.5px;
+    }
+
+    #keyboard {
+        width: 100%;
+        height: 50px;
+        position: absolute;
+        bottom: 124px;
+        left: 0;
+    }
+    
+    .keys{
+        width: 33px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        font-size: 20px;
+        border-radius: 7px;
+        margin-top: 3px;
+        margin-right: -1px;
+    }
+
+    #del{
+        width: 19px;
+        height: 25px;
+        padding: 7px 7px;
+        margin-bottom: -13px;
+        border-radius: 7px;
+        margin-right: -1px;
+    }
+
+    #enter{
+        width: 19px;
+        height: 25px;
+        padding: 7px 7px;
+        margin-bottom: -13px;
+        border-radius: 7px;
+        margin-right: -1px;
+    }
+
+    #trash{
+        width: 19px;
+        height: 25px;
+        padding: 7px 7px;
+        margin-bottom: -13px;
+        border-radius: 7px;
+        margin-right: -1px;
+    }
+
+    #chanceValue{
+        width: 10px;
+        position: relative;
+        font-family: Arial, Helvetica, sans-serif;
+        left: 158px;
+        top: -117px;
+        font-size: 17px;
+    }
+
+    #hammerValue{
+        width: 10px;
+        position: relative;
+        font-family: Arial, Helvetica, sans-serif;
+        left: 102px;
+        top: -80px;
+        font-size: 17px;
+    }
+
+    #hintValue{
+        width: 10px;
+        position: relative;
+        font-family: Arial, Helvetica, sans-serif;
+        left: 45px;
+        top: -42px;
+        font-size: 17px;
+    }
+
+    #helps{
+        position: absolute;
+        left: 50.3%;
+        width: 177px;
+        height: 41px;
+        bottom: 4px;
+        text-align: start;
+        background-color: #2f2f30;
+        border-radius: 6px;
+    }
+
+    #hint{
+        background-color: #2f2f30;
+        position: relative;
+        border: none;
+        top: 4px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        margin-left: 4px;
+        border-radius: 6px;
+        width: 18px;
+        height: 23px;
+        padding: 5px 10px;
+        align-content: center;
+    }
+
+    #hammer{
+        background-color: #2f2f30;
+        position: relative;
+        border: none;
+        top: 4px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        margin-left: 4px;
+        left: 11px;
+        border-radius: 6px;
+        width: 18px;
+        height: 23px;
+        padding: 5px 10px;
+        align-content: center;
+    }
+
+    #chance{
+        background-color: #2f2f30;
+        position: relative;
+        border: none;
+        top: 4px;
+        left: 21px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        margin-left: 4px;
+        border-radius: 6px;
+        width: 18px;
+        height: 23px;
+        padding: 5px 10px;
+        align-content: center;
+    }
+
+    #gameOptions{
+        position: absolute;
+        left: calc(50% - 178px);
+        width: 142px;
+        height: 41px;
+        bottom: 4px;
+        text-align: start;
+        background-color: #2f2f30;
+        border-radius: 6px;
+    }
+
+    #play{
+        background-color: #2f2f30;
+        border: none;
+        margin-top: 4px;
+        margin-bottom: 0px;
+        margin-left: 5px;
+        border-radius: 7px;
+        width: 16px;
+        height: 20px;
+        padding: 7px 10px 6px 11px;
+        align-content: center;
+    }
+
+    #restartBack{
+        position: absolute;
+        top: 4px;
+        left: 5px;
+        background-color: #2f2f30;
+        border: none;
+        border-radius: 7px;
+        width: 17px;
+        height: 21px;
+        padding: 6px 9px 6px 11px;
+        align-content: center;
+        visibility: hidden;
+    }
+
+    #restart{
+        position: absolute;
+        top: 11px;
+        left: 14px;
+        border: none;
+        border-radius: 7px;
+        width: 19px;
+        height: 19px;
+        align-content: center;
+        visibility: hidden;
+    }
+
+    #restartCount{
+        position: relative;
+        background-color: #2f2f30;
+        width: 12px;
+        height: 14px;
+        left: 31.5px;
+        top: -40px;
+        text-align: center;
+        color: white;
+        border-radius: 30px;
+        padding: 1.5px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        visibility: hidden;
+    }
+
+    #langBack{
+        position: absolute;
+        top: 4px;
+        left: 99px;
+        background-color: #2f2f30;
+        border: none;
+        border-radius: 7px;
+        width: 19px;
+        height: 21px;
+        padding: 6px 9px 6px 11px;
+        align-content: center;
+    }
+
+    #lang{
+        position: absolute;
+        top: 10px;
+        left: 109px;
+        border: none;
+        border-radius: 8px;
+        width: 20px;
+        height: 20px;
+        align-content: center;  
+    }
+
+    #skull{
+        position: absolute;
+        top: 3px;
+        left: 52px;
+        background-color: #2f2f30;
+        border: none;
+        border-radius: 7px;
+        width: 18px;
+        height: 24px;
+        padding: 5px 10px;
+        align-content: center;
+    }
+
+    #bottom-bar{
+        position: absolute;
+        bottom: 11px;
+        display: flex;
+        left: 0px;
+        width: 100%;
+        height: 30px;
+        visibility: hidden;
+    }
+
+    #leaderboard{
+        left: 50px;
+    }
+
+    #shop{
+        left: 50px;
+    }
+
+    #pass{
+        left: 50px;
+    }
+
+    #bug {
+        position: fixed;
+        top: 10vh;
+        left: 5vw;
+        width: 90vw;
+        max-width: 320px;
+        height: auto;
+        min-height: 200px;
+        background-color: #252525;
+        visibility: hidden;
+        border-radius: 30px;
+        box-sizing: border-box;
+    }
+
+    #bug h4 {
+        color: rgb(255, 24, 24);
+        font-size: 17px;
+        left: 54px;
+        width: 282px;
+        position: relative;
+        bottom: 20px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #createAccount {
+        position: relative;
+        top: 80px;
+        font-size: 16px;
+        display: block;
+        right: -163px;
+        width: 146px;
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        text-decoration: none;
+    }
+
+    #left-bar {
+        position: absolute;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 50px;
+        height: 142px;
+        background-color: #2f2f30;
+        z-index: 1;
+        gap: 6px;
+        border-radius: 0px 0px 7px 7px;
+    }
+
+    .in {
+        animation: mymovein 1s ease forwards;
+    }
+
+    .out {
+        animation: mymoveout 1s ease forwards;
+    }
+
+    .init {
+        top: -142px;
+    }
+
+    @keyframes mymovein {
+        from { top: -142px; }
+        to { top: 50px; }
+    }
+
+    @keyframes mymoveout {
+        from { top: 50px; }
+        to { top: -142px; }
+    }
+
+    #podiumIcon {
+        position: relative;
+        border-radius: 5px;
+        width: 30px;
+        height: 30px;
+        padding: 5px;
+        background-color: #2f2f30;
+    }
+
+    #passIcon {
+        position: relative;
+        border-radius: 5px;
+        width: 24px;
+        height: 24px;
+        padding: 8px;
+        background-color: #2f2f30;
+    }
+    
+    #shopIcon {
+        position: relative;
+        border-radius: 5px;
+        width: 24px;
+        height: 24px;
+        padding: 8px;
+        background-color: #2f2f30;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .keys{
+        width: 30px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+        font-size: 20px;
+        border-radius: 6px;
+        margin-top: 3px;
+        margin-right: -1px;
+    }
+
+    #del{
+        width: 18px;
+        height: 25px;
+        padding: 6px 6px;
+        margin-bottom: -12px;
+        border-radius: 6px;
+        margin-right: -1px;
+    }
+
+    #enter{
+        width: 16px;
+        height: 23px;
+        padding: 7px 7px;
+        margin-bottom: -12px;
+        border-radius: 6px;
+        margin-right: -1px;
+    }
+
+    #trash{
+        width: 16px;
+        height: 23px;
+        padding: 7px 7px;
+        margin-bottom: -12px;
+        border-radius: 6px;
+        margin-right: -1px;
+    }
+}

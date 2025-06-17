@@ -5,8 +5,10 @@
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Jersey+25&family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
       <title>WordChaze</title>
       <link type="text/css" rel="stylesheet"  href="{{ url_for('static', filename='css/wordChase.css') }}"/>
+      <link type="text/css" rel="stylesheet"  href="{{ url_for('static', filename='css/responsiveDesign.css') }}"/>
       <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/Logo.png') }}">
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,10 +22,10 @@
       </div>
       <div id="wrap">
          <p id="annoncement"></p>
-         <div id="points">
+<!--          <div id="points">
             <p id="xpnum">1000</p>
             <p id="xp">xp</p>
-         </div>
+         </div> -->
          <p id="decominutes">0</p>
          <p id="minutes">0</p>
          <p id="timeDivision"> : </p>
@@ -178,7 +180,7 @@
          <svg id="musicIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="white" d="M499.1 6.3c8.1 6 12.9 15.6 12.9 25.7l0 72 0 264c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6L448 147 192 223.8 192 432c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6L128 200l0-72c0-14.1 9.3-26.6 22.8-30.7l320-96c9.7-2.9 20.2-1.1 28.3 5z"/></svg>
          <input type="range" min="1" max="100" value="50" id="musicSlider">
          <div id="bottomText">
-            <a href="https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox/FMfcgzQbdrXLjSscqpDtRmNCQXgPCdPC?compose=GTvVlcSBmzXVTlpscLXdJwzWWrKrJPXwPpPFnXLrZndDrzDqglBHZZqSlxkZQFKtJtKLBdVmbvQzq" onclick="bug()">report bug - give an idea</a>
+            <a href="#" onclick="bug()">report bug - give an idea</a>
             <p>&#8226;</p>
             <a href="#" onclick="learn()">learn to play</a>
             <p>&#8226;</p>
@@ -194,12 +196,12 @@
 
  -->
       <div id="shader" onclick="hide()"></div>
-      <div id="newWordle">
+<!--       <div id="newWordle">
          <p>Create a new Wordle</p>
          <input id="word" placeholder="Word with 5 letters" type="text" minlength="5" maxlength="5">
          <button onclick="check()">&#10004;</button>
          <p id="noWord" style="color: red; font-size: 20px; visibility: hidden;">The list doesn't have this word</p>
-      </div>
+      </div> -->
 
       <div id="bug">
          <p>Report a bug - Give an idea</p>
@@ -207,6 +209,7 @@
          <select id="bugSelect">
             <option class="option" value="bug">Report a bug</option>
             <option class="option" value="idea">Give an idea</option>
+            <option class="option" value="feedback">Feedback</option>
          </select>
          <svg onclick="sendBug()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l82.7 0L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3l0 82.7c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160c0-17.7-14.3-32-32-32L320 0zM80 32C35.8 32 0 67.8 0 112L0 432c0 44.2 35.8 80 80 80l320 0c44.2 0 80-35.8 80-80l0-112c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 112c0 8.8-7.2 16-16 16L80 448c-8.8 0-16-7.2-16-16l0-320c0-8.8 7.2-16 16-16l112 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 32z"/></svg>
          <h4>WARNING! first spam account will be suspended <br> second account will be eleminated</h4>
@@ -221,7 +224,7 @@
                <input placeholder="password" type="password" id="password">
             </div>
             <p></p>
-            <button id="signupBtn" onclick="createUser()">Sign-Up</button>
+            <button id="signupBtn" onclick="createUser()">Send Code</button>
             <p id="information"></p>
          </div>
          <div id="Log-In">
@@ -232,6 +235,21 @@
             <a id="createAccount" href="#" onclick="signUp()">create an account</a>
             <p id="informationL"></p>
          </div>
+
+         <div id="Verification-Code" class="hidden">
+            <p id="verification">We send to your email a verification code <br> please enter here to complete the registration</p>
+            <p id="decominutesV">1</p>
+            <p id="minutesV">0</p>
+            <p id="timeDivisionV"> : </p>
+            <p id="decosecondsV">0</p>
+            <p id="secondsV">0</p>
+            <input placeholder="Verification Code" type="text" id="verificationcode" autofocus>
+            <p id="warning">WARNING! if you close this window or the time ends the registration will be eleminated and you will need to repeat it.</p>
+            <button id="loginVBtn">Sign-Up</button>
+            <a id="resend" href="#">resend email</a>
+            <p id="informationV"></p>
+         </div>
+
          <div id="user-account" class="hidden">
             <p id="profileName"></p>
             <div id="user-stats">
@@ -279,5 +297,6 @@
       <script type="text/javascript" src="{{ url_for('static', filename='js/palavras.js') }}"></script>
       <script type="text/javascript" src="{{ url_for('static', filename='js/words.js') }}"></script>
       <script type="text/javascript" src="{{ url_for('static', filename='js/wordChase.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/account.js') }}"></script>
    </body>
 </html>
