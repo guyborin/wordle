@@ -39,6 +39,16 @@ let timer = {
     decominutes: 0,
 }
 
+let shots = {
+    first: 0,
+    second: 0,
+    third: 0,
+    fourth: 0,
+    fifth: 0,
+    sixth: 0,
+    seventh: 0,
+}
+
 const stats = {
     secret:"",
     usedLetters: [],
@@ -471,6 +481,23 @@ function revealWord(guess){
     setTimeout(() => {
         if(isWinning){
             youWin();
+            if(stats.currentRow === 1){
+                shots.first++;
+            }else if(stats.currentRow === 2){
+                shots.second++;
+            }else if(stats.currentRow === 3){
+                shots.third++;
+            }else if(stats.currentRow === 4){
+                shots.fourth++;
+            }else if(stats.currentRow === 5){
+                shots.fifth++;
+            }else if(stats.currentRow === 6){
+                shots.sixth++;
+            }else if(stats.currentRow === 7){
+                shots.seventh++;
+            }
+            updateUser();
+
             inGame = false;
         }else if((!chanceN && stats.currentRow === 6) || (chanceN && stats.currentRow === 7)){
             youLose();

@@ -244,7 +244,6 @@ async function getUser(userLoged, userLogedPass){
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     });
-    console.log("response:", response);
 
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -286,6 +285,13 @@ async function updateUser() {
     const restart_counter = document.getElementById("restartCount").textContent;
     const total_games_played = document.getElementById("totalGames").textContent.replace("Total Games: ", "");
     const total_wins = document.getElementById("totalWins").textContent.replace("Total Wins: ", "");
+    const games_won_first_shot = shots.first;
+    const games_won_second_shot = shots.second;
+    const games_won_third_shot = shots.third;
+    const games_won_fourth_shot = shots.fourth;
+    const games_won_fifth_shot = shots.fifth;
+    const games_won_sixth_shot = shots.sixth;
+    const games_won_seventh_shot = shots.seventh;
     
     const host = window.location.hostname === "127.0.0.1" ? 
         "http://127.0.0.1:8080" : 
@@ -303,6 +309,13 @@ async function updateUser() {
             restart_counter: parseInt(restart_counter),
             total_games_played: parseInt(total_games_played),
             total_games_won: parseInt(total_wins),
+            games_won_first_try: games_won_first_shot,
+            games_won_second_try: games_won_second_shot,
+            games_won_third_try: games_won_third_shot,
+            games_won_fourth_try: games_won_fourth_shot,
+            games_won_fifth_try: games_won_fifth_shot,
+            games_won_sixth_try: games_won_sixth_shot,
+            games_won_seventh_try: games_won_seventh_shot,
         })
     });
 
@@ -313,9 +326,50 @@ async function updateUser() {
     console.log('User updated:', result);
     document.getElementById("Log-In").classList.add("hidden");
     document.getElementById("Sign-Up").classList.add("hidden");
+    updateStats(document.getElementById("totalWins").textContent.replace("Total Wins: ", ""));
 }
 
+function updateStats(wons) {
+    const firstShot = document.getElementById("first-percent");
+    const secondShot = document.getElementById("second-percent");
+    const thirdShot = document.getElementById("third-percent");
+    const fourthShot = document.getElementById("fourth-percent");
+    const fifthShot = document.getElementById("fifth-percent");
+    const sixthShot = document.getElementById("sixth-percent");
+    const seventhShot = document.getElementById("seventh-percent");
+    if (!wons || isNaN(wons) || wons === 0) {
+        firstShot.textContent = "0%";
+        secondShot.textContent = "0%";
+        thirdShot.textContent = "0%";
+        fourthShot.textContent = "0%";
+        fifthShot.textContent = "0%";
+        sixthShot.textContent = "0%";
+        seventhShot.textContent = "0%";
+        document.getElementById("first-shot-win").style.width = `${Math.round(12)}%`;
+        document.getElementById("second-shot-win").style.width = `${Math.round(12)}%`;
+        document.getElementById("third-shot-win").style.width = `${Math.round(12)}%`;
+        document.getElementById("fourth-shot-win").style.width = `${Math.round(12)}%`;
+        document.getElementById("fifth-shot-win").style.width = `${Math.round(12)}%`;
+        document.getElementById("sixth-shot-win").style.width = `${Math.round(12)}%`;
+        document.getElementById("seventh-shot-win").style.width = `${Math.round(12)}%`;
+        return;
+    }
 
+    firstShot.textContent = `${Math.round(shots.first*100/wons)}%`;
+    secondShot.textContent = `${Math.round(shots.second*100/wons)}%`;
+    thirdShot.textContent = `${Math.round(shots.third*100/wons)}%`;
+    fourthShot.textContent = `${Math.round(shots.fourth*100/wons)}%`;
+    fifthShot.textContent = `${Math.round(shots.fifth*100/wons)}%`;
+    sixthShot.textContent = `${Math.round(shots.sixth*100/wons)}%`;
+    seventhShot.textContent = `${Math.round(shots.seventh*100/wons)}%`;
+    document.getElementById("first-shot-win").style.width = `${Math.round(shots.first*100/wons + 12)}%`;
+    document.getElementById("second-shot-win").style.width = `${Math.round(shots.second*100/wons + 12)}%`;
+    document.getElementById("third-shot-win").style.width = `${Math.round(shots.third*100/wons + 12)}%`;
+    document.getElementById("fourth-shot-win").style.width = `${Math.round(shots.fourth*100/wons + 12)}%`;
+    document.getElementById("fifth-shot-win").style.width = `${Math.round(shots.fifth*100/wons + 12)}%`;
+    document.getElementById("sixth-shot-win").style.width = `${Math.round(shots.sixth*100/wons + 12)}%`;
+    document.getElementById("seventh-shot-win").style.width = `${Math.round(shots.seventh*100/wons + 12)}%`;
+}
 
 function updateValues(result){
     document.getElementById("money").textContent = result.coins;
@@ -333,12 +387,20 @@ function updateValues(result){
     hammerValue = result.hint_column_letter;
     chanceValue = result.hint_chance;
     restartCount = result.restart_counter;
+    shots.first = result.games_won_first_try;
+    shots.second = result.games_won_second_try;
+    shots.third = result.games_won_third_try;
+    shots.fourth = result.games_won_fourth_try;
+    shots.fifth = result.games_won_fifth_try;
+    shots.sixth = result.games_won_sixth_try;
+    shots.seventh = result.games_won_seventh_try;
     if(result.total_games_won != undefined){
         document.getElementById("totalWins").textContent = `Total Wins: ${result.total_games_won}`;
     }
     if(result.total_games_played != undefined){
         document.getElementById("totalGames").textContent = `Total Games: ${result.total_games_played}`;
     }
+    updateStats(result.total_games_won);
 }
 
 function signUp(){
@@ -372,4 +434,148 @@ function logOut(){
     hammerValue = 0;
     chanceValue = 0;
     restartCount = 0;
+}
+
+function forgotPassword(){
+    document.getElementById("forgot-password").classList.remove("hidden");
+    document.getElementById("Log-In").classList.add("hidden");
+}
+
+async function sendForgotPasswordEmail() {
+    const email = document.getElementById("forgot-email").value;
+    if (!email) {
+        createProblem("Please enter your email", "login");
+        return;
+    }
+
+    const host = window.location.hostname === "127.0.0.1" ? 
+        "http://127.0.0.1:8080" : 
+        "https://flask-cloudrun-943017112681.europe-west10.run.app";
+    
+    const response = await fetch(`${host}/send-password-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+    })
+    const code = await response.json();
+    console.log('Verification code sent:', code);
+    document.getElementById("Verification-Code").classList.remove("hidden");
+    document.getElementById("forgot-password").classList.add("hidden");
+    let seconds = document.getElementById("secondsV");
+    let decoseconds = document.getElementById("decosecondsV");
+    let minutes = document.getElementById("minutesV");
+    let decominutes = document.getElementById("decominutesV");
+
+    // Reset timer display
+    seconds.textContent = 9;
+    decoseconds.textContent = 5;
+    minutes.textContent = 9;
+    decominutes.textContent = 0;
+
+    let interval = setInterval(() => {
+        let sec = parseInt(seconds.textContent);
+        let dec = parseInt(decoseconds.textContent);
+        let min = parseInt(minutes.textContent);
+        let dmin = parseInt(decominutes.textContent);
+
+        if (dmin !== 0) {
+            decominutes.textContent = 0;
+            minutes.textContent = 9;
+            decoseconds.textContent = 5;
+            seconds.textContent = 9;
+            return;
+        }
+        if (sec > 0) {
+            seconds.textContent = sec - 1;
+        } else if (dec > 0) {
+            decoseconds.textContent = dec - 1;
+            seconds.textContent = 9;
+        } else if (min > 0) {
+            minutes.textContent = min - 1;
+            decoseconds.textContent = 5;
+            seconds.textContent = 9;
+        } else {
+            console.log("Time's up!");
+            clearInterval(interval);
+            document.getElementById("Verification-Code").classList.add("hidden");
+            document.getElementById("forgot-password").classList.remove("hidden");
+            document.getElementById("forgot-email").value = "";
+        }
+    }, 1000);
+    let resendBtn = document.getElementById("resend");
+    resendBtn.onclick = async () => {
+        sendForgotPasswordEmail();
+        clearInterval(interval);
+    }
+
+    // Only add the event listener once
+    const loginVBtn = document.getElementById("loginVBtn");
+    loginVBtn.onclick = null;
+    loginVBtn.onclick = async () => {
+        const verificationInput = document.getElementById("verificationcode");
+        console.log("loginVBtn clicked");
+        console.log("Input value:", verificationInput.value, "Expected code:", code.code);
+        if (!verificationInput) {
+            document.getElementById("informationV").textContent = "Verification input not found";
+            document.getElementById("informationV").style.color = "red";
+            document.getElementById("informationV").style.visibility = "visible";
+            setTimeout(() => {
+                document.getElementById("informationV").style.visibility = "hidden";
+                document.getElementById("informationV").textContent = "";
+            }, 5000);
+            return;
+        }
+        if (verificationInput.value === String(code.code)) {
+            document.getElementById("reset-password").classList.remove("hidden");
+            document.getElementById("Verification-Code").classList.add("hidden");
+            document.getElementById("resetBtn").onclick = async () => {
+                const newPassword = document.getElementById("new-password").value;
+                const confirmPassword = document.getElementById("confirm-new-password").value;
+
+                if (!newPassword || !confirmPassword) {
+                    document.getElementById("informationV").textContent = "Please enter both new password and confirmation";
+                    document.getElementById("informationV").style.color = "red";
+                    document.getElementById("informationV").style.visibility = "visible";
+                    setTimeout(() => {
+                        document.getElementById("informationV").style.visibility = "hidden";
+                        document.getElementById("informationV").textContent = "";
+                    }, 5000);
+                    return;
+                }
+                if (newPassword !== confirmPassword) {
+                    document.getElementById("informationV").textContent = "Passwords do not match";
+                    document.getElementById("informationV").style.color = "red";
+                    document.getElementById("informationV").style.visibility = "visible";
+                    setTimeout(() => {
+                        document.getElementById("informationV").style.visibility = "hidden";
+                        document.getElementById("informationV").textContent = "";
+                    }, 5000);
+                    return;
+                }
+
+                const resetResponse = await fetch(`${host}/reset-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password: newPassword })
+                });
+
+                if (resetResponse.ok) {
+                    createProblem("Password reset successfully. You can now log in with your new password", "login");
+                    localStorage.removeItem("userLoged");
+                    localStorage.removeItem("userLogedPass");
+                    clearInterval(interval);
+                } else {
+                    createProblem("Failed to reset password. Please try again", "login");
+                }
+            }
+        } else {
+            document.getElementById("informationV").textContent = "Incorrect verification code";
+            document.getElementById("informationV").style.color = "red";
+            document.getElementById("informationV").style.visibility = "visible";
+            setTimeout(() => {
+                document.getElementById("informationV").style.visibility = "hidden";
+                document.getElementById("informationV").textContent = "";
+            }, 5000);
+        }
+    };
 }

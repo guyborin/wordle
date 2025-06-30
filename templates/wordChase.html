@@ -8,6 +8,7 @@
       <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
       <title>WordChaze</title>
       <link type="text/css" rel="stylesheet"  href="{{ url_for('static', filename='css/wordChase.css') }}"/>
+      <link type="text/css" rel="stylesheet"  href="{{ url_for('static', filename='css/account.css') }}"/>
       <link type="text/css" rel="stylesheet"  href="{{ url_for('static', filename='css/responsiveDesign.css') }}"/>
       <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/Logo.png') }}">
       <meta charset="utf-8">
@@ -168,9 +169,6 @@
             <div class="slider-container">
                <input type="range" id="slider" min="0" max="500" orient="vertical" value="0">
            </div>
-           <div id="shopmenu">
-
-           </div>
          </div>
       </div>
 
@@ -196,13 +194,6 @@
 
  -->
       <div id="shader" onclick="hide()"></div>
-<!--       <div id="newWordle">
-         <p>Create a new Wordle</p>
-         <input id="word" placeholder="Word with 5 letters" type="text" minlength="5" maxlength="5">
-         <button onclick="check()">&#10004;</button>
-         <p id="noWord" style="color: red; font-size: 20px; visibility: hidden;">The list doesn't have this word</p>
-      </div> -->
-
       <div id="bug">
          <p>Report a bug - Give an idea</p>
          <textarea id="bugText" placeholder="Describe here the bug as well as possible"></textarea>
@@ -212,7 +203,7 @@
             <option class="option" value="feedback">Feedback</option>
          </select>
          <svg onclick="sendBug()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l82.7 0L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3l0 82.7c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160c0-17.7-14.3-32-32-32L320 0zM80 32C35.8 32 0 67.8 0 112L0 432c0 44.2 35.8 80 80 80l320 0c44.2 0 80-35.8 80-80l0-112c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 112c0 8.8-7.2 16-16 16L80 448c-8.8 0-16-7.2-16-16l0-320c0-8.8 7.2-16 16-16l112 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 32z"/></svg>
-         <h4>WARNING! first spam account will be suspended <br> second account will be eleminated</h4>
+         <h4>WARNING! spammers will be forbidden to use this feacher</h4>
       </div>
 
       <div id="account">
@@ -233,6 +224,7 @@
             <input placeholder="password" type="password" id="passwordL">
             <button id="loginBtn" onclick="getUser('none', 'none')">Log-In</button>
             <a id="createAccount" href="#" onclick="signUp()">create an account</a>
+            <a id="forgotPassword" href="#" onclick="forgotPassword()">forgot password?</a>
             <p id="informationL"></p>
          </div>
 
@@ -248,6 +240,24 @@
             <button id="loginVBtn">Sign-Up</button>
             <a id="resend" href="#">resend email</a>
             <p id="informationV"></p>
+         </div>
+
+         <div id="forgot-password" class="hidden">
+            <input placeholder="email" type="text" id="forgot-email" autofocus>
+            <button id="forgotBtn" onclick="sendForgotPasswordEmail()">Send</button>
+            <a id="forgotBack" href="#" onclick="backToLogin()">Back to Log-In</a>
+            <p id="forgotText">Enter your email to receive a link to reset your password</p>
+            <p id="forgotInformation"></p>
+         </div>
+
+         <div id="reset-password" class="hidden">
+            <p id="reset">Reset Password</p>
+            <p id="resetText">Enter your new password</p>
+            <input placeholder="new password" type="password" id="new-password" autofocus>
+            <input placeholder="confirm new password" type="password" id="confirm-new-password">
+            <button id="resetBtn">Reset Password</button>
+            <a id="resetBack" href="#" onclick="backToForgotPassword()">Back</a>
+            <p id="resetInformation"></p>
          </div>
 
          <div id="user-account" class="hidden">
@@ -274,13 +284,13 @@
                   <div class="shots" id="seventh-shot-win"></div>
                </div>
                <div id="shots-percent-container">
-                  <p class="shots-text">0%</p>
-                  <p class="shots-text">0%</p>
-                  <p class="shots-text">0%</p>
-                  <p class="shots-text">0%</p>
-                  <p class="shots-text">0%</p>
-                  <p class="shots-text">0%</p>
-                  <p class="shots-text">100%</p>
+                  <p class="shots-text" id="first-percent">0%</p>
+                  <p class="shots-text" id="second-percent">0%</p>
+                  <p class="shots-text" id="third-percent">0%</p>
+                  <p class="shots-text" id="fourth-percent">0%</p>
+                  <p class="shots-text" id="fifth-percent">0%</p>
+                  <p class="shots-text" id="sixth-percent">0%</p>
+                  <p class="shots-text" id="seventh-percent">0%</p>
                </div>
             </div>
             <div id="user-coins">
