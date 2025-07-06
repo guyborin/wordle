@@ -888,6 +888,7 @@ function hide(){
     document.getElementById("account").style.visibility = "hidden";
     document.getElementById("bug").style.visibility = "hidden";
     document.getElementById("Sign-Up").classList.add("hidden");
+    document.getElementById("end-session").style.visibility = "hidden";
 }
 
 function check(){
@@ -1116,40 +1117,82 @@ function changeEnglish(){
     }
 }
 
+let leaderboardTimeout = null;
+let shopTimeout = null;
+let passTimeout = null;
+
 function toggleBar(elementId, action, barValue) {
     const element = document.getElementById(elementId);
     element.classList.remove("init", "appear", "desapear");
 
+    // Clear any previous timeout for zIndex
+    if (elementId === "leaderboard" && leaderboardTimeout) {
+        clearTimeout(leaderboardTimeout);
+        leaderboardTimeout = null;
+    }
+    if (elementId === "shop" && shopTimeout) {
+        clearTimeout(shopTimeout);
+        shopTimeout = null;
+    }
+    if (elementId === "pass" && passTimeout) {
+        clearTimeout(passTimeout);
+        passTimeout = null;
+    }
+
     if (action === 1 && rightBar === barValue) {
         element.classList.add("desapear");
+        if (elementId === "leaderboard") {
+            leaderboardTimeout = setTimeout(() => {
+                element.style.zIndex = -1;
+                leaderboardTimeout = null;
+            }, 2000);
+        } else if (elementId === "shop") {
+            shopTimeout = setTimeout(() => {
+                element.style.zIndex = -1;
+                shopTimeout = null;
+            }, 2000);
+        } else if (elementId === "pass") {
+            passTimeout = setTimeout(() => {
+                element.style.zIndex = -1;
+                passTimeout = null;
+            }, 2000);
+        } else {
             setTimeout(() => {
                 element.style.zIndex = -1;
             }, 2000);
+        }
         return 0;
     } else {
         if (rightBar === 1) {
             const shop = document.getElementById("shop");
             shop.classList.add("desapear");
-            setTimeout(() => {
+            if (shopTimeout) clearTimeout(shopTimeout);
+            shopTimeout = setTimeout(() => {
                 shop.style.zIndex = -1;
+                shopTimeout = null;
             }, 2000);
             actionShop = 0;
         } else if (rightBar === 2) {
             const pass = document.getElementById("pass");
             pass.classList.add("desapear");
-            setTimeout(() => {
+            if (passTimeout) clearTimeout(passTimeout);
+            passTimeout = setTimeout(() => {
                 pass.style.zIndex = -1;
+                passTimeout = null;
             }, 2000);
             actionPass = 0;
         } else if (rightBar === 3) {
             const leaderboard = document.getElementById("leaderboard");
             leaderboard.classList.add("desapear");
-            setTimeout(() => {
+            if (leaderboardTimeout) clearTimeout(leaderboardTimeout);
+            leaderboardTimeout = setTimeout(() => {
                 leaderboard.style.zIndex = -1;
+                leaderboardTimeout = null;
             }, 2000);
             actionPodium = 0;
         }
 
+        element.classList.remove("desapear");
         element.classList.add("appear");
         element.style.zIndex = 1;
         return 1;
@@ -1253,7 +1296,7 @@ async function sendBug(){
     const username = localStorage.getItem("userLoged");
     const host = window.location.hostname === "127.0.0.1" ? 
         "http://127.0.0.1:8080" : 
-        "https://flask-cloudrun-943017112681.europe-west10.run.app";
+        "https://flask-cloudrun-484458904222.europe-west10.run.app/";
     if(email !== null && email !== undefined && email !== "" && username !== null && username !== undefined && username !== ""){
         const bugText = document.getElementById("bugText").value;
         if(bugText.length > 0){
@@ -1266,4 +1309,100 @@ async function sendBug(){
             alert("Please write a bug description.");
         }
     }
+}
+
+leaderboard(null, 101);
+
+async function leaderboard(start, users){
+    const host = window.location.hostname === "127.0.0.1" ? 
+        "http://127.0.0.1:8080" : 
+        "https://flask-cloudrun-484458904222.europe-west10.run.app/";
+    
+    const response = await fetch(`${host}/leaderboard?start=${encodeURIComponent(start)}&users=${encodeURIComponent(users)}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    });
+    const data = await response.json();
+    for(let i = start; i <= users; i++){
+        if(i === null) continue;
+
+        const list = document.getElementById("leaderboardList");
+        const box = document.createElement("div");
+        box.classList.add("leaderboardBox");
+        box.id = `leaderboardBox${i}`;
+
+        const rank = document.createElement("p");
+        rank.classList.add("leaderboardRank");
+        rank.id = `leaderboardRank${i}`;
+        rank.textContent = i;
+        if(rank.textContent.length === 3){
+            rank.classList.add("threeDigits");
+        }
+
+        if(i <= 5){
+            rank.classList.add("highrank");
+        }else if(i <= 50){
+            rank.classList.add("midrank");
+        }else{
+            rank.classList.add("lowrank");
+        }
+
+        const name = document.createElement("p");
+        name.classList.add("leaderboardName");
+        name.id = `leaderboardName${i}`;
+        if(data[i - 1]){
+            name.textContent = data[i - 1].name;
+        }
+
+        const score = document.createElement("p");
+        score.classList.add("leaderboardScore");
+        score.id = `leaderboardScore${i}`;
+        if(data[i - 1]){
+            score.textContent = data[i - 1].score;
+        }
+        list.appendChild(box);
+        box.appendChild(rank);
+        box.appendChild(name);
+        box.appendChild(score);
+        
+        if(i === 101 && start === null){
+            rank.remove();
+            name.remove();
+            score.remove();
+            box.id = "leaderboardMoreBox";
+            const more = document.createElement("p");
+            more.textContent = "Load More";
+            more.id = "leaderboardMore";
+            box.onclick = () => {
+                box.remove();
+                leaderboard(101, 200);
+            };
+            box.appendChild(more);
+            continue;
+        }else{
+            box.addEventListener("click", () => {
+/*                 const response = await fetch(`${host}/show-user-profile?start=${encodeURIComponent(name)}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                }); */
+                document.getElementById("leaderboard").style.zIndex = -1;
+                seeProfile(
+                    data[i-1].name, 
+                    data[i-1].total_games_won, 
+                    data[i-1].total_games_played, 
+                    data[i-1].games_won_first_try, 
+                    data[i-1].games_won_second_try, 
+                    data[i-1].games_won_third_try, 
+                    data[i-1].games_won_fourth_try, 
+                    data[i-1].games_won_fifth_try, 
+                    data[i-1].games_won_sixth_try, 
+                    data[i-1].games_won_seventh_try
+                );
+            });
+        }
+    }
+}
+
+function searchUser(){
+    
 }

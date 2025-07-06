@@ -8,11 +8,14 @@ function account(){
         document.getElementById("Log-In").style.visibility = "hidden";
         document.getElementById("Log-In").classList.add("hidden");
         document.getElementById("shader").style.visibility = "visible";
+        getUser(localStorage.getItem("userLoged"), localStorage.getItem("userLogedPass"));
+        document.getElementById("end-session").style.visibility = "visible";
     }else{
-    document.getElementById("Log-In").style.visibility = "visible";
-    document.getElementById("Log-In").classList.remove("hidden");
-    document.getElementById("email-username").focus();
-    document.getElementById("shader").style.visibility = "visible";
+        document.getElementById("Log-In").style.visibility = "visible";
+        document.getElementById("Log-In").classList.remove("hidden");
+        document.getElementById("email-username").focus();
+        document.getElementById("shader").style.visibility = "visible";
+        document.getElementById("user-account").classList.add("hidden");
     }
 }
 
@@ -60,8 +63,8 @@ async function createUser() {
         createProblem("Name must be at least 3 characters long");
         return;
     }
-    if (name.length > 20) {
-        createProblem("Name must be at most 20 characters long");
+    if (name.length > 15) {
+        createProblem("Name must be at most 15 characters long");
         return;
     }
     if (/[^a-zA-Z0-9\-_]/.test(name)) {
@@ -95,7 +98,7 @@ async function createUser() {
 
     const host = window.location.hostname === "127.0.0.1" ? 
         "http://127.0.0.1:8080" : 
-        "https://flask-cloudrun-943017112681.europe-west10.run.app";
+        "https://flask-cloudrun-484458904222.europe-west10.run.app/";
 
     // Check if user/email exists
     const verify = await fetch(`${host}/verify`, {
@@ -239,7 +242,7 @@ async function getUser(userLoged, userLogedPass){
     
     const host = window.location.hostname === "127.0.0.1" ? 
         "http://127.0.0.1:8080" : 
-        "https://flask-cloudrun-943017112681.europe-west10.run.app";
+        "https://flask-cloudrun-484458904222.europe-west10.run.app/";
     const response = await fetch(`${host}/user?emailname=${encodeURIComponent(emailname)}&password=${encodeURIComponent(password)}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -251,12 +254,12 @@ async function getUser(userLoged, userLogedPass){
     const result = await response.json();
     console.log('User :', result);
     if(result === "Incorrect password"){
-        createProblem(result, "login");
+        createProblem(result,);
         return;
     }
 
     if(result === "User or email not found"){
-        createProblem(result, "login");
+        createProblem(result,);
         if(userLoged != "none" && userLogedPass != "none"){
             logOut();
             document.getElementById("Log-In").classList.add("hidden");
@@ -265,8 +268,8 @@ async function getUser(userLoged, userLogedPass){
         return;
     }
 
-    if(result === "Missing email, name or passwouserLogedEmailrd"){
-        createProblem(result, "login");
+    if(result === "Missing email, name or password"){
+        createProblem(result);
         return;
     }
     updateValues(result);
@@ -277,7 +280,7 @@ async function getUser(userLoged, userLogedPass){
 }
 
 async function updateUser() {
-    const experience_points = 1000;
+    const score = 1000;
     const coins = document.getElementById("money").textContent;
     const hint_keyboard_letter = document.getElementById("hintValue").textContent;
     const hint_column_letter = document.getElementById("hammerValue").textContent;
@@ -295,13 +298,13 @@ async function updateUser() {
     
     const host = window.location.hostname === "127.0.0.1" ? 
         "http://127.0.0.1:8080" : 
-        "https://flask-cloudrun-943017112681.europe-west10.run.app";
+        "https://flask-cloudrun-484458904222.europe-west10.run.app/";
     const response = await fetch(`${host}/user`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
             name: localStorage.getItem("userLoged"),
-            experience_points: parseInt(experience_points),
+            score: parseInt(score),
             coins: parseInt(coins),
             hint_keyboard_letter: parseInt(hint_keyboard_letter),
             hint_column_letter: parseInt(hint_column_letter),
@@ -403,6 +406,65 @@ function updateValues(result){
     updateStats(result.total_games_won);
 }
 
+function updateStatsProfile(wons, shotsfirst, shotssecond, shotsthird, shotsfourth, shotsfifth, shotssixth, shotsseventh){
+    const firstShot = document.getElementById("first-percent");
+    const secondShot = document.getElementById("second-percent");
+    const thirdShot = document.getElementById("third-percent");
+    const fourthShot = document.getElementById("fourth-percent");
+    const fifthShot = document.getElementById("fifth-percent");
+    const sixthShot = document.getElementById("sixth-percent");
+    const seventhShot = document.getElementById("seventh-percent");
+    if (!wons || isNaN(wons) || wons === 0) {
+        firstShot.textContent = "0%";
+        secondShot.textContent = "0%";
+        thirdShot.textContent = "0%";
+        fourthShot.textContent = "0%";
+        fifthShot.textContent = "0%";
+        sixthShot.textContent = "0%";
+        seventhShot.textContent = "0%";
+        document.getElementById("first-shot-win").style.width = `${Math.round(12)}%`;
+        document.getElementById("second-shot-win").style.width = `${Math.round(12)}%`;
+        document.getElementById("third-shot-win").style.width = `${Math.round(12)}%`;
+        document.getElementById("fourth-shot-win").style.width = `${Math.round(12)}%`;
+        document.getElementById("fifth-shot-win").style.width = `${Math.round(12)}%`;
+        document.getElementById("sixth-shot-win").style.width = `${Math.round(12)}%`;
+        document.getElementById("seventh-shot-win").style.width = `${Math.round(12)}%`;
+        return;
+    }
+
+    firstShot.textContent = `${Math.round(shotsfirst*100/wons)}%`;
+    secondShot.textContent = `${Math.round(shotssecond*100/wons)}%`;
+    thirdShot.textContent = `${Math.round(shotsthird*100/wons)}%`;
+    fourthShot.textContent = `${Math.round(shotsfourth*100/wons)}%`;
+    fifthShot.textContent = `${Math.round(shotsfifth*100/wons)}%`;
+    sixthShot.textContent = `${Math.round(shotssixth*100/wons)}%`;
+    seventhShot.textContent = `${Math.round(shotsseventh*100/wons)}%`;
+    document.getElementById("first-shot-win").style.width = `${Math.round(shotsfirst*100/wons + 12)}%`;
+    document.getElementById("second-shot-win").style.width = `${Math.round(shotssecond*100/wons + 12)}%`;
+    document.getElementById("third-shot-win").style.width = `${Math.round(shotsthird*100/wons + 12)}%`;
+    document.getElementById("fourth-shot-win").style.width = `${Math.round(shotsfourth*100/wons + 12)}%`;
+    document.getElementById("fifth-shot-win").style.width = `${Math.round(shotsfifth*100/wons + 12)}%`;
+    document.getElementById("sixth-shot-win").style.width = `${Math.round(shotssixth*100/wons + 12)}%`;
+    document.getElementById("seventh-shot-win").style.width = `${Math.round(shotsseventh*100/wons + 12)}%`;
+}
+
+function seeProfile(name, wins, games, shotsfirst, shotssecond, shotsthird, shotsfourth, shotsfifth, shotssixth, shotsseventh){
+    document.getElementById("shader").style.visibility = "visible";
+    document.getElementById("account").style.visibility = "visible";
+    document.getElementById("user-account").classList.remove("hidden");
+    document.getElementById("Log-In").style.visibility = "hidden";
+    document.getElementById("Log-In").classList.add("hidden");
+    document.getElementById("end-session").style.visibility = "hidden";
+    document.getElementById("profileName").textContent = name;
+    if(wins != undefined){
+        document.getElementById("totalWins").textContent = `Total Wins: ${wins}`;
+    }
+    if(games != undefined){
+        document.getElementById("totalGames").textContent = `Total Games: ${games}`;
+    }
+    updateStatsProfile(wins, shotsfirst, shotssecond, shotsthird, shotsfourth, shotsfifth, shotssixth, shotsseventh);
+}
+
 function signUp(){
     document.getElementById("Sign-Up").classList.remove("hidden");
     document.getElementById("email").focus();
@@ -444,13 +506,18 @@ function forgotPassword(){
 async function sendForgotPasswordEmail() {
     const email = document.getElementById("forgot-email").value;
     if (!email) {
-        createProblem("Please enter your email", "login");
+        document.getElementById("forgotInformation").textContent = "Please enter your email";
+        document.getElementById("forgotInformation").style.color = "red";
+        setTimeout(() => {
+            document.getElementById("forgotInformation").textContent = "";
+            document.getElementById("forgotInformation").style.color = "";
+        }, 5000);
         return;
     }
 
     const host = window.location.hostname === "127.0.0.1" ? 
         "http://127.0.0.1:8080" : 
-        "https://flask-cloudrun-943017112681.europe-west10.run.app";
+        "https://flask-cloudrun-484458904222.europe-west10.run.app/";
     
     const response = await fetch(`${host}/send-password-email`, {
         method: 'POST',
@@ -513,8 +580,6 @@ async function sendForgotPasswordEmail() {
     loginVBtn.onclick = null;
     loginVBtn.onclick = async () => {
         const verificationInput = document.getElementById("verificationcode");
-        console.log("loginVBtn clicked");
-        console.log("Input value:", verificationInput.value, "Expected code:", code.code);
         if (!verificationInput) {
             document.getElementById("informationV").textContent = "Verification input not found";
             document.getElementById("informationV").style.color = "red";
@@ -533,22 +598,22 @@ async function sendForgotPasswordEmail() {
                 const confirmPassword = document.getElementById("confirm-new-password").value;
 
                 if (!newPassword || !confirmPassword) {
-                    document.getElementById("informationV").textContent = "Please enter both new password and confirmation";
-                    document.getElementById("informationV").style.color = "red";
-                    document.getElementById("informationV").style.visibility = "visible";
+                    document.getElementById("resetInformation").textContent = "Please enter both new password and confirmation";
+                    document.getElementById("resetInformation").style.color = "red";
+                    document.getElementById("resetInformation").style.visibility = "visible";
                     setTimeout(() => {
-                        document.getElementById("informationV").style.visibility = "hidden";
-                        document.getElementById("informationV").textContent = "";
+                        document.getElementById("resetInformation").style.visibility = "hidden";
+                        document.getElementById("resetInformation").textContent = "";
                     }, 5000);
                     return;
                 }
                 if (newPassword !== confirmPassword) {
-                    document.getElementById("informationV").textContent = "Passwords do not match";
-                    document.getElementById("informationV").style.color = "red";
-                    document.getElementById("informationV").style.visibility = "visible";
+                    document.getElementById("resetInformation").textContent = "Passwords do not match";
+                    document.getElementById("resetInformation").style.color = "red";
+                    document.getElementById("resetInformation").style.visibility = "visible";
                     setTimeout(() => {
-                        document.getElementById("informationV").style.visibility = "hidden";
-                        document.getElementById("informationV").textContent = "";
+                        document.getElementById("resetInformation").style.visibility = "hidden";
+                        document.getElementById("resetInformation").textContent = "";
                     }, 5000);
                     return;
                 }
@@ -560,10 +625,10 @@ async function sendForgotPasswordEmail() {
                 });
 
                 if (resetResponse.ok) {
-                    createProblem("Password reset successfully. You can now log in with your new password", "login");
-                    localStorage.removeItem("userLoged");
-                    localStorage.removeItem("userLogedPass");
                     clearInterval(interval);
+                    document.getElementById("reset-password").classList.add("hidden");
+                    document.getElementById("Log-In").classList.remove("hidden");
+                    createProblem("Password reset successfully.");
                 } else {
                     createProblem("Failed to reset password. Please try again", "login");
                 }
@@ -579,3 +644,4 @@ async function sendForgotPasswordEmail() {
         }
     };
 }
+

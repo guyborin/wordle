@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 # from flask_cors import CORS  # Import Flask-CORS
-from models import addUser, getUser, updateUser, verifyUser, getUserPassword, updatePassword
+from models import addUser, getUser, updateUser, verifyUser, getUserPassword, updatePassword, getTopUsers
 import os  # Import os module
 from flask_mail import Mail
 from app_email import send_email
@@ -57,7 +57,7 @@ def update_user():
     try:
         updateUser(
             data["name"],
-            data["experience_points"],
+            data["score"],
             data["coins"],
             data["hint_keyboard_letter"],
             data["hint_column_letter"],
@@ -156,6 +156,13 @@ def reset_password():
     except Exception as e:
         print("Reset password error:", e)
         return jsonify({'error': f"Error resetting password: {e}"}), 400
+
+@app.route("/leaderboard", methods=["GET"])
+def get_leaderboard():
+    start = request.args.get("start", default=None, type=int)
+    userNum = request.args.get("users", default=101, type=int)
+    users = getTopUsers(start, userNum)
+    return jsonify(users)
 
 @app.route("/")
 def home():

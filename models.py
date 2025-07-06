@@ -7,7 +7,7 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 defaultUser = dict(
-    experience_points=1000, 
+    score=1000, 
     coins=9999, 
     hint_keyboard_letter=0,
     hint_column_letter=0,
@@ -91,14 +91,14 @@ def getUserPassword(emailname):
         print("Error adding record:", e)
         return None  # <-- Also return None on exception
 
-def updateUser(username, experience_points, coins, hint_keyboard_letter, hint_column_letter, hint_chance, restart_counter, total_games_played, total_games_won, games_won_first_try, games_won_second_try, games_won_third_try, games_won_fourth_try, games_won_fifth_try, games_won_sixth_try, games_won_seventh_try):
+def updateUser(username, score, coins, hint_keyboard_letter, hint_column_letter, hint_chance, restart_counter, total_games_played, total_games_won, games_won_first_try, games_won_second_try, games_won_third_try, games_won_fourth_try, games_won_fifth_try, games_won_sixth_try, games_won_seventh_try):
     users_ref = db.collection("users")
     query = users_ref.where("name", "==", username)
     print("query: ", query.stream())
     for doc in query.stream():
         doc_ref = db.collection("users").document(doc.id)
         doc_ref.update({
-            "experience_points": experience_points,
+            "score": score,
             "coins": coins,
             "hint_keyboard_letter": hint_keyboard_letter,
             "hint_column_letter": hint_column_letter,
@@ -128,3 +128,15 @@ def updatePassword(password, email):
         })
     print(f"User updated successfully.", query)
     return "User updated successfully!"
+
+def getTopUsers(start=None, n=101):
+    users_ref = db.collection('users')
+    query = users_ref.order_by('score', direction=firestore.Query.DESCENDING)
+    if start:  # Only use start_after if start is provided and not 0/None
+        query = query.start_after({'score': start})
+    query = query.limit(n)
+    results = query.stream()
+    return [
+        {k: v for k, v in doc.to_dict().items() if k not in ("email", "password")}
+        for doc in results
+    ]

@@ -2,3 +2,5 @@ Flask
 firebase-admin
 gunicorn
 watchdog
+Flask-Mail
+python-dotenv
