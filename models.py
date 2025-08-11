@@ -7,7 +7,7 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 defaultUser = dict(
-    score=1000, 
+    score=0, 
     coins=9999, 
     hint_keyboard_letter=0,
     hint_column_letter=0,
@@ -140,3 +140,31 @@ def getTopUsers(start=None, n=101):
         {k: v for k, v in doc.to_dict().items() if k not in ("email", "password")}
         for doc in results
     ]
+
+def searchUser(usersearch):
+    if not usersearch:
+        return []
+
+    search_term = usersearch.lower()
+    all_users = db.collection('users').stream()
+    results = []
+    for doc in all_users:
+        data = doc.to_dict()
+        username = data.get("name", "").lower()
+        if search_term in username:
+            # exclude sensitive fields
+            safe_data = {k: v for k, v in data.items() if k not in ['email', 'password']}
+            results.append(safe_data)
+    return results
+
+def updateScore(score, username):
+    users_ref = db.collection("users")
+    query = users_ref.where("name", "==", username)
+    print("query: ", query.stream())
+    for doc in query.stream():
+        doc_ref = db.collection("users").document(doc.id)
+        doc_ref.update({
+            "score": score,
+        })
+    print(f"User {username} updated successfully.", query)
+    return "User updated successfully!"

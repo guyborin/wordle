@@ -5,8 +5,8 @@ MVP:
     2. Keyboard {check}
     3. Responsive design
     4. Left menu 
-        start/restart {check}
-        give up {check}
+        idea
+        idea
         change language {check}
     5. Right menu (3 hints) {check}
     6. Shop {semicheck}

@@ -311,27 +311,27 @@
 }
 
 #forgot-email{
-    position: relative;
-    left: calc(50% - 134px);
-    top: 185px;
-    height: 30px;
-    border-radius: 30px;
-    padding: 5px 28px;
-    font-size: 17px;
-    border: none;
+   position: relative;
+   left: calc(50% - 134px);
+   top: 185px;
+   height: 30px;
+   border-radius: 30px;
+   padding: 5px 28px;
+   font-size: 17px;
+   border: none;
 }
 
 #forgotBtn{
-    position: relative;
-    background-color: white;
-    left: calc(50% - 134px);
-    top: 192px;
-    height: 38px;
-    width: 270px;
-    border-radius: 30px;
-    padding: 5px 28px;
-    font-size: 22px;
-    border: none;
+   position: relative;
+   background-color: white;
+   left: calc(50% - 134px);
+   top: 192px;
+   height: 38px;
+   width: 270px;
+   border-radius: 30px;
+   padding: 5px 28px;
+   font-size: 22px;
+   border: none;
 }
 
 #forgotBtn:hover{
@@ -558,4 +558,55 @@
    font-size: 20px;
    text-align: center;
    font-family: Arial, Helvetica, sans-serif;
+}
+
+#explenation{
+   position: relative;
+   top: 139px;
+   font-size: 16px;
+   right: -119px;
+   color: white;
+   font-family: Arial, Helvetica, sans-serif;
+   text-decoration: none;
+}
+
+#explenation:hover{
+   text-decoration: underline;
+   color: #3362d9;
+}
+
+#why{
+   position: relative;
+   top: 66px;
+}
+
+#why h2{
+   color: white;
+   font-size: 24px;
+   text-align: center;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#why li{
+   color: white;
+   font-size: 18px;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+#why hr{
+   border: 1px solid #ffffff;
+   margin: 20px 0;
+   position: relative;
+   width: 90%;
+   left: 5%;
+}
+
+#why button{
+   border: none;
+   margin: 20px 0;
+   position: relative;
+   width: 25%;
+   left: 36%;
+   height: 23px;
+   border-radius: 17px;
 }

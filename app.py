@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 # from flask_cors import CORS  # Import Flask-CORS
-from models import addUser, getUser, updateUser, verifyUser, getUserPassword, updatePassword, getTopUsers
+from models import addUser, getUser, updateUser, verifyUser, getUserPassword, updatePassword, getTopUsers, searchUser, updateScore
 import os  # Import os module
 from flask_mail import Mail
 from app_email import send_email
@@ -163,6 +163,25 @@ def get_leaderboard():
     userNum = request.args.get("users", default=101, type=int)
     users = getTopUsers(start, userNum)
     return jsonify(users)
+
+@app.route("/search-user", methods=["GET"])
+def search_user():
+    usersearch = request.args.get("usersearch", default=None, type=str)
+    users = searchUser(usersearch)
+    return jsonify(users)
+
+@app.route("/update-score", methods=["PUT"])
+def update_score():
+    data = request.json
+    try:
+        updateScore(
+            data["score"],
+            data["username"],
+        )
+        return jsonify({"message": "Score updated successfully!"})
+    except Exception as e:
+        print("Update score error:", e)
+        return jsonify({'error': f"Error updating score: {e}"}), 400
 
 @app.route("/")
 def home():

@@ -18,12 +18,8 @@ let hammerValue = 0;
 let chanceValue = 0;
 let openG = true;
 let giftTimeouts = [];
-const slider = document.getElementById("slider");
-const box = document.getElementById("box");
+localStorage.setItem("score", 0);
 
-slider.addEventListener("input", () => {
-    /* box.style.top = slider.value + "px"; */
-});
 
 let costs = {
     restart: 150,
@@ -101,9 +97,11 @@ function options(){
     }else if(action === 1){
         leftBarApperDesaper.classList.remove("in");
         leftBarApperDesaper.classList.add("out");
-        document.getElementById("shop").classList.add("desapear");
-        document.getElementById("pass").classList.add("desapear");
-        document.getElementById("leaderboard").classList.add("desapear");
+        if(window.innerWidth > 600){
+            document.getElementById("shop").classList.add("desapear");
+            document.getElementById("pass").classList.add("desapear");
+            document.getElementById("leaderboard").classList.add("desapear");
+        }
         action = 0;
     }
 }
@@ -122,25 +120,11 @@ function start(){
     }else{
         stats.secret =  WORDS[Math.floor(Math.random() * WORDS.length + 1)].toUpperCase()
     }
-    document.getElementById("restartBack").style.visibility = "visible";
-    document.getElementById("restart").style.visibility = "visible";
-    document.getElementById("restartCount").style.visibility = "visible";
     keyboard();
     changeTime = true;
     inGame = true;
+    document.getElementById("giveup").style.visibility = "visible";
     console.log(stats.secret)
-}
-
-function backgroundR(){
-    document.getElementById("restartBack").style.backgroundColor = "#474747";
-    document.getElementById("restart").classList.add("ro");
-    setTimeout(() => {
-        document.getElementById("restart").classList.remove("ro");
-    }, 500)
-}
-
-function RbackgroundR(){
-    document.getElementById("restartBack").style.backgroundColor = "#2f2f30";
 }
 
 function backgroundL(){
@@ -203,6 +187,7 @@ function virtualKeyboardClick(e){
             stats.usedLetters.push(e);
         }
         hintValue--;
+        document.getElementById("points").textContent = parseInt(document.getElementById("points").textContent) - 5;
         document.getElementById("hintValue").textContent = hintValue;
         hintN = false;
     }else{
@@ -313,6 +298,7 @@ function chance(){
         }
         chanceN = true;
         chanceValue--;
+        document.getElementById("points").textContent = parseInt(document.getElementById("points").textContent) - 15;
         document.getElementById("chanceValue").textContent = chanceValue;
         updateUser();
     }
@@ -353,6 +339,7 @@ function line(line){
         }, 500)
     }
     hammerValue--;
+    document.getElementById("points").textContent = parseInt(document.getElementById("points").textContent) - 10;
     document.getElementById("hammerValue").textContent = hammerValue;
     document.getElementById("arrow").style.visibility = "hidden";
     document.getElementById("decominutes").style.visibility = "visible";
@@ -597,10 +584,12 @@ setInterval(() => {
             timer.minutes = 0;
             timer.decoseconds = 0;
             timer.seconds = 0;
+            document.getElementById("points").textContent = parseInt(document.getElementById("points").textContent) - 1;
         }else if(timer.decoseconds === 5 && timer.seconds === 10){
             timer.minutes++;
             timer.decoseconds = 0;
             timer.seconds = 0;
+            document.getElementById("points").textContent = parseInt(document.getElementById("points").textContent) - 1;
         }
         
         if(timer.seconds === 10){
@@ -706,6 +695,10 @@ function youWin(){
     const gamesElem = document.getElementById("totalGames"); 
     const currentGames = parseInt(gamesElem.textContent.replace("Total Games: ", "")) || 0;
     gamesElem.textContent = `Total Games: ${currentGames + 1}`;
+    const scoreElem = document.getElementById("points");
+    if(localStorage.getItem("userLoged")){
+        addScore(parseInt(scoreElem.textContent));
+    }
     updateUser();
 
 }
@@ -850,9 +843,7 @@ function endGame(letter, boxI, boxJ, value){
         }
         
     }, ((boxI + 1) * animation_duration) / 2);
-
-    document.getElementById("restartCount").style.visibility = "hidden";
-    const gamesElem = document.getElementById("totalGames");
+    document.getElementById("restart").style.visibility = "visible";
     box.classList.add("animated");
     box.style.animationDelay = `${(boxI * animation_duration) / 2}ms`;
 }
@@ -889,6 +880,7 @@ function hide(){
     document.getElementById("bug").style.visibility = "hidden";
     document.getElementById("Sign-Up").classList.add("hidden");
     document.getElementById("end-session").style.visibility = "hidden";
+    document.getElementById("why").classList.add("hidden");
 }
 
 function check(){
@@ -938,10 +930,8 @@ function restart(word){
     giftTimeouts = [];
     moveAllGiftsHome();
     moveMoneyRewardHome();
-    let restartCount = document.getElementById("restartCount");
     eraseChance();
-    restartCount.style.visibility = "visible";
-    if(restartCount.textContent > 0 || !inGame){
+    if(!inGame){
         removeAnnounce();
         roundlanguage = language
         if(roundlanguage === "portuguese"){
@@ -999,6 +989,8 @@ function restart(word){
         document.getElementById("minutes").textContent = timer.minutes;
         document.getElementById("decoseconds").textContent = timer.decoseconds;
         document.getElementById("seconds").textContent = timer.seconds;
+        document.getElementById("restart").style.visibility = "hidden";
+        document.getElementById("giveup").style.visibility = "visible";
         setTimeout(() => {
             changeTime = true;
             inGame = true;
@@ -1009,13 +1001,6 @@ function restart(word){
             updateUser();
         }
         openG = true;
-    }else{
-        restartCount.style.color = "red";
-        restartCount.style.fontStyle = "bold";
-        setTimeout(() => {
-            restartCount.style.color = "white";
-            restartCount.style.fontStyle = "normal";
-        }, 500)
     }
 }
 
@@ -1025,7 +1010,6 @@ function giveup(){
     moveAllGiftsHome();
     moveMoneyRewardHome();
     eraseChance();
-    restartCount.style.visibility = "visible";
     removeAnnounce();
 
     for(let i = 0; i < stats.usedLetters.length; i++){
@@ -1058,15 +1042,16 @@ function giveup(){
     timer.minutes = 0;
     timer.decoseconds = 0;
     timer.seconds = 0;
+    if(localStorage.getItem("userLoged")){
+        addScore(-20);
+    }
     document.getElementById("decominutes").textContent = timer.decominutes;
     document.getElementById("minutes").textContent = timer.minutes;
     document.getElementById("decoseconds").textContent = timer.decoseconds;
     document.getElementById("seconds").textContent = timer.seconds;
+    document.getElementById("giveup").style.visibility = "hidden";
     changeTime = false;
     inGame = false;
-    document.getElementById("restartCount").style.visibility = "hidden";
-    document.getElementById("restart").style.visibility = "hidden";
-    document.getElementById("restartBack").style.visibility = "hidden";
 }
 
 
@@ -1172,6 +1157,7 @@ function toggleBar(elementId, action, barValue) {
                 shopTimeout = null;
             }, 2000);
             actionShop = 0;
+            return 0;
         } else if (rightBar === 2) {
             const pass = document.getElementById("pass");
             pass.classList.add("desapear");
@@ -1181,6 +1167,7 @@ function toggleBar(elementId, action, barValue) {
                 passTimeout = null;
             }, 2000);
             actionPass = 0;
+            return 0;
         } else if (rightBar === 3) {
             const leaderboard = document.getElementById("leaderboard");
             leaderboard.classList.add("desapear");
@@ -1190,6 +1177,7 @@ function toggleBar(elementId, action, barValue) {
                 leaderboardTimeout = null;
             }, 2000);
             actionPodium = 0;
+            return 0;
         }
 
         element.classList.remove("desapear");
@@ -1200,19 +1188,21 @@ function toggleBar(elementId, action, barValue) {
 }
 
 function shopChange() {
-    actionShop = toggleBar("shop", actionShop, 1);
-    document.getElementById("shop").style.left = "105px";
-    rightBar = actionShop === 1 ? 1 : 0;
+    const newAction = toggleBar("shop", actionShop, 1);
+    rightBar = newAction === 1 ? 1 : 0;
+    actionShop = newAction;
 }
 
 function passChange() {
-    actionPass = toggleBar("pass", actionPass, 2);
-    rightBar = actionPass === 1 ? 2 : 0;
+    const newAction = toggleBar("pass", actionPass, 2);
+    rightBar = newAction === 1 ? 2 : 0;
+    actionPass = newAction;
 }
 
 function podiumChange() {
-    actionPodium = toggleBar("leaderboard", actionPodium, 3);
-    rightBar = actionPodium === 1 ? 3 : 0;
+    const newAction = toggleBar("leaderboard", actionPodium, 3);
+    rightBar = newAction === 1 ? 3 : 0;
+    actionPodium = newAction;
 }
 
 function gift(gift){
@@ -1313,7 +1303,13 @@ async function sendBug(){
 
 leaderboard(null, 101);
 
-async function leaderboard(start, users){
+async function leaderboard(start, users, value){
+    if(value != "more"){
+        const boxes = Array.from(document.getElementsByClassName("leaderboardBox"));
+        for (const box of boxes) {
+            box.remove();
+        }
+    }
     const host = window.location.hostname === "127.0.0.1" ? 
         "http://127.0.0.1:8080" : 
         "https://flask-cloudrun-484458904222.europe-west10.run.app/";
@@ -1353,38 +1349,174 @@ async function leaderboard(start, users){
         if(data[i - 1]){
             name.textContent = data[i - 1].name;
         }
-
-        const score = document.createElement("p");
-        score.classList.add("leaderboardScore");
-        score.id = `leaderboardScore${i}`;
+        let score = null;
         if(data[i - 1]){
-            score.textContent = data[i - 1].score;
+            const img = document.createElement("img");
+            img.src = "static/img/points.png";
+            img.classList.add("leaderboardPoints");
+            score = document.createElement("div");
+            score.classList.add("leaderboardScore");
+            score.id = `leaderboardScore${i}`;
+            const scoreValue = document.createElement("p");
+            scoreValue.textContent = data[i - 1].score;
+            scoreValue.classList.add("leaderboardScoreValue");
+            score.appendChild(img);
+            score.appendChild(scoreValue);
         }
+
         list.appendChild(box);
         box.appendChild(rank);
         box.appendChild(name);
-        box.appendChild(score);
-        
+        if(score){
+            box.appendChild(score);
+        }
         if(i === 101 && start === null){
             rank.remove();
             name.remove();
-            score.remove();
+            if(score) {
+                score.remove();
+            }
             box.id = "leaderboardMoreBox";
             const more = document.createElement("p");
             more.textContent = "Load More";
             more.id = "leaderboardMore";
             box.onclick = () => {
                 box.remove();
-                leaderboard(101, 200);
+                leaderboard(101, 200, "more");
             };
             box.appendChild(more);
             continue;
         }else{
             box.addEventListener("click", () => {
-/*                 const response = await fetch(`${host}/show-user-profile?start=${encodeURIComponent(name)}`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                }); */
+                document.getElementById("leaderboard").style.zIndex = -1;
+                seeProfile(
+                    data[i-1].name, 
+                    data[i-1].total_games_won, 
+                    data[i-1].total_games_played, 
+                    data[i-1].games_won_first_try, 
+                    data[i-1].games_won_second_try, 
+                    data[i-1].games_won_third_try, 
+                    data[i-1].games_won_fourth_try, 
+                    data[i-1].games_won_fifth_try, 
+                    data[i-1].games_won_sixth_try, 
+                    data[i-1].games_won_seventh_try
+                );
+            });
+        }
+    }
+    // Add the user box at the end
+    if(localStorage.getItem("userLoged") !== null && localStorage.getItem("userLoged") !== undefined && localStorage.getItem("userLoged") !== ""){
+        const list = document.getElementById("leaderboardList");
+        const user = localStorage.getItem("userLoged");
+        const userBox = document.createElement("div");
+        userBox.classList.add("leaderboardBox");
+        userBox.id = "leaderboardUserBox";
+
+        const userRank = document.createElement("p");
+        userRank.classList.add("leaderboardRank");
+        userRank.id = "leaderboardUserRank";
+
+        const userName = document.createElement("p");
+        userName.classList.add("leaderboardName");
+        userName.id = "leaderboardUserName";
+        userName.textContent = user;
+
+        // Score structure matches other boxes
+        const userScore = document.createElement("div");
+        userScore.classList.add("leaderboardScore");
+        userScore.id = "leaderboardUserScore";
+        const userScoreImg = document.createElement("img");
+        userScoreImg.src = "static/img/points.png";
+        userScoreImg.classList.add("leaderboardPoints");
+        const userScoreValue = document.createElement("p");
+        userScoreValue.classList.add("leaderboardScoreValue");
+
+        const userData = data.find((u) => u.name === user);
+        let userRankValue = null;
+        if (userData) {
+            userRankValue = data.indexOf(userData) + 1;
+            userScoreValue.textContent = userData.score;
+        } else {
+            userRankValue = "--";
+            userScoreValue.textContent = "";
+        }
+
+        userScore.appendChild(userScoreImg);
+        userScore.appendChild(userScoreValue);
+
+        // Always set a style
+        if (userRankValue !== null && userRankValue !== "--") {
+            userRank.textContent = userRankValue;
+            if (userRankValue <= 5) {
+                userRank.classList.add("highrank");
+                userBox.classList.add("highrank");
+            } else if (userRankValue <= 50) {
+                userRank.classList.add("midrank");
+                userBox.classList.add("midrank");
+            } else {
+                userRank.classList.add("lowrank");
+                userBox.classList.add("lowrank");
+            }
+        } else {
+            userRank.textContent = "--";
+            userRank.classList.add("lowrank");
+            userBox.classList.add("lowrank");
+        }
+
+        userBox.appendChild(userRank);
+        userBox.appendChild(userName);
+        userBox.appendChild(userScore);
+        list.appendChild(userBox);
+    }
+}
+
+async function searchUser(){
+    const boxes = Array.from(document.getElementsByClassName("leaderboardBox"));
+    for (const box of boxes) {
+        box.remove();
+    }
+
+    const user = document.getElementById("searchUserBar").value;
+    const host = window.location.hostname === "127.0.0.1" ? 
+        "http://127.0.0.1:8080" : 
+        "https://flask-cloudrun-484458904222.europe-west10.run.app/";
+    
+    const response = await fetch(`${host}/search-user?usersearch=${encodeURIComponent(user)}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    });
+    const data = await response.json();
+    if(data !== null && data !== undefined && data !== ""){
+        document.getElementById("leaderboard-title").textContent = `${data.length} results for "${user}"`;
+        document.getElementById("backToLeaderboard").style.display = "block";
+        for(let i = 1; i <= data.length; i++){
+            const list = document.getElementById("leaderboardList");
+            const box = document.createElement("div");
+            box.classList.add("leaderboardBox");
+
+            const rank = document.createElement("p");
+            rank.classList.add("leaderboardRankSearch");
+            rank.classList.add("lowrank");
+            rank.textContent = "--";
+
+            const name = document.createElement("p");
+            name.classList.add("leaderboardName");
+            if(data[i - 1]){
+                name.textContent = data[i - 1].name;
+            }
+
+            const score = document.createElement("p");
+            score.classList.add("leaderboardScore");
+            score.id = `leaderboardScore${i}`;
+            if(data[i - 1]){
+                score.textContent = data[i - 1].score;
+            }
+            list.appendChild(box);
+            box.appendChild(rank);
+            box.appendChild(name);
+            box.appendChild(score);
+
+            box.addEventListener("click", () => {
                 document.getElementById("leaderboard").style.zIndex = -1;
                 seeProfile(
                     data[i-1].name, 
@@ -1403,6 +1535,47 @@ async function leaderboard(start, users){
     }
 }
 
-function searchUser(){
-    
+function backToLeaderboard(){
+    const boxes = Array.from(document.getElementsByClassName("leaderboardBox"));
+    for (const box of boxes) {
+        box.remove();
+    }
+    document.getElementById("leaderboard-title").textContent = "Top WordChazers";
+    document.getElementById("backToLeaderboard").style.display = "none";
+    document.getElementById("searchUserBar").value = "";
+    leaderboard(null, 101);
+}
+
+async function addScore(score){
+    const host = window.location.hostname === "127.0.0.1" ? 
+        "http://127.0.0.1:8080" : 
+        "https://flask-cloudrun-484458904222.europe-west10.run.app/";
+
+    // Ensure both are numbers
+    score = parseInt(score) + parseInt(localStorage.getItem("score") || "0");
+    localStorage.setItem("score", score);
+
+    const username = localStorage.getItem("userLoged");
+    if (!username) return; // Don't send if not logged in
+
+    const response = await fetch(`${host}/update-score`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            score: score,
+            username: username,
+        }),
+    });
+    const data = await response.json();
+    leaderboard(null, 101);
+}
+
+function info(infoBox){
+    const infoElement = document.getElementById(infoBox);
+    infoElement.style.visibility = "visible";
+}
+
+function closeInfo(infoBox){
+    const infoElement = document.getElementById(infoBox);
+    infoElement.style.visibility = "hidden";
 }

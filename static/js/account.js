@@ -277,15 +277,16 @@ async function getUser(userLoged, userLogedPass){
     localStorage.setItem("userLogedPass", result.password);
     localStorage.setItem("userLogedEmail", result.email);
     console.log(localStorage.getItem("userLoged"));
+    leaderboard(null, 101);
 }
 
 async function updateUser() {
-    const score = 1000;
+    const score = localStorage.getItem("score") || 0;
     const coins = document.getElementById("money").textContent;
     const hint_keyboard_letter = document.getElementById("hintValue").textContent;
     const hint_column_letter = document.getElementById("hammerValue").textContent;
     const hint_chance = document.getElementById("chanceValue").textContent;
-    const restart_counter = document.getElementById("restartCount").textContent;
+    const restart_counter = 2;
     const total_games_played = document.getElementById("totalGames").textContent.replace("Total Games: ", "");
     const total_wins = document.getElementById("totalWins").textContent.replace("Total Wins: ", "");
     const games_won_first_shot = shots.first;
@@ -379,7 +380,7 @@ function updateValues(result){
     document.getElementById("hammerValue").textContent = result.hint_column_letter;
     document.getElementById("hintValue").textContent = result.hint_keyboard_letter;
     document.getElementById("chanceValue").textContent = result.hint_chance;
-    document.getElementById("restartCount").textContent = result.restart_counter;
+/*     document.getElementById("restartCount").textContent = result.restart_counter; */
     document.getElementById("user-account").classList.remove("hidden");
     document.getElementById("Log-In").style.visibility = "hidden";
     document.getElementById("Log-In").classList.add("hidden");
@@ -490,12 +491,13 @@ function logOut(){
     document.getElementById("hintValue").textContent = 0;
     document.getElementById("hammerValue").textContent = 0;
     document.getElementById("chanceValue").textContent = 0;
-    document.getElementById("restartCount").textContent = 0;
+/*     document.getElementById("restartCount").textContent = 0; */
     document.getElementById("money").textContent = 0;
     hintValue = 0;
     hammerValue = 0;
     chanceValue = 0;
     restartCount = 0;
+    leaderboard(null, 101);
 }
 
 function forgotPassword(){
@@ -645,3 +647,9 @@ async function sendForgotPasswordEmail() {
     };
 }
 
+
+function explain(){
+    document.getElementById("why").classList.remove("hidden");
+    document.getElementById("Log-In").classList.add("hidden");
+    document.getElementById("Sign-Up").classList.add("hidden");
+}
